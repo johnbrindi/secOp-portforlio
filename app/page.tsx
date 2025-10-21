@@ -1,102 +1,206 @@
-import Image from "next/image";
+'use client'; // Add this line at the top
+
+import { useState, useEffect } from 'react';
+import { Shield, Code, Award, BookOpen, Mail, Github, Linkedin, Terminal, Lock, Globe, ChevronDown } from 'lucide-react';
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [activeSection, setActiveSection] = useState('hero');
+  const [isScrolled, setIsScrolled] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const skills = [
+    { name: 'Penetration Testing', level: 90, icon: <Lock className="w-5 h-5" /> },
+    { name: 'Network Security', level: 100, icon: <Globe className="w-5 h-5" /> },
+    { name: 'Malware Analysis', level: 80, icon: <Terminal className="w-5 h-5" /> },
+    { name: 'Security Auditing', level: 88, icon: <Shield className="w-5 h-5" /> },
+    { name: 'Web App Security', level: 92, icon: <Code className="w-5 h-5" /> },
+  ];
+
+  const routes = [
+    { name: 'About Me', icon: <Shield className="w-6 h-6" />, path: '/about', color: 'from-blue-500 to-cyan-500' },
+    { name: 'Projects', icon: <Code className="w-6 h-6" />, path: '/projects', color: 'from-purple-500 to-pink-500' },
+    { name: 'Blog', icon: <BookOpen className="w-6 h-6" />, path: '/blog', color: 'from-green-500 to-emerald-500' },
+    { name: 'Certifications', icon: <Award className="w-6 h-6" />, path: '/certifications', color: 'from-orange-500 to-red-500' },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
+      {/* Navigation */}
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-gray-900/95 backdrop-blur-lg shadow-lg' : 'bg-transparent'}`}>
+        <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <Shield className="w-8 h-8 text-cyan-400" />
+            <span className="text-xl font-bold">SecOps M. JohnBrindi</span>
+          </div>
+          <div className="hidden md:flex gap-6">
+            {routes.map((route) => (
+              <a 
+                key={route.path}
+                href={route.path} 
+                className="hover:text-cyan-400 transition-colors duration-300"
+              >
+                {route.name}
+              </a>
+            ))}
+          </div>
+          <div className="flex gap-4">
+            <a href="https://github.com/johnbrindi/" className="hover:text-cyan-400 transition-colors">
+              <Github className="w-5 h-5" />
+            </a>
+            <a href="https://www.linkedin.com/in/mazwewohjohnbrindi/" className="hover:text-cyan-400 transition-colors">
+              <Linkedin className="w-5 h-5" />
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="min-h-screen flex items-center justify-center px-6 pt-20">
+        <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          {/* Left Side - Text */}
+          <div className="space-y-6 animate-fade-in">
+            <div className="inline-block px-4 py-2 bg-cyan-500/20 rounded-full border border-cyan-500/50">
+              <span className="text-cyan-400 text-sm font-semibold">🛡️ Security Professional</span>
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold leading-tight">
+              Hi, I'm <span className="bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text">MAZWEOH JOHN BRINDI N.</span>
+            </h1>
+            <p className="text-xl text-gray-300 leading-relaxed">
+              Cybersecurity Specialist | Ethical Hacker | Security Researcher
+            </p>
+            <p className="text-gray-400 leading-relaxed">
+              Passionate about protecting digital assets and uncovering vulnerabilities. 
+              I specialize in penetration testing, security audits, and building secure systems.
+            </p>
+            <div className="flex gap-4 pt-4">
+              <a href="/projects" className="px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105">
+                View Projects
+              </a>
+              <a href="/contact" className="px-8 py-3 border border-cyan-500 rounded-lg font-semibold hover:bg-cyan-500/10 transition-all duration-300">
+                Contact Me
+              </a>
+            </div>
+          </div>
+
+          {/* Right Side - Image */}
+          <div className="relative">
+            <div className="relative w-80 h-80 mx-auto">
+              {/* Animated rings */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-500 to-blue-600 opacity-20 animate-pulse"></div>
+              <div className="absolute inset-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-600 opacity-20 animate-pulse" style={{animationDelay: '0.5s'}}></div>
+              
+              {/* Profile Image Container */}
+              <div className="absolute inset-8 rounded-full overflow-hidden border-4 border-cyan-500/50 shadow-2xl shadow-cyan-500/50">
+                <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
+                  {/* <span className="text-6xl">👤</span> */}
+               <img src="/pic.jpg" alt="Profile" className="w-full h-full object-cover" />
+                </div>
+              </div>
+
+              {/* Floating Icons */}
+              <div className="absolute -top-4 -right-4 w-16 h-16 bg-cyan-500/20 rounded-lg flex items-center justify-center backdrop-blur-sm border border-cyan-500/30 animate-bounce">
+                <Shield className="w-8 h-8 text-cyan-400" />
+              </div>
+              <div className="absolute -bottom-4 -left-4 w-16 h-16 bg-purple-500/20 rounded-lg flex items-center justify-center backdrop-blur-sm border border-purple-500/30 animate-bounce" style={{animationDelay: '0.3s'}}>
+                <Terminal className="w-8 h-8 text-purple-400" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <ChevronDown className="w-8 h-8 text-cyan-400" />
+        </div>
+      </section>
+
+      {/* Skills Section */}
+      <section className="py-20 px-6 bg-gray-900/50">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl font-bold text-center mb-12 bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text">
+            Core Skills & Expertise
+          </h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            {skills.map((skill, idx) => (
+              <div key={idx} className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-cyan-500/50 transition-all duration-300 transform hover:scale-105">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="text-cyan-400">{skill.icon}</div>
+                  <span className="font-semibold text-lg">{skill.name}</span>
+                  <span className="ml-auto text-cyan-400 font-bold">{skill.level}%</span>
+                </div>
+                <div className="w-full bg-gray-700 rounded-full h-3 overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full transition-all duration-1000 ease-out"
+                    style={{width: `${skill.level}%`}}
+                  ></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Navigation Cards */}
+      <section className="py-20 px-6">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl font-bold text-center mb-12 bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text">
+            Explore My Work
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {routes.map((route, idx) => (
+              <a
+                key={idx}
+                href={route.path}
+                className="group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700 hover:border-transparent transition-all duration-300 transform hover:scale-105 hover:shadow-2xl overflow-hidden"
+              >
+                <div className={`absolute inset-0 bg-gradient-to-br ${route.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
+                <div className="relative z-10">
+                  <div className={`w-16 h-16 bg-gradient-to-br ${route.color} rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    {route.icon}
+                  </div>
+                  <h3 className="text-2xl font-bold mb-2">{route.name}</h3>
+                  <p className="text-gray-400 text-sm">
+                    {route.name === 'About Me' && 'Learn more about my journey and background'}
+                    {route.name === 'Projects' && 'Explore my cybersecurity projects and research'}
+                    {route.name === 'Blog' && 'Read my writeups and security insights'}
+                    {route.name === 'Certifications' && 'View my certifications and achievements'}
+                  </p>
+                  <div className="mt-4 text-cyan-400 group-hover:translate-x-2 transition-transform duration-300 inline-flex items-center gap-2">
+                    Explore →
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 px-6 bg-gradient-to-r from-cyan-900/30 to-blue-900/30">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-6">Let's Work Together</h2>
+          <p className="text-gray-300 text-lg mb-8">
+            Interested in collaborating or need security consultation? Feel free to reach out!
+          </p>
+          <a href="mailto:johnbrindimazwewoh@gmail.com" className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105">
+            <Mail className="w-5 h-5" />
+            Get In Touch
           </a>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-8 px-6 border-t border-gray-800">
+        <div className="max-w-7xl mx-auto text-center text-gray-400">
+          <p>© 2025 CyberSec Portfolio. Built with Next.js & Tailwind CSS</p>
+        </div>
       </footer>
     </div>
   );
