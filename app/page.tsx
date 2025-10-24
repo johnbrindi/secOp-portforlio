@@ -73,11 +73,10 @@ export default function Home() {
               Hi, I'm <span className="bg-gradient-to-r from-cyan-400 to-blue-500 text-transparent bg-clip-text">MAZWEOH JOHN BRINDI N.</span>
             </h1>
             <p className="text-xl text-gray-300 leading-relaxed">
-              Cybersecurity Specialist | Ethical Hacker | Security Researcher
+              A SOC Analyse | Network Administrator | Security Researcher | Pysics&Computer Science tutor
             </p>
             <p className="text-gray-400 leading-relaxed">
-              Passionate about protecting digital assets and uncovering vulnerabilities. 
-              I specialize in penetration testing, security audits, and building secure systems.
+              As a cyber security practional, i  am passionate about protecting organizations and individuals in an ever-evolving digital landscape. My strengths in attention to detail, problem-solving, and effective communication and collaboration equip me to tackle complex security challenges efficiently as I have been able to make some progress such as designing an IDS. I am driven by a passion for safeguarding people and systems and am eager to contribute to the security goals of forward-thinking organizations. By leveraging my skills and values, I aim to help organizations meet and exceed their security objectives, creating a safer digital environment for all.
             </p>
             <div className="flex gap-4 pt-4">
               <a href="/projects" className="px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105">
