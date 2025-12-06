@@ -1,0 +1,22 @@
+{
+	"servers": {
+		"supabase": {
+			"type": "http",
+			"url": "https://mcp.supabase.com/mcp?project_ref=gsbsjaomrlvpufglrbwm",
+			"env": {
+				"SUPABASE_SERVICE_KEY": "${env:SUPABASE_SERVICE_KEY}",
+				"SUPABASE_ANON_KEY": "${env:SUPABASE_ANON_KEY}",
+				"SUPABASE_URL": "${env:SUPABASE_URL}"
+			}
+		},
+		
+	},
+	"inputs": [
+		{
+			"type": "promptString",
+			"id": "db_path",
+			"description": "SQLite Database Path",
+			"default": "${workspaceFolder}/db.sqlite"
+		}
+	]
+}
