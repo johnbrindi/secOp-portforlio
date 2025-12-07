@@ -36,7 +36,7 @@ export default function HeroSection() {
             {/* Profile Image Container */}
             <div className="absolute inset-8 rounded-full overflow-hidden border-4 border-cyan-500/50 shadow-2xl shadow-cyan-500/50">
               <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center">
-                <img src="/pic.jpg" alt="Profile" className="w-full h-full object-cover" />
+                <img src="/me.jpg" alt="Profile" className="w-full h-full object-cover" />
               </div>
             </div>
             {/* Floating Icons */}
