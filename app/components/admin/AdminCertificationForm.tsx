@@ -40,7 +40,7 @@ export default function AdminCertificationForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 p-6 bg-gray-800 rounded-xl shadow-lg border border-gray-700 w-full max-w-2xl mx-auto">
+    <form onSubmit={handleSubmit} className="space-y-4 p-4 sm:p-6 bg-gray-800 rounded-xl shadow-lg border border-gray-700 w-full max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold text-cyan-400 mb-2">{submitLabel}</h2>
       <input
         name="title"

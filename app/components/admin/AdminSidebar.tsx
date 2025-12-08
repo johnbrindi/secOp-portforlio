@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function AdminSidebar() {
   return (
-    <aside className="admin-sidebar p-6 border-r border-gray-800 min-h-screen w-56 bg-gradient-to-b from-gray-900 via-gray-800 to-black">
+    <aside className="admin-sidebar p-4 sm:p-6 border-r border-gray-800 min-h-screen w-full sm:w-56 bg-gradient-to-b from-gray-900 via-gray-800 to-black overflow-x-auto">
       <nav className="flex flex-col gap-4">
         <Link href="/admin" className="px-3 py-2 rounded text-cyan-300 hover:bg-cyan-900 hover:text-white transition-colors font-medium">Dashboard</Link>
         <Link href="/admin/blogs" className="px-3 py-2 rounded text-cyan-300 hover:bg-cyan-900 hover:text-white transition-colors font-medium">Blogs</Link>
