@@ -1,14 +1,14 @@
 "use client";
 import React, { useState } from 'react';
+import { createCertification } from '@/app/actions/certification';
 
 export default function AdminCertificationForm({
   initialData,
-  onSubmit,
   onCancel,
   submitLabel = 'Add Certification',
 }: {
   initialData?: any;
-  onSubmit: (data: any) => void;
+  onSubmit?: any; // Deprecated
   onCancel?: () => void;
   submitLabel?: string;
 }) {
@@ -19,7 +19,7 @@ export default function AdminCertificationForm({
     description: initialData?.description || '',
     link: initialData?.link || '',
     image: initialData?.image || '',
-    imageFile: null,
+    imageFile: null as File | null,
   });
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -31,12 +31,33 @@ export default function AdminCertificationForm({
     }
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    onSubmit({
-      ...form,
-      image: form.image || (form.imageFile ? URL.createObjectURL(form.imageFile) : ''),
-    });
+
+    const formData = new FormData();
+    formData.append('title', form.title);
+    formData.append('issuer', form.issuer);
+    formData.append('date', form.date);
+    formData.append('description', form.description);
+    formData.append('link', form.link);
+    formData.append('image', form.image);
+    if (form.imageFile) {
+      formData.append('imageFile', form.imageFile);
+    }
+
+    await createCertification(formData);
+
+    if (!initialData) {
+      setForm({
+        title: '',
+        issuer: '',
+        date: '',
+        description: '',
+        link: '',
+        image: '',
+        imageFile: null,
+      });
+    }
   }
 
   return (

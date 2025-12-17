@@ -1,22 +1,35 @@
 "use client";
 import React, { useState } from 'react';
+import { createSkill } from '@/app/actions/skill';
 
 export default function AdminSkillsForm({
   initialData,
-  onSubmit,
+  onSubmit, // Deprecated
   onCancel,
   submitLabel = 'Update Skills & Expertise',
 }: {
   initialData?: any;
-  onSubmit: (data: any) => void;
+  onSubmit?: any;
   onCancel?: () => void;
   submitLabel?: string;
 }) {
   const [skills, setSkills] = useState(initialData?.skills?.join(', ') || '');
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    onSubmit(skills.split(',').map((s: string) => s.trim()));
+
+    const formData = new FormData();
+    formData.append('skills', skills);
+
+    await createSkill(formData);
+
+    // Optionally clear or keep the list. 
+    // Usually "Update" implies keeping it, but "Add" passes new ones.
+    // The server action appends. Let's clear to indicate success? 
+    // Or keep it to show current state? 
+    // The previous implementation added new skills. 
+    // Let's clear it so user can add more.
+    setSkills('');
   }
 
   return (

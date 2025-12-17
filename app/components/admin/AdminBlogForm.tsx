@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from 'react';
+import { createBlog } from '@/app/actions/blog';
 
 const categories = [
   'Web Security',
@@ -12,12 +13,11 @@ const categories = [
 
 export default function AdminBlogForm({
   initialData,
-  onSubmit,
   onCancel,
   submitLabel = 'Publish Post',
 }: {
   initialData?: any;
-  onSubmit: (data: any) => void;
+  onSubmit?: any; // Deprecated/Unused
   onCancel?: () => void;
   submitLabel?: string;
 }) {
@@ -28,7 +28,7 @@ export default function AdminBlogForm({
     category: initialData?.category || categories[0],
     tags: initialData?.tags?.join(', ') || '',
     image: initialData?.image || '',
-    imageFile: null,
+    imageFile: null as File | null,
     featured: initialData?.featured || false,
   });
 
@@ -43,10 +43,43 @@ export default function AdminBlogForm({
     }
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // For now, just pass the form data. You can handle image upload logic in the parent.
-    onSubmit(form);
+
+    const formData = new FormData();
+    formData.append('title', form.title);
+    formData.append('excerpt', form.excerpt);
+    formData.append('content', form.content);
+    formData.append('category', form.category);
+    formData.append('tags', form.tags);
+    formData.append('image', form.image); // URL if any
+    if (form.imageFile) {
+      formData.append('imageFile', form.imageFile);
+    }
+    if (form.featured) {
+      formData.append('featured', 'on');
+    }
+
+    try {
+      await createBlog(formData);
+      alert('Blog post created successfully!');
+
+      // Reset form after success
+      if (!initialData) {
+        setForm({
+          title: '',
+          excerpt: '',
+          content: '',
+          category: categories[0],
+          tags: '',
+          image: '',
+          imageFile: null,
+          featured: false,
+        });
+      }
+    } catch (error: any) {
+      alert('Failed to create blog post: ' + error.message);
+    }
   }
 
   return (

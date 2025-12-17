@@ -1,21 +1,17 @@
-"use client";
 import AdminTable from '../../components/admin/AdminTable';
 import AdminProjectForm from '../../components/admin/AdminProjectForm';
-import { useState } from 'react';
+import { createClient } from '@/utils/supabase/server';
 
-export default function AdminProjects() {
-  const [projects, setProjects] = useState<any[]>([]);
-
-  function handleAddProject(data: any) {
-    setProjects([...projects, data]);
-  }
+export default async function AdminProjects() {
+  const supabase = await createClient();
+  const { data: projects } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white p-4">
       <h1 className="text-2xl font-bold mb-8 text-cyan-400">Manage Projects</h1>
-      <AdminProjectForm onSubmit={handleAddProject} submitLabel="Add Project" />
+      <AdminProjectForm />
       <div className="mt-8">
-        <AdminTable columns={["title", "description", "tags"]} data={projects} />
+        <AdminTable columns={["title", "description", "tags"]} data={projects || []} />
       </div>
     </div>
   );

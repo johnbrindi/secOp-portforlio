@@ -1,14 +1,15 @@
 "use client";
 import React, { useState } from 'react';
+import { createProject } from '@/app/actions/project';
 
 export default function AdminProjectForm({
   initialData,
-  onSubmit,
+  onSubmit, // Deprecated
   onCancel,
   submitLabel = 'Add Project',
 }: {
   initialData?: any;
-  onSubmit: (data: any) => void;
+  onSubmit?: any;
   onCancel?: () => void;
   submitLabel?: string;
 }) {
@@ -16,7 +17,7 @@ export default function AdminProjectForm({
     title: initialData?.title || '',
     description: initialData?.description || '',
     image: initialData?.image || '',
-    imageFile: null,
+    imageFile: null as File | null,
     tags: initialData?.tags?.join(', ') || '',
   });
 
@@ -29,13 +30,34 @@ export default function AdminProjectForm({
     }
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    onSubmit({
-      ...form,
-      tags: form.tags.split(',').map((t: string) => t.trim()),
-      image: form.image || (form.imageFile ? URL.createObjectURL(form.imageFile) : ''),
-    });
+
+    const formData = new FormData();
+    formData.append('title', form.title);
+    formData.append('description', form.description);
+    formData.append('tags', form.tags);
+    formData.append('image', form.image);
+    if (form.imageFile) {
+      formData.append('imageFile', form.imageFile);
+    }
+
+    try {
+      await createProject(formData);
+      alert('Project created successfully!');
+
+      if (!initialData) {
+        setForm({
+          title: '',
+          description: '',
+          image: '',
+          imageFile: null,
+          tags: '',
+        });
+      }
+    } catch (error: any) {
+      alert('Failed to create project: ' + error.message);
+    }
   }
 
   return (

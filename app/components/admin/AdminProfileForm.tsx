@@ -1,14 +1,15 @@
 "use client";
 import React, { useState } from 'react';
+import { updateProfile } from '@/app/actions/profile';
 
 export default function AdminProfileForm({
   initialData,
-  onSubmit,
+  onSubmit, // Deprecated
   onCancel,
   submitLabel = 'Update Profile',
 }: {
   initialData?: any;
-  onSubmit: (data: any) => void;
+  onSubmit?: any;
   onCancel?: () => void;
   submitLabel?: string;
 }) {
@@ -17,7 +18,7 @@ export default function AdminProfileForm({
     title: initialData?.title || '',
     bio: initialData?.bio || '',
     image: initialData?.image || '',
-    imageFile: null,
+    imageFile: null as File | null,
   });
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -29,12 +30,20 @@ export default function AdminProfileForm({
     }
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    onSubmit({
-      ...form,
-      image: form.image || (form.imageFile ? URL.createObjectURL(form.imageFile) : ''),
-    });
+
+    const formData = new FormData();
+    formData.append('name', form.name);
+    formData.append('title', form.title);
+    formData.append('bio', form.bio);
+    formData.append('image', form.image);
+    if (form.imageFile) {
+      formData.append('imageFile', form.imageFile);
+    }
+
+    await updateProfile(formData);
+    // Profile usually stays on screen, no need to clear form
   }
 
   return (

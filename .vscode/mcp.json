@@ -2,7 +2,7 @@
 	"servers": {
 		"supabase": {
 			"type": "http",
-			"url": "https://mcp.supabase.com/mcp?project_ref=gsbsjaomrlvpufglrbwm",
+			"url": "https://mcp.supabase.com/mcp?project_ref=epfjgoarpgzvwiyzpmnk",
 			"env": {
 				"SUPABASE_SERVICE_KEY": "${env:SUPABASE_SERVICE_KEY}",
 				"SUPABASE_ANON_KEY": "${env:SUPABASE_ANON_KEY}",
