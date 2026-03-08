@@ -1,33 +1,394 @@
 @import "tailwindcss";
 
+/* ──────────────────────────────────────────────────────
+   DESIGN TOKENS
+────────────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Surface palette — dark, sophisticated, not "default hacker" */
+  --bg: #09090f;
+  --surface: #0f0f1a;
+  --surface-2: #14141f;
+  --surface-3: #1c1c2e;
+  --border: rgba(255, 255, 255, .07);
+  --border-hi: rgba(255, 255, 255, .14);
+
+  /* Typography */
+  --text: #e8e8f0;
+  --text-muted: #8b8ba7;
+  --text-dim: #5a5a72;
+
+  /* Brand — a single restrained accent */
+  --accent: #6e8efb;
+  --accent-2: #a777e3;
+  --accent-glow: rgba(110, 142, 251, .18);
+
+  /* Fluid type scale (clamp: min, preferred, max) */
+  --step--1: clamp(.8rem, 1.5vw, .9rem);
+  --step-0: clamp(.95rem, 1.8vw, 1.05rem);
+  --step-1: clamp(1.1rem, 2.2vw, 1.35rem);
+  --step-2: clamp(1.4rem, 3vw, 1.9rem);
+  --step-3: clamp(1.9rem, 4.5vw, 2.8rem);
+  --step-4: clamp(2.6rem, 6.5vw, 4.2rem);
+  --step-5: clamp(3.2rem, 9vw, 6rem);
+
+  /* Spacing tokens */
+  --space-xs: clamp(.5rem, 1vw, .75rem);
+  --space-sm: clamp(.75rem, 2vw, 1rem);
+  --space-md: clamp(1.25rem, 3vw, 2rem);
+  --space-lg: clamp(2rem, 5vw, 3.5rem);
+  --space-xl: clamp(3rem, 8vw, 6rem);
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius: 12px;
+  --radius-lg: 20px;
+
+  /* Easing */
+  --ease-out-expo: cubic-bezier(.16, 1, .3, 1);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ──────────────────────────────────────────────────────
+   RESET + BASE
+────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 18px;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: var(--step-0);
+  line-height: 1.7;
+  min-height: 100dvh;
+  overflow-x: hidden;
 }
 
-@media (max-width: 600px) {
-  body {
-    font-size: 16px;
+/* ──────────────────────────────────────────────────────
+   MESH BACKGROUND — subtle, not "default cyberpunk"
+────────────────────────────────────────────────────── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% -10%, rgba(110, 142, 251, .08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 110%, rgba(167, 119, 227, .07) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 50% 50%, rgba(110, 142, 251, .03) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ──────────────────────────────────────────────────────
+   TYPOGRAPHY UTILITIES
+────────────────────────────────────────────────────── */
+.font-display {
+  font-family: "Space Grotesk", sans-serif;
+}
+
+.font-mono {
+  font-family: "Space Mono", monospace;
+}
+
+.text-display {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: var(--step-5);
+  font-weight: 700;
+  letter-spacing: -.03em;
+  line-height: 1.05;
+}
+
+.text-headline {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: var(--step-4);
+  font-weight: 700;
+  letter-spacing: -.025em;
+  line-height: 1.1;
+}
+
+.text-title {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: var(--step-3);
+  font-weight: 600;
+  letter-spacing: -.02em;
+  line-height: 1.2;
+}
+
+.text-subtitle {
+  font-size: var(--step-2);
+  font-weight: 500;
+  letter-spacing: -.01em;
+  line-height: 1.35;
+}
+
+.text-body {
+  font-size: var(--step-0);
+  line-height: 1.7;
+}
+
+.text-small {
+  font-size: var(--step--1);
+  line-height: 1.6;
+}
+
+.text-label {
+  font-family: "Space Mono", monospace;
+  font-size: var(--step--1);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ──────────────────────────────────────────────────────
+   GRADIENT TEXT
+────────────────────────────────────────────────────── */
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ──────────────────────────────────────────────────────
+   SURFACE / CARD
+────────────────────────────────────────────────────── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color .25s var(--ease-out-expo),
+    box-shadow .25s var(--ease-out-expo),
+    transform .25s var(--ease-out-expo);
+}
+
+.card:hover {
+  border-color: var(--border-hi);
+  box-shadow: 0 0 0 1px var(--border-hi), 0 20px 60px rgba(0, 0, 0, .4);
+  transform: translateY(-2px);
+}
+
+.card-glass {
+  background: rgba(15, 15, 26, .6);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/* ──────────────────────────────────────────────────────
+   BUTTONS
+────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .65em 1.4em;
+  border-radius: var(--radius-sm);
+  font-family: "Inter", sans-serif;
+  font-size: var(--step-0);
+  font-weight: 600;
+  letter-spacing: .01em;
+  cursor: pointer;
+  transition: all .2s var(--ease-out-expo);
+  white-space: nowrap;
+  border: 1px solid transparent;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #fff;
+  box-shadow: 0 4px 24px var(--accent-glow);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 6px 32px rgba(110, 142, 251, .35);
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--border-hi);
+}
+
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-glow);
+}
+
+/* ──────────────────────────────────────────────────────
+   DIVIDER
+────────────────────────────────────────────────────── */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ──────────────────────────────────────────────────────
+   TICKER ANIMATION
+────────────────────────────────────────────────────── */
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
   }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker 28s linear infinite;
+}
+
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* ──────────────────────────────────────────────────────
+   FADE UP ANIMATION
+────────────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp .7s var(--ease-out-expo) both;
+}
+
+.animate-fade-up-1 {
+  animation-delay: .1s;
+}
+
+.animate-fade-up-2 {
+  animation-delay: .2s;
+}
+
+.animate-fade-up-3 {
+  animation-delay: .3s;
+}
+
+.animate-fade-up-4 {
+  animation-delay: .45s;
+}
+
+/* ──────────────────────────────────────────────────────
+   LAYOUT HELPERS
+────────────────────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 3rem);
+}
+
+.section {
+  padding-block: var(--space-xl);
+}
+
+/* ──────────────────────────────────────────────────────
+   PROSE
+────────────────────────────────────────────────────── */
+.prose {
+  max-width: 68ch;
+}
+
+.prose p {
+  color: var(--text-muted);
+  margin-block: .75em;
+}
+
+.prose a {
+  color: var(--accent);
+  text-underline-offset: 3px;
+}
+
+/* ──────────────────────────────────────────────────────
+   FORM FIELDS
+────────────────────────────────────────────────────── */
+.field {
+  width: 100%;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  padding: .75em 1em;
+  font-size: var(--step-0);
+  font-family: inherit;
+  transition: border-color .2s;
+  outline: none;
+}
+
+.field::placeholder {
+  color: var(--text-dim);
+}
+
+.field:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* ──────────────────────────────────────────────────────
+   SCROLLBAR
+────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--surface-3);
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hi);
+}
+
+/* ──────────────────────────────────────────────────────
+   SELECTION
+────────────────────────────────────────────────────── */
+::selection {
+  background: var(--accent-glow);
+  color: var(--text);
+}
+
+/* ──────────────────────────────────────────────────────
+   COMPONENT HOVER — CSS-only (no JS needed in Server Components)
+────────────────────────────────────────────────────── */
+.skill-cell:hover {
+  background: var(--surface-2) !important;
+}
+
+footer nav a:hover {
+  color: var(--text) !important;
+}
+
+.social-icon:hover {
+  color: var(--text) !important;
+  background: var(--surface-3) !important;
 }
