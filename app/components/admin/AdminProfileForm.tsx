@@ -8,8 +8,14 @@ export default function AdminProfileForm({
   onCancel,
   submitLabel = 'Update Profile',
 }: {
-  initialData?: any;
-  onSubmit?: any;
+  initialData?: {
+    name?: string;
+    title?: string;
+    bio?: string;
+    image?: string;
+    imageFile?: File | null;
+  };
+  onSubmit?: (data: unknown) => void;
   onCancel?: () => void;
   submitLabel?: string;
 }) {
@@ -22,7 +28,7 @@ export default function AdminProfileForm({
   });
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    const { name, value, type, files } = e.target as any;
+    const { name, value, type, files } = e.target as HTMLInputElement & HTMLTextAreaElement;
     if (type === 'file') {
       setForm({ ...form, imageFile: files[0] });
     } else {

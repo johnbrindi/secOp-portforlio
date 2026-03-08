@@ -10,7 +10,7 @@ export async function createProject(formData: FormData) {
     const description = formData.get('description') as string;
     const tags = (formData.get('tags') as string)?.split(',').map((tag) => tag.trim()) || [];
 
-    let image_url = formData.get('image') as string || '';
+    const image_url = formData.get('image') as string || '';
     const imageFile = formData.get('imageFile') as File | null;
     // TODO: Upload imageFile handling
 

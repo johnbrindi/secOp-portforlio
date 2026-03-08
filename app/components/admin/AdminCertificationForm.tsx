@@ -7,8 +7,16 @@ export default function AdminCertificationForm({
   onCancel,
   submitLabel = 'Add Certification',
 }: {
-  initialData?: any;
-  onSubmit?: any; // Deprecated
+  initialData?: {
+    title?: string;
+    issuer?: string;
+    date?: string;
+    description?: string;
+    link?: string;
+    image?: string;
+    imageFile?: File | null;
+  };
+  onSubmit?: (data: unknown) => void; // Deprecated
   onCancel?: () => void;
   submitLabel?: string;
 }) {
@@ -23,7 +31,7 @@ export default function AdminCertificationForm({
   });
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    const { name, value, type, files } = e.target as any;
+    const { name, value, type, files } = e.target as HTMLInputElement & HTMLTextAreaElement;
     if (type === 'file') {
       setForm({ ...form, imageFile: files[0] });
     } else {

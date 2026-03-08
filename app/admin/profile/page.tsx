@@ -1,20 +1,40 @@
+"use client";
 import AdminProfileForm from '../../components/admin/AdminProfileForm';
-import { createClient } from '@/utils/supabase/server';
+import { useState, useEffect } from 'react';
 
-export default async function AdminProfile() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+export default function AdminProfile() {
+  type Profile = {
+    id: string;
+    name: string;
+    title: string;
+    bio: string;
+    image: string;
+  };
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  let profile = null;
-  if (user) {
-    const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-    profile = data;
+  useEffect(() => {
+    fetch('/api/profile')
+      .then(res => res.json())
+      .then(setProfile);
+  }, []);
+
+  async function handleProfileUpdate(data: Profile) {
+    setLoading(true);
+    const res = await fetch('/api/profile', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    const updated = await res.json();
+    setProfile(updated);
+    setLoading(false);
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white p-4">
       <h1 className="text-2xl font-bold mb-8 text-cyan-400">Edit Profile</h1>
-      <AdminProfileForm initialData={profile} />
+      <AdminProfileForm onSubmit={handleProfileUpdate} initialData={profile} submitLabel={loading ? 'Updating...' : 'Update Profile'} />
     </div>
   );
 }

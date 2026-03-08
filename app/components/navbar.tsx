@@ -1,3 +1,5 @@
+"use client";
+
 import { Shield, Github, Linkedin, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 
@@ -40,7 +42,6 @@ export default function Navbar() {
 					</button>
 				</div>
 			</div>
-			{/* Mobile menu */}
 			{menuOpen && (
 				<div className="md:hidden bg-gray-900/95 backdrop-blur-lg shadow-lg px-6 py-4">
 					<div className="flex flex-col gap-6">

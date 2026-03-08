@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 
 type CommentFormProps = {
@@ -7,11 +9,11 @@ type CommentFormProps = {
 export default function CommentForm({ onSubmit }: CommentFormProps) {
   const [form, setForm] = React.useState({ name: "", comment: "" });
 
-  function handleChange(e: { target: { name: any; value: any; }; }) {
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  function handleSubmit(e: { preventDefault: () => void; }) {
+  function handleSubmit(e: { preventDefault: () => void }) {
     e.preventDefault();
     if (form.name && form.comment) {
       onSubmit(form);
@@ -20,15 +22,18 @@ export default function CommentForm({ onSubmit }: CommentFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 p-4 bg-gray-800 rounded-xl shadow-lg border border-gray-700 w-full max-w-2xl mx-auto mt-6">
-      <h3 className="text-xl font-bold text-cyan-400 mb-2">Add a Comment</h3>
+    <form
+      onSubmit={handleSubmit}
+      className="mx-auto mt-6 w-full max-w-2xl space-y-4 rounded-xl border border-gray-700 bg-gray-800 p-4 shadow-lg"
+    >
+      <h3 className="mb-2 text-xl font-bold text-cyan-400">Add a Comment</h3>
       <input
         name="name"
         type="text"
         placeholder="Your Name"
         value={form.name}
         onChange={handleChange}
-        className="w-full px-4 py-3 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
+        className="w-full rounded-lg bg-gray-700 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
         required
       />
       <textarea
@@ -37,12 +42,12 @@ export default function CommentForm({ onSubmit }: CommentFormProps) {
         value={form.comment}
         onChange={handleChange}
         rows={3}
-        className="w-full px-4 py-3 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 resize-none"
+        className="w-full resize-none rounded-lg bg-gray-700 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-cyan-500"
         required
       />
       <button
         type="submit"
-        className="w-full px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all"
+        className="w-full rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 px-6 py-3 font-semibold transition-all hover:shadow-lg hover:shadow-cyan-500/50"
       >
         Post Comment
       </button>

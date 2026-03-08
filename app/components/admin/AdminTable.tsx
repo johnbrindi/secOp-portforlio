@@ -1,6 +1,7 @@
 import React from 'react';
 
-export default function AdminTable({ columns, data }: { columns: string[]; data: any[] }) {
+type RowData = { [key: string]: string | number | boolean | undefined | null };
+export default function AdminTable({ columns, data }: { columns: string[]; data: RowData[] }) {
   return (
     <div className="overflow-x-auto w-full">
       <table className="admin-table min-w-[400px] w-full border mt-4 bg-gray-900 rounded-xl overflow-hidden shadow-lg">

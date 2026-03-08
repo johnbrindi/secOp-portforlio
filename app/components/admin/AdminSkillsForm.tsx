@@ -8,8 +8,10 @@ export default function AdminSkillsForm({
   onCancel,
   submitLabel = 'Update Skills & Expertise',
 }: {
-  initialData?: any;
-  onSubmit?: any;
+  initialData?: {
+    skills?: string[];
+  };
+  onSubmit?: (data: unknown) => void;
   onCancel?: () => void;
   submitLabel?: string;
 }) {

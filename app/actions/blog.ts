@@ -15,7 +15,7 @@ export async function createBlog(formData: FormData) {
     const featured = formData.get('featured') === 'on';
 
     const imageFile = formData.get('imageFile') as File | null;
-    let image_url = formData.get('image') as string || '';
+    const image_url = formData.get('image') as string || '';
 
     if (imageFile && imageFile.size > 0) {
         // TODO: Implement Storage Upload

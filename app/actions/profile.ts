@@ -10,7 +10,7 @@ export async function updateProfile(formData: FormData) {
     const title = formData.get('title') as string;
     const bio = formData.get('bio') as string;
 
-    let image_url = formData.get('image') as string || '';
+    const image_url = formData.get('image') as string || '';
     const imageFile = formData.get('imageFile') as File | null;
     // TODO: Buffer/Storage upload implementation
 

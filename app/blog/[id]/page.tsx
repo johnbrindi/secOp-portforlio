@@ -21,7 +21,7 @@ export default function BlogDetailPage({ params }: { params: { id: string } }) {
     setLikeCount(likeCount + 1);
   }
 
-  function handleShare(platform: string) {
+  function handleShare(platform: "facebook" | "twitter" | "linkedin") {
     if (!blog) return;
     const url = typeof window !== "undefined" ? window.location.href : "";
     const text = `Check out this article: ${blog.title}`;

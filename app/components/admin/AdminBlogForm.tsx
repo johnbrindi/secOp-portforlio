@@ -16,8 +16,17 @@ export default function AdminBlogForm({
   onCancel,
   submitLabel = 'Publish Post',
 }: {
-  initialData?: any;
-  onSubmit?: any; // Deprecated/Unused
+  initialData?: {
+    title?: string;
+    excerpt?: string;
+    content?: string;
+    category?: string;
+    tags?: string[];
+    image?: string;
+    imageFile?: File | null;
+    featured?: boolean;
+  };
+  onSubmit?: (data: unknown) => void; // Deprecated/Unused
   onCancel?: () => void;
   submitLabel?: string;
 }) {
@@ -33,7 +42,7 @@ export default function AdminBlogForm({
   });
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
-    const { name, value, type, checked, files } = e.target as any;
+    const { name, value, type, checked, files } = e.target as HTMLInputElement & HTMLTextAreaElement & HTMLSelectElement;
     if (type === 'checkbox') {
       setForm({ ...form, [name]: checked });
     } else if (type === 'file') {

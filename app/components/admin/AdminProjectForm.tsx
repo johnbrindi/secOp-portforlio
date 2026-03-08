@@ -8,8 +8,14 @@ export default function AdminProjectForm({
   onCancel,
   submitLabel = 'Add Project',
 }: {
-  initialData?: any;
-  onSubmit?: any;
+  initialData?: {
+    title?: string;
+    description?: string;
+    image?: string;
+    imageFile?: File | null;
+    tags?: string[];
+  };
+  onSubmit?: (data: unknown) => void;
   onCancel?: () => void;
   submitLabel?: string;
 }) {
@@ -22,7 +28,7 @@ export default function AdminProjectForm({
   });
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    const { name, value, type, files } = e.target as any;
+    const { name, value, type, files } = e.target as HTMLInputElement & HTMLTextAreaElement;
     if (type === 'file') {
       setForm({ ...form, imageFile: files[0] });
     } else {
@@ -55,8 +61,12 @@ export default function AdminProjectForm({
           tags: '',
         });
       }
-    } catch (error: any) {
-      alert('Failed to create project: ' + error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        alert('Failed to create project: ' + error.message);
+      } else {
+        alert('Failed to create project.');
+      }
     }
   }
 
