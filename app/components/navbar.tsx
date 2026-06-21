@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Shield, Github, Linkedin, Menu, X, Circle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Shield, Github, Linkedin, Menu, X } from "lucide-react";
 import Link from "next/link";
 
 const routes = [

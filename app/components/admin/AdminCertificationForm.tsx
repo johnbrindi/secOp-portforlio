@@ -16,7 +16,6 @@ export default function AdminCertificationForm({
     image?: string;
     imageFile?: File | null;
   };
-  onSubmit?: (data: unknown) => void; // Deprecated
   onCancel?: () => void;
   submitLabel?: string;
 }) {
@@ -31,9 +30,13 @@ export default function AdminCertificationForm({
   });
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    const { name, value, type, files } = e.target as HTMLInputElement & HTMLTextAreaElement;
+    const target = e.target as HTMLInputElement;
+    const { name, value, type, files } = target;
+
     if (type === 'file') {
-      setForm({ ...form, imageFile: files[0] });
+      if (files?.length) {
+        setForm({ ...form, imageFile: files[0] });
+      }
     } else {
       setForm({ ...form, [name]: value });
     }

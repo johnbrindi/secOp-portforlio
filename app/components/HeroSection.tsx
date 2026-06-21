@@ -1,4 +1,5 @@
 import { Shield, Terminal, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default function HeroSection() {
   return (
@@ -32,19 +33,19 @@ export default function HeroSection() {
                 maxWidth: "52ch",
               }}
             >
-              I'm <strong style={{ color: "var(--text)", fontWeight: 600 }}>Mazweoh John Brindi N.</strong> — a SOC analyst,
+              I&apos;m <strong style={{ color: "var(--text)", fontWeight: 600 }}>Mazweoh John Brindi N.</strong> — a SOC analyst,
               network administrator, and web pentester who thinks like an attacker
               to build defenses that actually hold.
             </p>
 
             {/* CTAs */}
             <div className="animate-fade-up animate-fade-up-4 flex flex-wrap gap-3 pt-2">
-              <a href="/projects" className="btn btn-primary">
+              <Link href="/projects" className="btn btn-primary">
                 View Projects <ArrowRight className="w-4 h-4" />
-              </a>
-              <a href="/contact" className="btn btn-outline">
+              </Link>
+              <Link href="/contact" className="btn btn-outline">
                 Get in Touch
-              </a>
+              </Link>
             </div>
 
             {/* Quick stats */}

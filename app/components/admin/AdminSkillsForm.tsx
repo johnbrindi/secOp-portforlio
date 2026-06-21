@@ -4,14 +4,12 @@ import { createSkill } from '@/app/actions/skill';
 
 export default function AdminSkillsForm({
   initialData,
-  onSubmit, // Deprecated
   onCancel,
   submitLabel = 'Update Skills & Expertise',
 }: {
   initialData?: {
     skills?: string[];
   };
-  onSubmit?: (data: unknown) => void;
   onCancel?: () => void;
   submitLabel?: string;
 }) {

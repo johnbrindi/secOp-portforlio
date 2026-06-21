@@ -25,7 +25,7 @@ export default async function ProjectsPage() {
           <div className="mb-14">
             <p className="text-label mb-3">Portfolio</p>
             <h1 className="text-headline mb-4">
-              Things I've <span className="gradient-text">built & broken</span>
+              Things I&apos;ve <span className="gradient-text">built & broken</span>
             </h1>
             <p className="text-body" style={{ color: "var(--text-muted)", maxWidth: "48ch" }}>
               From Intrusion Detection Systems to web application exploitation labs —

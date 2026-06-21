@@ -57,11 +57,11 @@ export default function ContactPage() {
           <div className="mb-14">
             <p className="text-label mb-3">Contact</p>
             <h1 className="text-headline mb-4">
-              Let's start a{" "}
+              Let&apos;s start a{" "}
               <span className="gradient-text">conversation</span>
             </h1>
             <p className="text-body" style={{ color: "var(--text-muted)", maxWidth: "48ch" }}>
-              Whether it's a consulting inquiry, collaboration idea, or just a
+              Whether it&apos;s a consulting inquiry, collaboration idea, or just a
               security question — I read every message.
             </p>
           </div>
@@ -85,7 +85,7 @@ export default function ContactPage() {
                     Message sent!
                   </h2>
                   <p style={{ color: "var(--text-muted)" }}>
-                    Thanks for reaching out. I'll get back to you within a day
+                    Thanks for reaching out. I&apos;ll get back to you within a day
                     or two.
                   </p>
                 </div>

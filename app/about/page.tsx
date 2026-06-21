@@ -84,7 +84,7 @@ export default function AboutMePage() {
                   security accessible — not just for enterprises, but for everyone.
                 </p>
                 <p>
-                  When I'm not in a terminal, I'm writing about what I've learned,
+                  When I&apos;m not in a terminal, I&apos;m writing about what I&apos;ve learned,
                   competing in CTFs, or exploring the next vulnerability class.
                 </p>
               </div>

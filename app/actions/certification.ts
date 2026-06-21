@@ -14,7 +14,6 @@ export async function createCertification(formData: FormData) {
 
     // Image handling placeholder
     const image_url = formData.get('image') as string || '';
-    const imageFile = formData.get('imageFile') as File | null;
     // TODO: Upload imageFile to bucket if present
 
     const { error } = await supabase.from('certifications').insert([

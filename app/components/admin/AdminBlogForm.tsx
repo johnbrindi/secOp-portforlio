@@ -26,7 +26,6 @@ export default function AdminBlogForm({
     imageFile?: File | null;
     featured?: boolean;
   };
-  onSubmit?: (data: unknown) => void; // Deprecated/Unused
   onCancel?: () => void;
   submitLabel?: string;
 }) {
@@ -42,11 +41,15 @@ export default function AdminBlogForm({
   });
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
-    const { name, value, type, checked, files } = e.target as HTMLInputElement & HTMLTextAreaElement & HTMLSelectElement;
+    const target = e.target as HTMLInputElement;
+    const { name, value, type, checked, files } = target;
+
     if (type === 'checkbox') {
       setForm({ ...form, [name]: checked });
     } else if (type === 'file') {
-      setForm({ ...form, imageFile: files[0] });
+      if (files && files.length > 0) {
+        setForm({ ...form, imageFile: files[0] });
+      }
     } else {
       setForm({ ...form, [name]: value });
     }
@@ -86,8 +89,8 @@ export default function AdminBlogForm({
           featured: false,
         });
       }
-    } catch (error: any) {
-      alert('Failed to create blog post: ' + error.message);
+    } catch (error: unknown) {
+      alert('Failed to create blog post: ' + (error instanceof Error ? error.message : String(error)));
     }
   }
 

@@ -11,7 +11,6 @@ export async function updateProfile(formData: FormData) {
     const bio = formData.get('bio') as string;
 
     const image_url = formData.get('image') as string || '';
-    const imageFile = formData.get('imageFile') as File | null;
     // TODO: Buffer/Storage upload implementation
 
     // Hardcode ID or assume single user for this simplified portfolio

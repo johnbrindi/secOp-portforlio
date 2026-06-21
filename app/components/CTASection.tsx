@@ -16,7 +16,7 @@ export default function CTASection() {
             className="font-display font-bold mb-5"
             style={{ fontSize: "var(--step-4)", letterSpacing: "-.025em", lineHeight: 1.1 }}
           >
-            Let's build<br />
+            Let&apos;s build<br />
             <span className="gradient-text">something secure.</span>
           </h2>
           <p

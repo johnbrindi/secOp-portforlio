@@ -11,7 +11,6 @@ export async function createProject(formData: FormData) {
     const tags = (formData.get('tags') as string)?.split(',').map((tag) => tag.trim()) || [];
 
     const image_url = formData.get('image') as string || '';
-    const imageFile = formData.get('imageFile') as File | null;
     // TODO: Upload imageFile handling
 
     const { error } = await supabase.from('projects').insert([

@@ -2,7 +2,7 @@
 
 import dummyBlogs from "../dummyBlogs";
 import { use, useState } from "react";
-import { Heart, Share2, Facebook, Twitter, Linkedin } from "lucide-react";
+import { Heart, Facebook, Twitter, Linkedin } from "lucide-react";
 
 export default function BlogDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
