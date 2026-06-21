@@ -1,11 +1,12 @@
 "use client";
 
 import dummyBlogs from "../dummyBlogs";
-import { useState } from "react";
+import { use, useState } from "react";
 import { Heart, Share2, Facebook, Twitter, Linkedin } from "lucide-react";
 
-export default function BlogDetailPage({ params }: { params: { id: string } }) {
-  const blog = dummyBlogs.find(b => String(b.id) === params.id);
+export default function BlogDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const blog = dummyBlogs.find(b => String(b.id) === id);
   const [comments, setComments] = useState<{ name: string; email: string; comment: string; time: string }[]>([]);
   const [commentForm, setCommentForm] = useState({ name: "", email: "", comment: "" });
   const [likeCount, setLikeCount] = useState(blog ? (blog.likes || 0) : 0);
