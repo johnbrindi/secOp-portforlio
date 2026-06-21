@@ -1,23 +1,19 @@
-"use client";
 import AdminTable from '../../components/admin/AdminTable';
 import AdminProjectForm from '../../components/admin/AdminProjectForm';
-import { useState, useEffect } from 'react';
+import prisma from '../../../lib/prisma';
 
-export default function AdminProjects() {
-  type Project = {
-    id: string;
-    title: string;
-    description: string;
-    image: string;
-    tags: string[];
-  };
-  const [projects, setProjects] = useState<Project[]>([]);
+export default async function AdminProjects() {
+  const projectsData = await prisma.projects.findMany({
+    orderBy: { created_at: 'desc' }
+  });
 
-  useEffect(() => {
-    fetch('/api/projects')
-      .then(res => res.json())
-      .then(setProjects);
-  }, []);
+  const projects = projectsData.map((p: any) => ({
+    id: p.id,
+    title: p.title,
+    description: p.description || '',
+    image: p.image_url || '',
+    tags: p.tags || []
+  }));
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white p-4">

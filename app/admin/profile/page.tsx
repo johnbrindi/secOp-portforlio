@@ -1,22 +1,18 @@
-"use client";
 import AdminProfileForm from '../../components/admin/AdminProfileForm';
-import { useState, useEffect } from 'react';
+import prisma from '../../../lib/prisma';
 
-export default function AdminProfile() {
-  type Profile = {
-    id: string;
-    name: string;
-    title: string;
-    bio: string;
-    image: string;
-  };
-  const [profile, setProfile] = useState<Profile | null>(null);
+export default async function AdminProfile() {
+  const profileData = await prisma.profiles.findFirst({
+    orderBy: { updated_at: 'desc' }
+  });
 
-  useEffect(() => {
-    fetch('/api/profile')
-      .then(res => res.json())
-      .then(setProfile);
-  }, []);
+  const profile = profileData ? {
+    id: profileData.id,
+    name: profileData.name || '',
+    title: profileData.title || '',
+    bio: profileData.bio || '',
+    image: profileData.image_url || ''
+  } : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white p-4">

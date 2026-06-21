@@ -1,26 +1,22 @@
-"use client";
 import AdminTable from '../../components/admin/AdminTable';
 import AdminBlogForm from '../../components/admin/AdminBlogForm';
-import { useState, useEffect } from 'react';
+import prisma from '../../../lib/prisma';
 
-export default function AdminBlogs() {
-  type Blog = {
-    id: string;
-    title: string;
-    excerpt: string;
-    content: string;
-    category: string;
-    tags: string[];
-    image: string;
-    likes?: number;
-  };
-  const [blogs, setBlogs] = useState<Blog[]>([]);
+export default async function AdminBlogs() {
+  const blogsData = await prisma.posts.findMany({
+    orderBy: { created_at: 'desc' }
+  });
 
-  useEffect(() => {
-    fetch('/api/blogs')
-      .then(res => res.json())
-      .then(setBlogs);
-  }, []);
+  const blogs = blogsData.map((b: any) => ({
+    id: b.id,
+    title: b.title,
+    excerpt: b.excerpt || '',
+    content: b.content || '',
+    category: b.category || '',
+    tags: b.tags || [],
+    image: b.image_url || '',
+    likes: 0
+  }));
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white p-4">

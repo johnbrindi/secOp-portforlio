@@ -1,25 +1,21 @@
-"use client";
 import AdminTable from '../../components/admin/AdminTable';
 import AdminCertificationForm from '../../components/admin/AdminCertificationForm';
-import { useState, useEffect } from 'react';
+import prisma from '../../../lib/prisma';
 
-export default function AdminCertifications() {
-  type Certification = {
-    id: string;
-    title: string;
-    issuer: string;
-    date: string;
-    description: string;
-    link: string;
-    image: string;
-  };
-  const [certs, setCerts] = useState<Certification[]>([]);
+export default async function AdminCertifications() {
+  const certsData = await prisma.certifications.findMany({
+    orderBy: { created_at: 'desc' }
+  });
 
-  useEffect(() => {
-    fetch('/api/certifications')
-      .then(res => res.json())
-      .then(setCerts);
-  }, []);
+  const certs = certsData.map((c: any) => ({
+    id: c.id,
+    title: c.title,
+    issuer: c.issuer || '',
+    date: c.date_issued || '',
+    description: c.description || '',
+    link: c.link || '',
+    image: c.image_url || ''
+  }));
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white p-4">

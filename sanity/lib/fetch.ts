@@ -12,5 +12,10 @@ export const getProjectBySlug = cache(async (slug: string) => {
 });
 
 export const getSkills = cache(async () => {
-  return sanityClient.fetch<Skill[]>(skillsQuery);
+  try {
+    return await sanityClient.fetch<Skill[]>(skillsQuery);
+  } catch (error) {
+    console.warn("Sanity fetch failed ( likely missing project ID ). Returning empty array.");
+    return [];
+  }
 });
