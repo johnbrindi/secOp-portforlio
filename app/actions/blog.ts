@@ -1,27 +1,7 @@
 'use server';
 
-import { createAdminClient } from '@/utils/supabase/admin';
+import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-// import { redirect } from 'next/navigation';
-
-export async function createBlog(formData: FormData) {
-    const supabase = createAdminClient();
-
-    const title = formData.get('title') as string;
-    const excerpt = formData.get('excerpt') as string;
-    const content = formData.get('content') as string;
-    const category = formData.get('category') as string;
-    const tags = (formData.get('tags') as string)?.split(',').map((tag) => tag.trim()) || [];
-    const featured = formData.get('featured') === 'on';
-
-    const imageFile = formData.get('imageFile') as File | null;
-    const image_url = formData.get('image') as string || '';
-
-    if (imageFile && imageFile.size > 0) {
-        // TODO: Implement Storage Upload
-    }
-
-    const { error } = await supabase.from('posts').insert([
         {
             title,
             excerpt,

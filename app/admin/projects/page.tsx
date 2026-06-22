@@ -2,6 +2,8 @@ import AdminTable from '../../components/admin/AdminTable';
 import AdminProjectForm from '../../components/admin/AdminProjectForm';
 import prisma from '../../../lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminProjects() {
   const projectsData = await prisma.projects.findMany({
     orderBy: { created_at: 'desc' }

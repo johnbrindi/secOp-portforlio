@@ -1,6 +1,8 @@
 import AdminSkillsForm from '../../components/admin/AdminSkillsForm';
 import prisma from '../../../lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminSkills() {
   const skillsData = await prisma.skills.findMany({
     orderBy: { created_at: 'desc' }

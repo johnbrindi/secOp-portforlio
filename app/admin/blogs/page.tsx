@@ -2,6 +2,8 @@ import AdminTable from '../../components/admin/AdminTable';
 import AdminBlogForm from '../../components/admin/AdminBlogForm';
 import prisma from '../../../lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminBlogs() {
   const blogsData = await prisma.posts.findMany({
     orderBy: { created_at: 'desc' }

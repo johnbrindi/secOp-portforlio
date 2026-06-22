@@ -2,6 +2,8 @@ import AdminTable from '../../components/admin/AdminTable';
 import AdminCertificationForm from '../../components/admin/AdminCertificationForm';
 import prisma from '../../../lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminCertifications() {
   const certsData = await prisma.certifications.findMany({
     orderBy: { created_at: 'desc' }

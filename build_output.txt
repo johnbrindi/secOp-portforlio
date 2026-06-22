@@ -1,0 +1,40 @@
+
+> cybersec-portfolio@0.1.0 build
+> next build
+
+   ▲ Next.js 15.5.6
+   - Environments: .env.local, .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 3.8s
+   Linting and checking validity of types ...
+   Collecting page data ...
+[Error: Failed to collect configuration for /admin/skills] {
+  [cause]: Error [PrismaClientInitializationError]: `PrismaClient` needs to be constructed with a non-empty, valid `PrismaClientOptions`:
+  
+  ```
+  new PrismaClient({
+    ...
+  })
+  ```
+  
+  or
+  
+  ```
+  constructor() {
+    super({ ... });
+  }
+  ```
+            
+      at 23622 (C:\Users\INTER-TECH\Desktop\SecOps\.next\server\app\admin\skills\page.js:2:8218)
+      at c (C:\Users\INTER-TECH\Desktop\SecOps\.next\server\webpack-runtime.js:1:128)
+      at 76983 (C:\Users\INTER-TECH\Desktop\SecOps\.next\server\app\admin\skills\page.js:2:13404)
+      at Function.c (C:\Users\INTER-TECH\Desktop\SecOps\.next\server\webpack-runtime.js:1:128) {
+    clientVersion: '7.8.0',
+    errorCode: undefined,
+    retryable: undefined
+  }
+}
+
+> Build error occurred
+[Error: Failed to collect page data for /admin/skills] { type: 'Error' }

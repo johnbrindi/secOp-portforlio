@@ -1,6 +1,8 @@
 import AdminProfileForm from '../../components/admin/AdminProfileForm';
 import prisma from '../../../lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminProfile() {
   const profileData = await prisma.profiles.findFirst({
     orderBy: { updated_at: 'desc' }
