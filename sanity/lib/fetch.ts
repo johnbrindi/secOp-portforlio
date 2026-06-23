@@ -4,11 +4,21 @@ import { projectBySlugQuery, projectsQuery, skillsQuery } from "./queries";
 import type { Project, Skill } from "@/sanity/types";
 
 export const getProjects = cache(async () => {
-  return sanityClient.fetch<Project[]>(projectsQuery);
+  try {
+    return await sanityClient.fetch<Project[]>(projectsQuery);
+  } catch (error) {
+    console.warn("Sanity fetch failed ( likely missing project ID ). Returning empty array.");
+    return [];
+  }
 });
 
 export const getProjectBySlug = cache(async (slug: string) => {
-  return sanityClient.fetch<Project | null>(projectBySlugQuery, { slug });
+  try {
+    return await sanityClient.fetch<Project | null>(projectBySlugQuery, { slug });
+  } catch (error) {
+    console.warn("Sanity fetch failed ( likely missing project ID ). Returning null.");
+    return null;
+  }
 });
 
 export const getSkills = cache(async () => {
