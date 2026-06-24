@@ -1,32 +1,112 @@
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
+import { GraduationCap, Mic, Award, BookOpen, Shield, Network, Globe, Terminal } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About — Mazweoh John Brindi",
+  title: "About — Mazwewoh John Brindi",
   description:
-    "Learn about Mazweoh John Brindi N., a cybersecurity professional specialising in SOC operations, network administration, and web penetration testing.",
+    "Learn about Mazwewoh John Brindi Nwosoh, a Cybersecurity Lead and IT professional specialising in SOC operations, network security, web penetration testing, and founder of ZIGEX.",
 };
 
 const timeline = [
   {
+    year: "2025",
+    role: "Cybersecurity Lead — Speaker",
+    org: "DevFest Bamenda 2025 · Google Developer Groups",
+    note: "Led the cybersecurity track at DevFest Bamenda 2025, delivering sessions on practical security for developers and youth digital empowerment across Cameroon.",
+  },
+  {
     year: "2024",
-    role: "Web Penetration Testing Intern",
+    role: "Founder & Lead Developer",
+    org: "ZIGEX Platform",
+    note: "Founded ZIGEX — a career and internship platform for students across Cameroon. Scaled to 500+ active users. Stack: Next.js, TypeScript, PostgreSQL, cloud deployment.",
+  },
+  {
+    year: "2024",
+    role: "Web Penetration Testing",
     org: "SEED Cybersecurity",
-    note: "Research, exploit, and report on OWASP Top 10 vulnerabilities in a controlled lab environment.",
+    note: "Researched, exploited, and documented OWASP Top 10 vulnerabilities in a controlled lab environment. Produced formal penetration testing reports.",
   },
   {
     year: "2023",
     role: "SOC Analyst",
     org: "Freelance / Consulting",
-    note: "Monitored SIEM alerts, triaged incidents, and performed log analysis across multiple client environments.",
+    note: "Monitored SIEM alerts, triaged security incidents, and performed log analysis across multiple client environments. Tuned detection rules to reduce false-positive rates.",
   },
   {
     year: "2022",
-    role: "Network Administrator",
+    role: "Network Security Practitioner",
     org: "Academic / Personal Projects",
-    note: "Designed and deployed network topologies; built an Intrusion Detection System from scratch.",
+    note: "Designed multi-VLAN network topologies with DMZ, firewalls, and IDS/IPS using PNETLab and Cisco IOS. Built a home IDS from scratch using Suricata.",
   },
+];
+
+const skills = [
+  { name: "Security Operations (SOC)", level: 88, category: "Operations" },
+  { name: "Web Application Pentesting", level: 85, category: "Offensive" },
+  { name: "Network Security & Design", level: 82, category: "Infrastructure" },
+  { name: "SIEM & Log Analysis", level: 86, category: "Operations" },
+  { name: "Identity & Access Management", level: 78, category: "IAM" },
+  { name: "Threat Hunting", level: 75, category: "Operations" },
+  { name: "Incident Response", level: 80, category: "Operations" },
+  { name: "Python / Scripting", level: 72, category: "Engineering" },
+];
+
+const education = [
+  {
+    degree: "Higher National Diploma — Computer Science",
+    school: "National Higher Polytechnic Institute (NAHPI)",
+    location: "Bamenda, Cameroon",
+    year: "2022 – Present",
+  },
+  {
+    degree: "University of Bamenda",
+    school: "Faculty of Science",
+    location: "Bamenda, Cameroon",
+    year: "2020 – 2022",
+  },
+];
+
+const certifications = [
+  { name: "Certified Ethical Hacker (CEH)", issuer: "EC-Council", status: "earned" },
+  { name: "CompTIA Security+", issuer: "CompTIA", status: "earned" },
+  { name: "AWS Certified Solutions Architect", issuer: "Amazon Web Services", status: "earned" },
+  { name: "OSCP", issuer: "Offensive Security", status: "in-progress" },
+  { name: "Okta Certified Professional", issuer: "Okta", status: "in-progress" },
+  { name: "AWS Security Specialty", issuer: "Amazon Web Services", status: "in-progress" },
+];
+
+const communityWork = [
+  {
+    title: "DevFest Bamenda 2025",
+    role: "Cybersecurity Lead & Speaker",
+    description: "Delivered cybersecurity sessions to developers and students at Cameroon's largest Google Developer Festival.",
+    icon: Mic,
+    color: "var(--accent)",
+  },
+  {
+    title: "ZIGEX Youth Initiative",
+    role: "Founder",
+    description: "Built a platform to connect Cameroonian students with internships and career opportunities, reaching 500+ users.",
+    icon: Globe,
+    color: "#4ade80",
+  },
+  {
+    title: "Security Education Advocacy",
+    role: "Contributor",
+    description: "Active advocate for accessible cybersecurity education for youth across Cameroon and West Africa.",
+    icon: Shield,
+    color: "var(--accent-2)",
+  },
+];
+
+const currentlyLearning = [
+  "Offensive Security Certified Professional (OSCP) — active lab practice",
+  "SCIM provisioning and enterprise identity lifecycle management",
+  "Advanced threat hunting with YARA rules and behavioral analysis",
+  "Rust for low-level security tooling",
+  "Cloud-native security architecture on AWS",
 ];
 
 export default function AboutMePage() {
@@ -38,11 +118,11 @@ export default function AboutMePage() {
 
           {/* ── Bio block ───────────────────────────────── */}
           <div
-            className="grid md:grid-cols-[200px_1fr] gap-12 items-start mb-20"
+            className="grid md:grid-cols-[220px_1fr] gap-12 items-start mb-20"
             style={{ borderBottom: "1px solid var(--border)", paddingBottom: "var(--space-xl)" }}
           >
             {/* Avatar */}
-            <div className="relative w-40 h-40 md:w-48 md:h-48 mx-auto md:mx-0 flex-shrink-0">
+            <div className="relative flex-shrink-0 mx-auto md:mx-0">
               <div
                 className="absolute inset-0 rounded-2xl"
                 style={{
@@ -52,47 +132,96 @@ export default function AboutMePage() {
                 }}
               />
               <img
-                src="/pic.jpg"
-                alt="Mazweoh John Brindi"
-                className="relative w-full h-full object-cover rounded-2xl"
-                style={{ border: "1px solid var(--border-hi)" }}
+                src="/profile.jpg"
+                alt="Mazwewoh John Brindi — DevFest Bamenda 2025"
+                style={{
+                  position: "relative",
+                  width: "200px",
+                  height: "240px",
+                  objectFit: "cover",
+                  objectPosition: "center top",
+                  borderRadius: "16px",
+                  border: "1px solid var(--border-hi)",
+                  display: "block",
+                }}
               />
             </div>
 
             {/* Text */}
             <div>
               <p className="text-label mb-3">About me</p>
-              <h1 className="text-headline mb-4">
-                Mazweoh John Brindi N.
+              <h1 className="text-headline mb-3">
+                Mazwewoh John Brindi Nwosoh
               </h1>
               <p
                 className="text-small font-medium mb-6 tracking-wide"
                 style={{ color: "var(--accent)" }}
               >
-                SOC Analyst · Network Administrator · Security Researcher · Web Pentester
+                Cybersecurity Lead · SOC Analyst · Network Security Practitioner · Web Pentester · Founder of ZIGEX
               </p>
               <div className="prose" style={{ fontSize: "var(--step-1)" }}>
                 <p>
-                  I got into security because I wanted to understand how things
-                  break — not just how to patch them. That curiosity led me from
-                  building network topologies to designing IDS systems, and
-                  eventually to web penetration testing and SOC operations.
+                  I got into security because I wanted to understand how systems
+                  break — not just how to patch them. That curiosity led me from building
+                  network topologies and IDS systems to web penetration testing and SOC operations.
                 </p>
                 <p>
-                  My approach is simple: think like an attacker, document like an
-                  engineer, and communicate like a human. I care deeply about making
-                  security accessible — not just for enterprises, but for everyone.
+                  Outside of security work, I founded <strong>ZIGEX</strong> — a platform built to connect
+                  students across Cameroon with internships and career opportunities. I spoke at
+                  DevFest Bamenda 2025, and I remain active in digital empowerment initiatives
+                  for youth across West Africa.
                 </p>
                 <p>
-                  When I&apos;m not in a terminal, I&apos;m writing about what I&apos;ve learned,
-                  competing in CTFs, or exploring the next vulnerability class.
+                  My approach is straightforward: think like an attacker, document like an
+                  engineer, and communicate like a human. I believe security should be
+                  accessible — not only for enterprises, but for every developer and end user.
                 </p>
               </div>
             </div>
           </div>
 
+          {/* ── Skills Proficiency ───────────────────────── */}
+          <div
+            className="mb-20"
+            style={{ borderBottom: "1px solid var(--border)", paddingBottom: "var(--space-xl)" }}
+          >
+            <p className="text-label mb-8">Skills proficiency</p>
+            <div className="grid md:grid-cols-2 gap-x-16 gap-y-6">
+              {skills.map((skill) => (
+                <div key={skill.name}>
+                  <div className="flex justify-between mb-2">
+                    <span className="text-small font-medium" style={{ color: "var(--text)" }}>
+                      {skill.name}
+                    </span>
+                    <span className="text-small font-mono" style={{ color: "var(--text-dim)" }}>
+                      {skill.level}%
+                    </span>
+                  </div>
+                  <div
+                    className="h-1.5 rounded-full overflow-hidden"
+                    style={{ background: "var(--surface-3)" }}
+                  >
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${skill.level}%`,
+                        background: "linear-gradient(90deg, var(--accent), var(--accent-2))",
+                      }}
+                    />
+                  </div>
+                  <p className="text-small mt-1" style={{ color: "var(--text-dim)", fontSize: ".65rem" }}>
+                    {skill.category}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* ── Timeline ────────────────────────────────── */}
-          <div>
+          <div
+            className="mb-20"
+            style={{ borderBottom: "1px solid var(--border)", paddingBottom: "var(--space-xl)" }}
+          >
             <p className="text-label mb-8">Experience</p>
             <div className="relative flex flex-col gap-0">
               {/* Vertical line */}
@@ -118,7 +247,6 @@ export default function AboutMePage() {
                     >
                       {item.year}
                     </span>
-                    {/* dot */}
                     <div
                       className="hidden md:block w-2 h-2 rounded-full mt-1 ml-auto mr-[-4.5px] flex-shrink-0"
                       style={{ background: "var(--accent)" }}
@@ -142,6 +270,182 @@ export default function AboutMePage() {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* ── Education ───────────────────────────────── */}
+          <div
+            className="mb-20"
+            style={{ borderBottom: "1px solid var(--border)", paddingBottom: "var(--space-xl)" }}
+          >
+            <p className="text-label mb-8">Education</p>
+            <div className="flex flex-col gap-6">
+              {education.map((edu, i) => (
+                <div
+                  key={i}
+                  className="card flex items-start gap-4 p-6"
+                >
+                  <div
+                    className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                    style={{ background: "var(--accent-glow)", color: "var(--accent)" }}
+                  >
+                    <GraduationCap className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-display font-semibold" style={{ fontSize: "var(--step-1)" }}>
+                      {edu.degree}
+                    </h3>
+                    <p className="text-small" style={{ color: "var(--accent-2)" }}>
+                      {edu.school} · {edu.location}
+                    </p>
+                    <p className="text-small" style={{ color: "var(--text-dim)" }}>
+                      {edu.year}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Certifications ──────────────────────────── */}
+          <div
+            className="mb-20"
+            style={{ borderBottom: "1px solid var(--border)", paddingBottom: "var(--space-xl)" }}
+          >
+            <p className="text-label mb-8">Certifications</p>
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-3">
+              {certifications.map((cert, i) => (
+                <div
+                  key={i}
+                  className="card p-4 flex items-start gap-3"
+                  style={
+                    cert.status === "in-progress"
+                      ? {
+                          borderStyle: "dashed",
+                          opacity: 0.7,
+                        }
+                      : {}
+                  }
+                >
+                  <Award
+                    className="w-5 h-5 flex-shrink-0 mt-0.5"
+                    style={{
+                      color: cert.status === "earned" ? "var(--accent)" : "var(--text-dim)",
+                    }}
+                  />
+                  <div>
+                    <p className="font-medium text-small">{cert.name}</p>
+                    <p className="text-small" style={{ color: "var(--text-muted)", fontSize: ".7rem" }}>
+                      {cert.issuer}
+                    </p>
+                    {cert.status === "in-progress" && (
+                      <span
+                        className="text-label mt-1 inline-block"
+                        style={{ fontSize: ".6rem", color: "#f59e0b" }}
+                      >
+                        In progress
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── Community ───────────────────────────────── */}
+          <div
+            id="community"
+            className="mb-20"
+            style={{ borderBottom: "1px solid var(--border)", paddingBottom: "var(--space-xl)" }}
+          >
+            <p className="text-label mb-8">Community leadership</p>
+            <div className="grid md:grid-cols-3 gap-4">
+              {communityWork.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <div key={item.title} className="card p-6 flex flex-col gap-4">
+                    <div
+                      className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
+                      style={{
+                        background: `color-mix(in srgb, ${item.color} 14%, transparent)`,
+                        color: item.color,
+                      }}
+                    >
+                      <Icon className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <h3 className="font-display font-semibold mb-1" style={{ fontSize: "var(--step-1)" }}>
+                        {item.title}
+                      </h3>
+                      <p className="text-small mb-2" style={{ color: "var(--accent-2)", fontSize: ".72rem" }}>
+                        {item.role}
+                      </p>
+                      <p className="text-small" style={{ color: "var(--text-muted)" }}>
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* ── Currently Learning ──────────────────────── */}
+          <div
+            className="mb-20"
+            style={{ borderBottom: "1px solid var(--border)", paddingBottom: "var(--space-xl)" }}
+          >
+            <p className="text-label mb-8">Currently learning</p>
+            <div className="flex flex-col gap-3">
+              {currentlyLearning.map((item, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-3 py-3"
+                  style={{ borderBottom: "1px solid var(--border)" }}
+                >
+                  <span
+                    className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 font-mono font-bold"
+                    style={{
+                      background: "var(--accent-glow)",
+                      color: "var(--accent)",
+                      fontSize: ".6rem",
+                    }}
+                  >
+                    {i + 1}
+                  </span>
+                  <p className="text-small" style={{ color: "var(--text-muted)" }}>
+                    {item}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* ── PGP Key ─────────────────────────────────── */}
+          <div>
+            <p className="text-label mb-4">PGP public key</p>
+            <div
+              className="card-glass p-6 rounded-[var(--radius)]"
+            >
+              <p className="text-small mb-3" style={{ color: "var(--text-muted)" }}>
+                For encrypted communications. Import this key to verify signatures or send encrypted messages.
+              </p>
+              {/* TODO: Replace with real PGP public key once generated */}
+              <pre
+                className="font-mono text-small overflow-x-auto p-4 rounded-lg"
+                style={{
+                  background: "var(--surface-3)",
+                  color: "var(--text-dim)",
+                  fontSize: ".7rem",
+                  lineHeight: 1.6,
+                }}
+              >
+{`-----BEGIN PGP PUBLIC KEY BLOCK-----
+TODO: Add real PGP public key here.
+Generate with: gpg --full-generate-key
+Export with:   gpg --armor --export your@email.com
+-----END PGP PUBLIC KEY BLOCK-----`}
+              </pre>
             </div>
           </div>
 

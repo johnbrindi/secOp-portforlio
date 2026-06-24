@@ -5,16 +5,21 @@ import { useRouter } from "next/navigation";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import dummyBlogs from "./dummyBlogs";
+import { Clock, ArrowRight } from "lucide-react";
 
 const CATEGORIES = [
   "All",
+  "SOC",
   "Web Security",
   "Network Security",
-  "Malware Analysis",
   "Pentesting",
-  "Cloud Security",
   "CTF Writeups",
 ];
+
+function formatDate(dateStr: string) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+}
 
 export default function BlogListPage() {
   const router = useRouter();
@@ -39,8 +44,8 @@ export default function BlogListPage() {
               <span className="gradient-text">research</span>
             </h1>
             <p className="text-body" style={{ color: "var(--text-muted)", maxWidth: "48ch" }}>
-              Write-ups from CTF challenges, lessons from real engagements, and
-              honest takes on the security landscape.
+              Write-ups from CTF challenges, SOC operations, and hands-on security research.
+              No fluff — just practical field knowledge.
             </p>
           </div>
 
@@ -54,18 +59,18 @@ export default function BlogListPage() {
                 style={
                   selected === cat
                     ? {
-                      background: "var(--accent)",
-                      color: "#fff",
-                      borderColor: "transparent",
-                      boxShadow: "0 4px 16px var(--accent-glow)",
-                      padding: ".4em 1em",
-                    }
+                        background: "var(--accent)",
+                        color: "#fff",
+                        borderColor: "transparent",
+                        boxShadow: "0 4px 16px var(--accent-glow)",
+                        padding: ".4em 1em",
+                      }
                     : {
-                      background: "var(--surface-2)",
-                      color: "var(--text-muted)",
-                      borderColor: "var(--border)",
-                      padding: ".4em 1em",
-                    }
+                        background: "var(--surface-2)",
+                        color: "var(--text-muted)",
+                        borderColor: "var(--border)",
+                        padding: ".4em 1em",
+                      }
                 }
               >
                 {cat}
@@ -77,7 +82,7 @@ export default function BlogListPage() {
           <div
             className="grid gap-6"
             style={{
-              gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 320px), 1fr))",
+              gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 340px), 1fr))",
             }}
           >
             {filtered.map((blog) => (
@@ -87,7 +92,7 @@ export default function BlogListPage() {
                 onClick={() => router.push(`/blog/${blog.id}`)}
               >
                 {blog.image && (
-                  <div className="overflow-hidden" style={{ height: "180px" }}>
+                  <div className="overflow-hidden" style={{ height: "200px" }}>
                     <img
                       src={blog.image}
                       alt={blog.title}
@@ -117,6 +122,15 @@ export default function BlogListPage() {
                     {blog.excerpt}
                   </p>
 
+                  {/* Meta */}
+                  <div className="flex items-center gap-4 text-small" style={{ color: "var(--text-dim)" }}>
+                    <span className="flex items-center gap-1.5">
+                      <Clock className="w-3 h-3" />
+                      {blog.readTime} min
+                    </span>
+                    <span>{formatDate(blog.publishedAt)}</span>
+                  </div>
+
                   {blog.tags?.length ? (
                     <div className="flex flex-wrap gap-1.5 mt-1">
                       {blog.tags.map((t) => (
@@ -134,10 +148,26 @@ export default function BlogListPage() {
                       ))}
                     </div>
                   ) : null}
+
+                  <div
+                    className="flex items-center gap-1.5 text-small font-medium mt-2 transition-all duration-300 group-hover:gap-3"
+                    style={{ color: "var(--accent)" }}
+                  >
+                    Read article <ArrowRight className="w-3.5 h-3.5" />
+                  </div>
                 </div>
               </article>
             ))}
           </div>
+
+          {filtered.length === 0 && (
+            <div className="text-center py-20">
+              <p className="text-label mb-2">No articles</p>
+              <p className="text-body" style={{ color: "var(--text-muted)" }}>
+                No articles in this category yet.
+              </p>
+            </div>
+          )}
 
         </div>
       </main>

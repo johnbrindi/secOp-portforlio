@@ -392,3 +392,36 @@ footer nav a:hover {
   color: var(--text) !important;
   background: var(--surface-3) !important;
 }
+
+/* ──────────────────────────────────────────────────────
+   ADMIN NAV LINK HOVER
+────────────────────────────────────────────────────── */
+.admin-nav-link:hover {
+  background: var(--surface-2) !important;
+  color: var(--text) !important;
+}
+
+/* ──────────────────────────────────────────────────────
+   SPIN ANIMATION — loader button states
+────────────────────────────────────────────────────── */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin .75s linear infinite;
+}
+
+/* ──────────────────────────────────────────────────────
+   MOBILE RESPONSIVE — ensure tables scroll
+────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .container {
+    padding-inline: 1.25rem;
+  }
+
+  .text-display {
+    font-size: clamp(2.2rem, 10vw, 3.5rem);
+  }
+}

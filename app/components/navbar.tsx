@@ -8,19 +8,22 @@ const routes = [
 	{ name: "About", path: "/about" },
 	{ name: "Projects", path: "/projects" },
 	{ name: "Blog", path: "/blog" },
+	{ name: "Lab", path: "/lab" },
+	{ name: "Achievements", path: "/achievements" },
 	{ name: "Certifications", path: "/certifications" },
+	{ name: "Contact", path: "/contact" },
 ];
 
-// Ticker items — the "Latest Activity" strip inside the navbar
+// Ticker items — Latest Activity strip inside the navbar
 const TICKER_ITEMS = [
 	{ icon: "●", color: "#6e8efb", text: "Actively researching web app pentesting techniques" },
 	{ icon: "●", color: "#a777e3", text: "New blog post: SIEM tuning for SOC teams" },
 	{ icon: "●", color: "#6e8efb", text: "DVWA lab — SQL Injection & CSRF modules complete" },
 	{ icon: "●", color: "#4ade80", text: "Available for security consulting engagements" },
 	{ icon: "●", color: "#a777e3", text: "CTF Write-up: Web Exploitation Challenge published" },
+	{ icon: "●", color: "#4ade80", text: "Cybersecurity Lead — DevFest Bamenda 2025" },
 ];
 
-// Double the list so the seamless loop works
 const DOUBLED = [...TICKER_ITEMS, ...TICKER_ITEMS];
 
 export default function Navbar() {
@@ -71,12 +74,12 @@ export default function Navbar() {
 				</Link>
 
 				{/* Desktop links */}
-				<nav className="hidden md:flex items-center gap-1">
+				<nav className="hidden lg:flex items-center gap-1">
 					{routes.map((r) => (
 						<Link
 							key={r.path}
 							href={r.path}
-							className="px-4 py-2 rounded-md text-[var(--step-0)] text-[var(--text-muted)] font-medium hover:text-[var(--text)] hover:bg-[var(--surface-3)] transition-all duration-200 tracking-wide"
+							className="px-3 py-2 rounded-md text-[var(--step--1)] text-[var(--text-muted)] font-medium hover:text-[var(--text)] hover:bg-[var(--surface-3)] transition-all duration-200 tracking-wide"
 						>
 							{r.name}
 						</Link>
@@ -106,7 +109,7 @@ export default function Navbar() {
 
 					{/* Mobile hamburger */}
 					<button
-						className="md:hidden w-9 h-9 flex items-center justify-center rounded-md text-[var(--text-muted)] hover:bg-[var(--surface-3)] transition-colors"
+						className="lg:hidden w-9 h-9 flex items-center justify-center rounded-md text-[var(--text-muted)] hover:bg-[var(--surface-3)] transition-colors"
 						onClick={() => setMenuOpen(!menuOpen)}
 						aria-label={menuOpen ? "Close menu" : "Open menu"}
 					>
@@ -117,7 +120,7 @@ export default function Navbar() {
 
 			{/* ── Mobile Menu ─────────────────────────────────── */}
 			{menuOpen && (
-				<div className="md:hidden border-t border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur-xl">
+				<div className="lg:hidden border-t border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur-xl">
 					<nav className="container py-4 flex flex-col gap-1">
 						{routes.map((r) => (
 							<Link

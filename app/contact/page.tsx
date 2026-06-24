@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
-import { Mail, Github, Linkedin, Send, CheckCircle } from "lucide-react";
+import { Mail, Github, Linkedin, Send, CheckCircle, AlertCircle, Loader2, Calendar } from "lucide-react";
+import type { Metadata } from "next";
 
 const SOCIALS = [
   {
@@ -27,9 +28,9 @@ const SOCIALS = [
 ];
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -37,14 +38,35 @@ export default function ContactPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) {
-      setError("Please fill in all fields.");
+      setErrorMsg("Please fill in all required fields.");
       return;
     }
-    setError(null);
-    setSubmitted(true);
+    setErrorMsg(null);
+    setStatus("loading");
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setErrorMsg(data.error || "Something went wrong. Please try again.");
+        setStatus("error");
+        return;
+      }
+
+      setStatus("success");
+    } catch {
+      setErrorMsg("Network error. Please check your connection and try again.");
+      setStatus("error");
+    }
   }
 
   return (
@@ -61,8 +83,7 @@ export default function ContactPage() {
               <span className="gradient-text">conversation</span>
             </h1>
             <p className="text-body" style={{ color: "var(--text-muted)", maxWidth: "48ch" }}>
-              Whether it&apos;s a consulting inquiry, collaboration idea, or just a
-              security question — I read every message.
+              Whether it&apos;s a consulting inquiry, collaboration idea, or just a security question — I read every message.
             </p>
           </div>
 
@@ -70,7 +91,7 @@ export default function ContactPage() {
 
             {/* ── Form ──────────────────────────────────── */}
             <div>
-              {submitted ? (
+              {status === "success" ? (
                 <div
                   className="card-glass flex flex-col items-center gap-4 py-16 text-center rounded-[var(--radius-lg)]"
                 >
@@ -82,12 +103,18 @@ export default function ContactPage() {
                     className="font-display font-semibold"
                     style={{ fontSize: "var(--step-2)" }}
                   >
-                    Message sent!
+                    Message received
                   </h2>
                   <p style={{ color: "var(--text-muted)" }}>
-                    Thanks for reaching out. I&apos;ll get back to you within a day
-                    or two.
+                    Thanks for reaching out. I&apos;ll get back to you within 1–2 days.
                   </p>
+                  <button
+                    onClick={() => { setStatus("idle"); setForm({ name: "", email: "", subject: "", message: "" }); }}
+                    className="btn btn-outline text-small"
+                    style={{ marginTop: "1rem", padding: ".5em 1.2em" }}
+                  >
+                    Send another message
+                  </button>
                 </div>
               ) : (
                 <form
@@ -102,7 +129,7 @@ export default function ContactPage() {
                         className="text-label"
                         style={{ fontSize: ".7rem" }}
                       >
-                        Your Name
+                        Your Name <span style={{ color: "#f87171" }}>*</span>
                       </label>
                       <input
                         id="name"
@@ -113,6 +140,7 @@ export default function ContactPage() {
                         onChange={handleChange}
                         className="field"
                         required
+                        disabled={status === "loading"}
                       />
                     </div>
                     <div className="flex flex-col gap-1.5">
@@ -121,7 +149,7 @@ export default function ContactPage() {
                         className="text-label"
                         style={{ fontSize: ".7rem" }}
                       >
-                        Email Address
+                        Email Address <span style={{ color: "#f87171" }}>*</span>
                       </label>
                       <input
                         id="email"
@@ -132,8 +160,29 @@ export default function ContactPage() {
                         onChange={handleChange}
                         className="field"
                         required
+                        disabled={status === "loading"}
                       />
                     </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label
+                      htmlFor="subject"
+                      className="text-label"
+                      style={{ fontSize: ".7rem" }}
+                    >
+                      Subject
+                    </label>
+                    <input
+                      id="subject"
+                      name="subject"
+                      type="text"
+                      placeholder="Consulting inquiry, collaboration, security question…"
+                      value={form.subject}
+                      onChange={handleChange}
+                      className="field"
+                      disabled={status === "loading"}
+                    />
                   </div>
 
                   <div className="flex flex-col gap-1.5">
@@ -142,32 +191,54 @@ export default function ContactPage() {
                       className="text-label"
                       style={{ fontSize: ".7rem" }}
                     >
-                      Message
+                      Message <span style={{ color: "#f87171" }}>*</span>
                     </label>
                     <textarea
                       id="message"
                       name="message"
-                      placeholder="Tell me what you need…"
+                      placeholder="Describe what you need…"
                       value={form.message}
                       onChange={handleChange}
                       rows={6}
                       className="field resize-none"
                       required
+                      disabled={status === "loading"}
                     />
                   </div>
 
-                  {error && (
-                    <p
-                      className="text-small"
-                      style={{ color: "#f87171" }}
+                  {(errorMsg || status === "error") && (
+                    <div
+                      className="flex items-start gap-2 p-3 rounded-lg"
+                      style={{ background: "rgba(248,113,113,.08)", border: "1px solid rgba(248,113,113,.2)" }}
                     >
-                      {error}
-                    </p>
+                      <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#f87171" }} />
+                      <p className="text-small" style={{ color: "#f87171" }}>
+                        {errorMsg}
+                      </p>
+                    </div>
                   )}
 
-                  <button type="submit" className="btn btn-primary self-start">
-                    Send Message <Send className="w-4 h-4" />
+                  <button
+                    type="submit"
+                    className="btn btn-primary self-start"
+                    disabled={status === "loading"}
+                    style={{ opacity: status === "loading" ? 0.7 : 1 }}
+                  >
+                    {status === "loading" ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Sending…
+                      </>
+                    ) : (
+                      <>
+                        Send Message <Send className="w-4 h-4" />
+                      </>
+                    )}
                   </button>
+
+                  <p className="text-small" style={{ color: "var(--text-dim)", fontSize: ".7rem" }}>
+                    Typical response time: 1–2 business days.
+                  </p>
                 </form>
               )}
             </div>
@@ -182,7 +253,7 @@ export default function ContactPage() {
                   <a
                     key={s.label}
                     href={s.href}
-                    target="_blank"
+                    target={s.href.startsWith("mailto") ? undefined : "_blank"}
                     rel="noreferrer"
                     className="card flex items-center gap-4 p-4 no-underline"
                   >
@@ -210,10 +281,35 @@ export default function ContactPage() {
                 );
               })}
 
-              {/* Availability note */}
-              <div
-                className="card-glass p-4 rounded-[var(--radius)] mt-2"
+              {/* Schedule a call */}
+              <a
+                href="https://calendly.com/johnbrindimazwewoh"
+                target="_blank"
+                rel="noreferrer"
+                className="card flex items-center gap-4 p-4 no-underline"
               >
+                <div
+                  className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+                  style={{ background: "rgba(74,222,128,.1)", color: "#4ade80" }}
+                >
+                  <Calendar className="w-4 h-4" />
+                </div>
+                <div>
+                  <p
+                    className="text-small font-medium"
+                    style={{ color: "var(--text-muted)", marginBottom: ".1em" }}
+                  >
+                    Schedule a call
+                  </p>
+                  {/* TODO: Replace with actual Calendly/Cal.com link once account is set up */}
+                  <p className="text-small" style={{ color: "var(--text)" }}>
+                    Book a 30-min consultation
+                  </p>
+                </div>
+              </a>
+
+              {/* Availability note */}
+              <div className="card-glass p-4 rounded-[var(--radius)] mt-2">
                 <div className="flex items-center gap-2 mb-2">
                   <span
                     className="w-2 h-2 rounded-full animate-pulse"
@@ -222,8 +318,7 @@ export default function ContactPage() {
                   <span className="text-small font-medium">Currently available</span>
                 </div>
                 <p className="text-small" style={{ color: "var(--text-muted)" }}>
-                  Open to part-time consulting, internship, and freelance
-                  security engagements.
+                  Open to part-time consulting, internship, and freelance security engagements.
                 </p>
               </div>
             </aside>

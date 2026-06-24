@@ -1,11 +1,11 @@
-import { Shield, Terminal, ArrowRight } from "lucide-react";
+import { Shield, Terminal, ArrowRight, Download, Network } from "lucide-react";
 import Link from "next/link";
 
 export default function HeroSection() {
   return (
     <section className="relative min-h-screen flex flex-col justify-center section pt-[7rem]">
       <div className="container">
-        <div className="grid md:grid-cols-[1fr_auto] gap-16 items-center">
+        <div className="grid md:grid-cols-[1fr_auto] gap-12 lg:gap-20 items-center">
 
           {/* ── Left: Text ──────────────────────────────── */}
           <div className="space-y-8 max-w-2xl">
@@ -33,9 +33,9 @@ export default function HeroSection() {
                 maxWidth: "52ch",
               }}
             >
-              I&apos;m <strong style={{ color: "var(--text)", fontWeight: 600 }}>Mazweoh John Brindi N.</strong> — a SOC analyst,
-              network administrator, and web pentester who thinks like an attacker
-              to build defenses that actually hold.
+              I&apos;m <strong style={{ color: "var(--text)", fontWeight: 600 }}>Mazwewoh John Brindi N.</strong> — a Cybersecurity Lead,
+              SOC analyst, and web pentester. Founder of <strong style={{ color: "var(--accent)" }}>ZIGEX</strong>.
+              I think like an attacker to build defenses that actually hold.
             </p>
 
             {/* CTAs */}
@@ -46,6 +46,16 @@ export default function HeroSection() {
               <Link href="/contact" className="btn btn-outline">
                 Get in Touch
               </Link>
+              {/* TODO: Replace href with actual CV PDF path once uploaded */}
+              <a
+                href="/cv-mazwewoh-john-brindi.pdf"
+                download
+                className="btn btn-outline"
+                style={{ borderColor: "var(--border)" }}
+              >
+                <Download className="w-4 h-4" />
+                Download CV
+              </a>
             </div>
 
             {/* Quick stats */}
@@ -56,6 +66,7 @@ export default function HeroSection() {
               {[
                 { value: "3+", label: "Years in security" },
                 { value: "10+", label: "Projects completed" },
+                { value: "500+", label: "ZIGEX users" },
                 { value: "CTF", label: "Active competitor" },
               ].map((s) => (
                 <div key={s.label}>
@@ -74,48 +85,64 @@ export default function HeroSection() {
           </div>
 
           {/* ── Right: Avatar ───────────────────────────── */}
-          <div className="hidden md:block relative flex-shrink-0">
+          <div className="hidden md:flex flex-col items-center relative flex-shrink-0">
             {/* Background aura */}
             <div
-              className="absolute inset-0 rounded-full"
+              className="absolute inset-0 rounded-[2rem]"
               style={{
                 background:
                   "radial-gradient(ellipse at center, var(--accent-glow) 0%, transparent 70%)",
-                transform: "scale(1.3)",
+                transform: "scale(1.25)",
                 zIndex: 0,
               }}
             />
 
-            {/* Avatar ring */}
+            {/* Avatar frame — large, rectangular with rounded corners */}
             <div
-              className="relative w-56 h-56 rounded-full overflow-hidden"
+              className="relative overflow-hidden"
               style={{
+                width: "320px",
+                height: "400px",
+                borderRadius: "24px",
                 border: "1px solid var(--border-hi)",
-                boxShadow: "0 0 0 6px var(--surface), 0 0 40px var(--accent-glow)",
+                boxShadow: "0 0 0 6px var(--surface), 0 0 60px var(--accent-glow)",
                 zIndex: 1,
               }}
             >
               <img
-                src="/me.jpg"
-                alt="Mazweoh John Brindi"
-                className="w-full h-full object-cover"
+                src="/profile.jpg"
+                alt="Mazwewoh John Brindi — DevFest Bamenda 2025"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "center top",
+                  display: "block",
+                }}
               />
             </div>
 
             {/* Floating badges */}
             <div
-              className="absolute -bottom-4 -left-6 card flex items-center gap-2 px-3 py-2"
+              className="absolute -bottom-4 -left-8 card flex items-center gap-2 px-3 py-2"
               style={{ zIndex: 2, background: "var(--surface-2)" }}
             >
               <Shield className="w-4 h-4" style={{ color: "var(--accent)" }} />
               <span className="text-small font-medium">SOC Analyst</span>
             </div>
             <div
-              className="absolute -top-3 -right-4 card flex items-center gap-2 px-3 py-2"
+              className="absolute -top-3 -right-8 card flex items-center gap-2 px-3 py-2"
               style={{ zIndex: 2, background: "var(--surface-2)" }}
             >
               <Terminal className="w-4 h-4" style={{ color: "var(--accent-2)" }} />
               <span className="text-small font-medium">Web Pentester</span>
+            </div>
+            <div
+              className="absolute bottom-20 -right-10 card flex items-center gap-2 px-3 py-2"
+              style={{ zIndex: 2, background: "var(--surface-2)" }}
+            >
+              <Network className="w-4 h-4" style={{ color: "#4ade80" }} />
+              <span className="text-small font-medium">Founder · ZIGEX</span>
             </div>
           </div>
 

@@ -5,6 +5,8 @@ const links = [
   { name: "About", href: "/about" },
   { name: "Projects", href: "/projects" },
   { name: "Blog", href: "/blog" },
+  { name: "Lab", href: "/lab" },
+  { name: "Achievements", href: "/achievements" },
   { name: "Certifications", href: "/certifications" },
   { name: "Contact", href: "/contact" },
 ];
@@ -44,7 +46,7 @@ export default function Footer() {
             className="text-small"
             style={{ color: "var(--text-muted)", maxWidth: "28ch" }}
           >
-            SOC Analyst · Network Admin · Security Researcher
+            Cybersecurity Lead · SOC Analyst · Founder of ZIGEX
           </p>
         </div>
 
@@ -93,7 +95,7 @@ export default function Footer() {
             </a>
           </div>
           <p className="text-small" style={{ color: "var(--text-dim)" }}>
-            © {year} Mazweoh John Brindi N.
+            © {year} Mazwewoh John Brindi Nwosoh
           </p>
         </div>
       </div>

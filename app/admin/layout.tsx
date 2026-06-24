@@ -1,10 +1,25 @@
-import AdminSidebar from '../components/admin/AdminSidebar';
+import AdminSidebar from "../components/admin/AdminSidebar";
+import type { Metadata } from "next";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-col sm:flex-row min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black">
+    <div
+      style={{
+        display: "flex",
+        minHeight: "100vh",
+        background: "var(--bg)",
+      }}
+    >
       <AdminSidebar />
-      <main className="flex-1 p-4 sm:p-8">{children}</main>
+      <main
+        style={{
+          flex: 1,
+          padding: "clamp(1.5rem, 4vw, 2.5rem)",
+          overflowX: "hidden",
+        }}
+      >
+        {children}
+      </main>
     </div>
   );
 }

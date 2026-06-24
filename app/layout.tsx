@@ -8,9 +8,18 @@ const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space
 const spaceMono = Space_Mono({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-space-mono" });
 
 export const metadata: Metadata = {
-  title: "Mazweoh John Brindi — Security Researcher & SOC Analyst",
+  title: "Mazwewoh John Brindi — Cybersecurity Lead & Security Researcher",
   description:
-    "Portfolio of Mazweoh John Brindi N. — SOC analyst, network administrator, web pentester and security researcher.",
+    "Portfolio of Mazwewoh John Brindi Nwosoh — Cybersecurity Lead, SOC analyst, network security practitioner, web pentester, and founder of ZIGEX. Based in Cameroon.",
+  keywords: [
+    "cybersecurity",
+    "SOC analyst",
+    "security researcher",
+    "web pentesting",
+    "ZIGEX",
+    "Cameroon",
+    "Mazwewoh John Brindi",
+  ],
 };
 
 export default function RootLayout({
