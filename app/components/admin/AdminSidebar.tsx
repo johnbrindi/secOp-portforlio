@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
-import { Shield, MessageSquare, FileText, Code2, Award, User, Wrench, Home } from "lucide-react";
+import { Shield, MessageSquare, FileText, Code2, Award, User, Wrench, Home, LogOut } from "lucide-react";
+import { signOut } from "next-auth/react";
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: Home },
@@ -75,8 +78,33 @@ export default function AdminSidebar() {
         })}
       </nav>
 
-      {/* Back to site */}
-      <div style={{ paddingTop: "1rem", borderTop: "1px solid var(--border)" }}>
+      {/* Footer Actions */}
+      <div style={{ paddingTop: "1rem", borderTop: "1px solid var(--border)", display: "flex", flexDirection: "column", gap: "2px" }}>
+        <button
+          onClick={() => signOut({ callbackUrl: '/' })}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            padding: ".55em .75em",
+            borderRadius: "8px",
+            color: "#f87171",
+            fontSize: "var(--step--1)",
+            fontWeight: 500,
+            textDecoration: "none",
+            transition: "all .15s ease",
+            cursor: "pointer",
+            border: "none",
+            background: "transparent",
+            textAlign: "left",
+            width: "100%",
+          }}
+          className="hover:bg-[rgba(248,113,113,0.1)]"
+        >
+          <LogOut style={{ width: "14px", height: "14px" }} />
+          Sign Out
+        </button>
+
         <Link
           href="/"
           style={{

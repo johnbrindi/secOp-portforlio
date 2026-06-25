@@ -159,6 +159,14 @@ export default function AboutMePage() {
               >
                 Cybersecurity Lead · SOC Analyst · Network Security Practitioner · Web Pentester · Founder of ZIGEX
               </p>
+              <div className="flex items-center gap-2 mb-6 text-small" style={{ color: "var(--text-muted)" }}>
+                <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-md" style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}>
+                  📞 +237 650146590
+                </span>
+                <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-md" style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}>
+                  ✉️ johnbrindimazwewoh@gmail.com
+                </span>
+              </div>
               <div className="prose" style={{ fontSize: "var(--step-1)" }}>
                 <p>
                   I got into security because I wanted to understand how systems
@@ -418,34 +426,6 @@ export default function AboutMePage() {
                   </p>
                 </div>
               ))}
-            </div>
-          </div>
-
-          {/* ── PGP Key ─────────────────────────────────── */}
-          <div>
-            <p className="text-label mb-4">PGP public key</p>
-            <div
-              className="card-glass p-6 rounded-[var(--radius)]"
-            >
-              <p className="text-small mb-3" style={{ color: "var(--text-muted)" }}>
-                For encrypted communications. Import this key to verify signatures or send encrypted messages.
-              </p>
-              {/* TODO: Replace with real PGP public key once generated */}
-              <pre
-                className="font-mono text-small overflow-x-auto p-4 rounded-lg"
-                style={{
-                  background: "var(--surface-3)",
-                  color: "var(--text-dim)",
-                  fontSize: ".7rem",
-                  lineHeight: 1.6,
-                }}
-              >
-{`-----BEGIN PGP PUBLIC KEY BLOCK-----
-TODO: Add real PGP public key here.
-Generate with: gpg --full-generate-key
-Export with:   gpg --armor --export your@email.com
------END PGP PUBLIC KEY BLOCK-----`}
-              </pre>
             </div>
           </div>
 

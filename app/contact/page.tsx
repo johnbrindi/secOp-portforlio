@@ -14,6 +14,12 @@ const SOCIALS = [
     icon: Mail,
   },
   {
+    label: "Phone",
+    value: "+237 650146590",
+    href: "tel:+237650146590",
+    icon: Mail, // You can change this to a Phone icon if imported
+  },
+  {
     label: "GitHub",
     value: "github.com/johnbrindi",
     href: "https://github.com/johnbrindi/",
