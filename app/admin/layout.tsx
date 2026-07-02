@@ -1,5 +1,4 @@
 import AdminSidebar from "../components/admin/AdminSidebar";
-import type { Metadata } from "next";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -16,6 +15,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           flex: 1,
           padding: "clamp(1.5rem, 4vw, 2.5rem)",
           overflowX: "hidden",
+          // On mobile, add top padding to account for the fixed top bar
+          paddingTop: "clamp(4.5rem, 10vw, 2.5rem)",
         }}
       >
         {children}

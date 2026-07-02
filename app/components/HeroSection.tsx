@@ -1,4 +1,4 @@
-import { Shield, Terminal, ArrowRight, Download, Network } from "lucide-react";
+import { Shield, Terminal, ArrowRight, Download, Network, Server } from "lucide-react";
 import Link from "next/link";
 
 export default function HeroSection() {
@@ -16,14 +16,14 @@ export default function HeroSection() {
               <span className="text-label tracking-[.16em]">Open to opportunities</span>
             </div>
 
-            {/* Headline */}
+            {/* Headline — updated priority: Infrastructure → Security → Backend */}
             <h1 className="text-display animate-fade-up animate-fade-up-2">
-              Security researcher.<br />
-              <span className="gradient-text">Threat hunter.</span><br />
-              Human first.
+              Infrastructure Engineer.<br />
+              <span className="gradient-text">System Administrator.</span><br />
+              Defending the core.
             </h1>
 
-            {/* Sub-copy */}
+            {/* Sub-copy — updated bio */}
             <p
               className="animate-fade-up animate-fade-up-3"
               style={{
@@ -33,9 +33,20 @@ export default function HeroSection() {
                 maxWidth: "52ch",
               }}
             >
-              I&apos;m <strong style={{ color: "var(--text)", fontWeight: 600 }}>Mazwewoh John Brindi N.</strong> — a Cybersecurity Lead,
-              SOC analyst, and web pentester. Founder of <strong style={{ color: "var(--accent)" }}>ZIGEX</strong>.
-              I think like an attacker to build defenses that actually hold.
+              I&apos;m <strong style={{ color: "var(--text)", fontWeight: 600 }}>Mazwewoh John Brindi N.</strong>{" "}
+              Founder at{" "}
+              <a
+                href="http://zigexconnect.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "var(--accent)", fontWeight: 700, textDecoration: "none" }}
+              >
+                ZIGEX
+              </a>
+              , Network &amp; Systems Infrastructure Engineer. I specialize in designing robust
+              architectures, managing system administration, and implementing hardened server
+              environments. I build scalable, high-availability networks and backends with a
+              security-first mindset.
             </p>
 
             {/* CTAs */}
@@ -46,10 +57,11 @@ export default function HeroSection() {
               <Link href="/contact" className="btn btn-outline">
                 Get in Touch
               </Link>
-              {/* TODO: Replace href with actual CV PDF path once uploaded */}
+              {/* CV — opens print-optimized page; user saves as PDF */}
               <a
-                href="/cv-mazwewoh-john-brindi.pdf"
-                download
+                href="/cv"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="btn btn-outline"
                 style={{ borderColor: "var(--border)" }}
               >
@@ -84,8 +96,11 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* ── Right: Avatar ───────────────────────────── */}
-          <div className="hidden md:flex flex-col items-center relative flex-shrink-0">
+          {/* ── Right: Avatar — visible on all screens ─── */}
+          <div
+            className="flex flex-col items-center relative flex-shrink-0 mx-auto md:mx-0"
+            style={{ position: "relative" }}
+          >
             {/* Background aura */}
             <div
               className="absolute inset-0 rounded-[2rem]"
@@ -97,12 +112,12 @@ export default function HeroSection() {
               }}
             />
 
-            {/* Avatar frame — large, rectangular with rounded corners */}
+            {/* Avatar frame */}
             <div
               className="relative overflow-hidden"
               style={{
-                width: "320px",
-                height: "400px",
+                width: "clamp(220px, 40vw, 320px)",
+                height: "clamp(270px, 50vw, 400px)",
                 borderRadius: "24px",
                 border: "1px solid var(--border-hi)",
                 boxShadow: "0 0 0 6px var(--surface), 0 0 60px var(--accent-glow)",
@@ -122,28 +137,59 @@ export default function HeroSection() {
               />
             </div>
 
-            {/* Floating badges */}
+            {/* Floating badges — repositioned for responsiveness */}
             <div
-              className="absolute -bottom-4 -left-8 card flex items-center gap-2 px-3 py-2"
-              style={{ zIndex: 2, background: "var(--surface-2)" }}
+              className="absolute card flex items-center gap-2 px-3 py-2"
+              style={{
+                zIndex: 2,
+                background: "var(--surface-2)",
+                bottom: "-1rem",
+                left: "-1rem",
+              }}
             >
               <Shield className="w-4 h-4" style={{ color: "var(--accent)" }} />
               <span className="text-small font-medium">SOC Analyst</span>
             </div>
+
             <div
-              className="absolute -top-3 -right-8 card flex items-center gap-2 px-3 py-2"
-              style={{ zIndex: 2, background: "var(--surface-2)" }}
+              className="absolute card flex items-center gap-2 px-3 py-2"
+              style={{
+                zIndex: 2,
+                background: "var(--surface-2)",
+                top: "-0.75rem",
+                right: "-1rem",
+              }}
             >
               <Terminal className="w-4 h-4" style={{ color: "var(--accent-2)" }} />
-              <span className="text-small font-medium">Web Pentester</span>
+              <span className="text-small font-medium">Infra Engineer</span>
             </div>
+
             <div
-              className="absolute bottom-20 -right-10 card flex items-center gap-2 px-3 py-2"
-              style={{ zIndex: 2, background: "var(--surface-2)" }}
+              className="absolute card flex items-center gap-2 px-3 py-2"
+              style={{
+                zIndex: 2,
+                background: "var(--surface-2)",
+                bottom: "4.5rem",
+                right: "-1.25rem",
+              }}
             >
               <Network className="w-4 h-4" style={{ color: "#4ade80" }} />
               <span className="text-small font-medium">Founder · ZIGEX</span>
             </div>
+
+            <div
+              className="absolute card flex items-center gap-2 px-3 py-2"
+              style={{
+                zIndex: 2,
+                background: "var(--surface-2)",
+                top: "4rem",
+                left: "-1.25rem",
+              }}
+            >
+              <Server className="w-4 h-4" style={{ color: "#f59e0b" }} />
+              <span className="text-small font-medium">Sys Admin</span>
+            </div>
+
           </div>
 
         </div>
