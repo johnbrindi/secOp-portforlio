@@ -18,9 +18,9 @@ export default function HeroSection() {
 
             {/* Headline — updated priority: Infrastructure → Security → Backend */}
             <h1 className="text-display animate-fade-up animate-fade-up-2">
-              Infrastructure Engineer.<br />
-              <span className="gradient-text">System Administrator.</span><br />
-              Defending the core.
+              Mazwewoh John Brindi.<br />
+              <span className="gradient-text">Founder of ZIGEX.</span><br />
+              Infrastructure Engineer.
             </h1>
 
             {/* Sub-copy — updated bio */}
@@ -33,15 +33,15 @@ export default function HeroSection() {
                 maxWidth: "52ch",
               }}
             >
-              I&apos;m <strong style={{ color: "var(--text)", fontWeight: 600 }}>Mazwewoh John Brindi N.</strong>{" "}
-              Founder at{" "}
+              I&apos;m <strong style={{ color: "var(--text)", fontWeight: 600 }}>Mazwewoh John Brindi Nwosoh</strong>{" "}
+              (John Brindi), Founder of{" "}
               <a
-                href="http://zigexconnect.com/"
+                href="https://zigexconnect.com/"
                 target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "var(--accent)", fontWeight: 700, textDecoration: "none" }}
+                rel="me noopener noreferrer"
+                style={{ color: "var(--accent)", fontWeight: 700, textDecoration: "underline" }}
               >
-                ZIGEX
+                ZIGEX (zigexconnect.com)
               </a>
               , Network &amp; Systems Infrastructure Engineer. I specialize in designing robust
               architectures, managing system administration, and implementing hardened server

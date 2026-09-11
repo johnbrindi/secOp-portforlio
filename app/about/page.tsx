@@ -4,9 +4,12 @@ import { GraduationCap, Mic, Award, BookOpen, Shield, Network, Globe, Terminal }
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About — Mazwewoh John Brindi",
+  title: "About Mazwewoh John Brindi Nwosoh — Founder of ZigexConnect",
   description:
-    "Learn about Mazwewoh John Brindi Nwosoh, a Cybersecurity Lead and IT professional specialising in SOC operations, network security, web penetration testing, and founder of ZIGEX.",
+    "Learn about Mazwewoh John Brindi Nwosoh (John Brindi), Founder of ZIGEX (zigexconnect.com), a Cybersecurity Lead, SOC Analyst, and IT professional in Cameroon.",
+  alternates: {
+    canonical: "https://mazwewohjohnbrindi.vercel.app/about",
+  }
 };
 
 const timeline = [
@@ -115,6 +118,33 @@ export default function AboutMePage() {
       <Navbar />
       <main className="pt-[7rem] pb-[var(--space-xl)]">
         <div className="container">
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "ProfilePage",
+                mainEntity: {
+                  "@type": "Person",
+                  name: "Mazwewoh John Brindi Nwosoh",
+                  alternateName: ["Mazwewoh John Brindi", "John Brindi", "Mazwewoh Nwosoh"],
+                  description: "Founder of ZIGEX, Cybersecurity Lead, and SOC Analyst.",
+                  sameAs: [
+                    "https://zigexconnect.com/",
+                    "https://www.linkedin.com/in/mazwewohjohnbrindi/",
+                    "https://github.com/johnbrindi/"
+                  ]
+                },
+                speakable: {
+                  "@type": "SpeakableSpecification",
+                  xpath: [
+                    "/html/head/title",
+                    "/html/head/meta[@name='description']/@content"
+                  ]
+                }
+              })
+            }}
+          />
 
           {/* ── Bio block ───────────────────────────────── */}
           <div
@@ -157,7 +187,7 @@ export default function AboutMePage() {
                 className="text-small font-medium mb-6 tracking-wide"
                 style={{ color: "var(--accent)" }}
               >
-                Cybersecurity Lead · SOC Analyst · Network Security Practitioner · Web Pentester · Founder of ZIGEX
+                Cybersecurity Lead · SOC Analyst · Network Security Practitioner · Web Pentester · Founder of <a href="https://zigexconnect.com" rel="me" target="_blank" style={{textDecoration: 'underline'}}>ZIGEX (zigexconnect.com)</a>
               </p>
               <div className="flex items-center gap-2 mb-6 text-small" style={{ color: "var(--text-muted)" }}>
                 <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-md" style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}>
@@ -174,7 +204,7 @@ export default function AboutMePage() {
                   network topologies and IDS systems to web penetration testing and SOC operations.
                 </p>
                 <p>
-                  Outside of security work, I founded <strong>ZIGEX</strong> — a platform built to connect
+                  Outside of security work, I founded <strong><a href="https://zigexconnect.com" rel="me" target="_blank" style={{color: 'inherit', textDecoration: 'underline'}}>ZIGEX (zigexconnect.com)</a></strong> — a platform built to connect
                   students across Cameroon with internships and career opportunities. I spoke at
                   DevFest Bamenda 2025, and I remain active in digital empowerment initiatives
                   for youth across West Africa.

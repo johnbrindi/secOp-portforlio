@@ -95,7 +95,7 @@ export default function Footer() {
             </a>
           </div>
           <p className="text-small" style={{ color: "var(--text-dim)" }}>
-            © {year} Mazwewoh John Brindi Nwosoh
+            © {year} Mazwewoh John Brindi Nwosoh — <a href="https://zigexconnect.com" target="_blank" rel="me" className="hover:underline" style={{color: "var(--accent)"}}>Founder of ZigexConnect</a>
           </p>
         </div>
       </div>
