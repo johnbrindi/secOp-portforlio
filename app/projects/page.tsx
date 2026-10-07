@@ -1,6 +1,5 @@
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
-import Link from "next/link";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import type { Metadata } from "next";
 
@@ -153,11 +152,12 @@ export default function ProjectsPage() {
           </div>
 
           {/* Project list */}
-          <div className="flex flex-col gap-0">
+          <div className="flex flex-col">
             {PROJECTS.map((project, i) => (
               <article
                 key={project.id}
                 id={`project-${project.id}`}
+                className="project-article"
                 style={{
                   borderTop: "1px solid var(--border)",
                   paddingTop: "var(--space-lg)",
@@ -165,7 +165,7 @@ export default function ProjectsPage() {
                   borderBottom: i === PROJECTS.length - 1 ? "1px solid var(--border)" : "none",
                 }}
               >
-                <div className="grid md:grid-cols-[1fr_380px] gap-10 items-start">
+                <div className="project-grid">
 
                   {/* Left: Text */}
                   <div>
@@ -180,10 +180,7 @@ export default function ProjectsPage() {
                       >
                         {project.category}
                       </span>
-                      <span
-                        className="text-label"
-                        style={{ color: "var(--text-dim)", fontSize: ".65rem" }}
-                      >
+                      <span className="text-label" style={{ color: "var(--text-dim)", fontSize: ".65rem" }}>
                         {project.date}
                       </span>
                     </div>
@@ -197,31 +194,21 @@ export default function ProjectsPage() {
                     </h2>
 
                     {/* Summary */}
-                    <p
-                      className="text-body mb-6"
-                      style={{ color: "var(--text-muted)", maxWidth: "60ch" }}
-                    >
+                    <p className="text-body mb-5" style={{ color: "var(--text-muted)", maxWidth: "62ch" }}>
                       {project.summary}
                     </p>
 
                     {/* Detail points */}
-                    <ul
-                      className="flex flex-col gap-2.5 mb-6"
-                      style={{ paddingLeft: "1.1rem", listStyleType: "disc" }}
-                    >
+                    <ul className="project-detail-list mb-5">
                       {project.detail.map((point, j) => (
-                        <li
-                          key={j}
-                          className="text-small"
-                          style={{ color: "var(--text-muted)", lineHeight: 1.7 }}
-                        >
+                        <li key={j} className="text-small" style={{ color: "var(--text-muted)", lineHeight: 1.75 }}>
                           {point}
                         </li>
                       ))}
                     </ul>
 
                     {/* Tags */}
-                    <div className="flex flex-wrap gap-1.5 mb-6">
+                    <div className="flex flex-wrap gap-1.5 mb-5">
                       {project.tags.map((tag) => (
                         <span
                           key={tag}
@@ -238,9 +225,9 @@ export default function ProjectsPage() {
                       ))}
                     </div>
 
-                    {/* Links */}
+                    {/* External links */}
                     {project.links.length > 0 && (
-                      <div className="flex flex-wrap gap-3">
+                      <div className="flex flex-wrap gap-4">
                         {project.links.map((link) => (
                           <a
                             key={link.href}
@@ -259,18 +246,11 @@ export default function ProjectsPage() {
                   </div>
 
                   {/* Right: Image */}
-                  <div
-                    className="rounded-xl overflow-hidden flex-shrink-0"
-                    style={{
-                      border: "1px solid var(--border)",
-                      background: "var(--surface-2)",
-                    }}
-                  >
+                  <div className="project-image-wrap">
                     <img
                       src={project.image}
                       alt={project.title}
-                      className="w-full h-full object-cover"
-                      style={{ display: "block", maxHeight: "280px", objectFit: "cover" }}
+                      className="project-image"
                     />
                   </div>
 

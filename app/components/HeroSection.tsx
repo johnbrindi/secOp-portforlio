@@ -1,4 +1,4 @@
-import { Shield, Network, ArrowRight } from "lucide-react";
+import { Shield, Network, ArrowRight, Download } from "lucide-react";
 import Link from "next/link";
 
 export default function HeroSection() {

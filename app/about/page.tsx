@@ -58,6 +58,15 @@ const timeline = [
   },
 ];
 
+const skills = [
+  { name: "Routing & Switching (Cisco)", level: 90, category: "Networking" },
+  { name: "MPLS, BGP, OSPF", level: 85, category: "Networking" },
+  { name: "Linux Administration", level: 85, category: "Systems" },
+  { name: "Node.js & Backend Architecture", level: 80, category: "Development" },
+  { name: "Penetration Testing (Web)", level: 75, category: "Security" },
+  { name: "Network Troubleshooting", level: 95, category: "Operations" },
+];
+
 export default function AboutMePage() {
   return (
     <>

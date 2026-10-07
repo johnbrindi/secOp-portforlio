@@ -540,3 +540,88 @@ footer nav a:hover {
     right: 8px;
   }
 }
+
+/* ──────────────────────────────────────────────────────
+   PROJECTS PAGE — responsive project article grid
+────────────────────────────────────────────────────── */
+
+/* Each project article: text + image side by side on desktop */
+.project-grid {
+  display: grid;
+  gap: clamp(2rem, 5vw, 3.5rem);
+  align-items: start;
+}
+
+@media (min-width: 768px) {
+  .project-grid {
+    grid-template-columns: 1fr 360px;
+  }
+}
+
+@media (max-width: 767px) {
+  .project-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Project image wrapper */
+.project-image-wrap {
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  flex-shrink: 0;
+}
+
+/* Image fills wrapper, consistent height */
+.project-image {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  height: 260px;
+}
+
+@media (min-width: 768px) {
+  .project-image {
+    height: 280px;
+  }
+}
+
+/* On mobile, image goes after text */
+@media (max-width: 767px) {
+  .project-image-wrap {
+    order: 1;
+  }
+}
+
+/* Detail bullet list */
+.project-detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-left: 1.15rem;
+  list-style-type: disc;
+}
+
+/* ──────────────────────────────────────────────────────
+   ABOUT PAGE — timeline mobile improvements
+────────────────────────────────────────────────────── */
+
+/* On mobile, timeline year dot is hidden and year shown inline */
+@media (max-width: 767px) {
+  .timeline-year-dot {
+    display: none !important;
+  }
+}
+
+/* ──────────────────────────────────────────────────────
+   SPIN ANIMATION (for loading states)
+────────────────────────────────────────────────────── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
