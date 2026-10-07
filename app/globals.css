@@ -392,3 +392,151 @@ footer nav a:hover {
   color: var(--text) !important;
   background: var(--surface-3) !important;
 }
+
+/* ──────────────────────────────────────────────────────
+   HERO SECTION — Mobile-first responsive layout
+────────────────────────────────────────────────────── */
+
+/* Grid: stacked on mobile, side-by-side on md+ */
+.hero-grid {
+  display: grid;
+  gap: clamp(3rem, 6vw, 5rem);
+  align-items: center;
+}
+
+/* Mobile: avatar first (top), then text */
+@media (max-width: 767px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+  }
+  .hero-avatar-col {
+    order: -1; /* avatar above text on mobile */
+    display: flex;
+    justify-content: center;
+  }
+}
+
+/* Desktop: text left, avatar right */
+@media (min-width: 768px) {
+  .hero-grid {
+    grid-template-columns: 1fr 380px;
+  }
+  .hero-avatar-col {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+}
+
+/* Text column spacing */
+.hero-text {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.25rem, 3vw, 1.75rem);
+}
+
+/* Bio paragraph */
+.hero-bio {
+  font-size: var(--step-0);
+  color: var(--text-muted);
+  line-height: 1.75;
+  max-width: 56ch;
+}
+
+/* Stats row */
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border);
+}
+
+.hero-stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hero-stat-value {
+  font-size: clamp(1.5rem, 3.5vw, 2.1rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+/* Avatar wrapper — relative so badges can be positioned */
+.hero-avatar-wrap {
+  position: relative;
+  width: clamp(220px, 35vw, 320px);
+  height: clamp(220px, 35vw, 320px);
+  flex-shrink: 0;
+}
+
+/* Soft glow behind avatar */
+.hero-avatar-glow {
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(110, 142, 251, 0.15) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Avatar border ring */
+.hero-avatar-ring {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--border-hi);
+  box-shadow:
+    0 0 0 8px var(--surface),
+    0 0 60px rgba(110, 142, 251, 0.2);
+  z-index: 1;
+}
+
+/* Avatar image */
+.hero-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+/* Floating badge base */
+.hero-badge {
+  position: absolute;
+  z-index: 2;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.hero-badge-bottom {
+  bottom: -8px;
+  left: -16px;
+}
+
+.hero-badge-top {
+  top: -8px;
+  right: -16px;
+}
+
+/* Mobile badge adjustments */
+@media (max-width: 767px) {
+  .hero-badge-bottom {
+    bottom: -6px;
+    left: 8px;
+  }
+  .hero-badge-top {
+    top: -6px;
+    right: 8px;
+  }
+}

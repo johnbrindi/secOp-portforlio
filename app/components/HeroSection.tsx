@@ -1,14 +1,14 @@
-import { Shield, Terminal, ArrowRight } from "lucide-react";
+import { Shield, Network, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export default function HeroSection() {
   return (
-    <section className="relative min-h-screen flex flex-col justify-center section pt-[7rem]">
+    <section className="hero-section relative min-h-screen flex flex-col justify-center section pt-[7rem]">
       <div className="container">
-        <div className="grid md:grid-cols-[1fr_auto] gap-16 items-center">
+        <div className="hero-grid">
 
           {/* Left: Text */}
-          <div className="space-y-8 max-w-2xl">
+          <div className="hero-text">
 
             {/* Status pill */}
             <div className="animate-fade-up animate-fade-up-1 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[var(--border-hi)] bg-[var(--surface-2)]">
@@ -17,23 +17,18 @@ export default function HeroSection() {
             </div>
 
             {/* Headline */}
-            <h1 className="text-display animate-fade-up animate-fade-up-2">
-              Network engineer.<br />
-              <span className="gradient-text">Security defender.</span><br />
-              Always building.
+            <h1 className="text-display animate-fade-up animate-fade-up-2" style={{ lineHeight: 1.05 }}>
+              Network<br />
+              engineer.<br />
+              <span className="gradient-text">Security</span><br />
+              <span className="gradient-text">defender.</span>
             </h1>
 
             {/* Sub-copy */}
             <p
-              className="animate-fade-up animate-fade-up-3"
-              style={{
-                fontSize: "var(--step-1)",
-                color: "var(--text-muted)",
-                lineHeight: 1.65,
-                maxWidth: "52ch",
-              }}
+              className="animate-fade-up animate-fade-up-3 hero-bio"
             >
-              I&apos;m <strong style={{ color: "var(--text)", fontWeight: 600 }}>Mazwewoh John Brindi N.</strong> Enterprise networking and IT infrastructure engineer with hands-on experience designing carrier-grade MPLS backbones, resolving high-stakes network failures, and leading backend system architecture. Mentored 50+ students in networking and cybersecurity at SEED. Networking infrastructure intern at CRTV Yaounde where I diagnosed and resolved critical production network failures.
+              I&apos;m <strong style={{ color: "var(--text)", fontWeight: 600 }}>Mazwewoh John Brindi N.</strong> Enterprise networking and IT infrastructure engineer with hands-on experience designing carrier-grade MPLS backbones, resolving high-stakes network failures, and leading backend system architecture. Mentored 50+ students in networking and cybersecurity at SEED. Networking infrastructure intern at CRTV Yaounde.
             </p>
 
             {/* CTAs */}
@@ -47,20 +42,14 @@ export default function HeroSection() {
             </div>
 
             {/* Quick stats */}
-            <div
-              className="animate-fade-up animate-fade-up-4 flex flex-wrap gap-6 pt-4"
-              style={{ borderTop: "1px solid var(--border)", paddingTop: "var(--space-md)" }}
-            >
+            <div className="hero-stats animate-fade-up animate-fade-up-4">
               {[
                 { value: "50+", label: "Students mentored" },
                 { value: "MPLS", label: "L3VPN architect" },
                 { value: "CRTV", label: "Network intern" },
               ].map((s) => (
-                <div key={s.label}>
-                  <p
-                    className="font-display font-bold"
-                    style={{ fontSize: "var(--step-2)", letterSpacing: "-.02em" }}
-                  >
+                <div key={s.label} className="hero-stat-item">
+                  <p className="hero-stat-value font-display font-bold">
                     {s.value}
                   </p>
                   <p className="text-small" style={{ color: "var(--text-muted)" }}>
@@ -72,45 +61,37 @@ export default function HeroSection() {
           </div>
 
           {/* Right: Avatar */}
-          <div className="hidden md:block relative flex-shrink-0">
-            <div
-              className="absolute inset-0 rounded-full"
-              style={{
-                background:
-                  "radial-gradient(ellipse at center, var(--accent-glow) 0%, transparent 70%)",
-                transform: "scale(1.3)",
-                zIndex: 0,
-              }}
-            />
+          <div className="hero-avatar-col animate-fade-up animate-fade-up-2">
+            <div className="hero-avatar-wrap">
+              {/* Subtle ring accent */}
+              <div className="hero-avatar-glow" />
 
-            <div
-              className="relative w-56 h-56 rounded-full overflow-hidden"
-              style={{
-                border: "1px solid var(--border-hi)",
-                boxShadow: "0 0 0 6px var(--surface), 0 0 40px var(--accent-glow)",
-                zIndex: 1,
-              }}
-            >
-              <img
-                src="/me.jpg"
-                alt="Mazwewoh John Brindi"
-                className="w-full h-full object-cover"
-              />
-            </div>
+              {/* Photo */}
+              <div className="hero-avatar-ring">
+                <img
+                  src="/me.jpg"
+                  alt="Mazwewoh John Brindi"
+                  className="hero-avatar-img"
+                />
+              </div>
 
-            <div
-              className="absolute -bottom-4 -left-6 card flex items-center gap-2 px-3 py-2"
-              style={{ zIndex: 2, background: "var(--surface-2)" }}
-            >
-              <Shield className="w-4 h-4" style={{ color: "var(--accent)" }} />
-              <span className="text-small font-medium">Network Engineer</span>
-            </div>
-            <div
-              className="absolute -top-3 -right-4 card flex items-center gap-2 px-3 py-2"
-              style={{ zIndex: 2, background: "var(--surface-2)" }}
-            >
-              <Terminal className="w-4 h-4" style={{ color: "var(--accent-2)" }} />
-              <span className="text-small font-medium">Security Defender</span>
+              {/* Badge: Network Engineer */}
+              <div
+                className="hero-badge hero-badge-bottom card flex items-center gap-2 px-3 py-2"
+                style={{ background: "var(--surface-2)" }}
+              >
+                <Shield className="w-4 h-4" style={{ color: "var(--accent)" }} />
+                <span className="text-small font-medium">Network Engineer</span>
+              </div>
+
+              {/* Badge: Security Defender */}
+              <div
+                className="hero-badge hero-badge-top card flex items-center gap-2 px-3 py-2"
+                style={{ background: "var(--surface-2)" }}
+              >
+                <Network className="w-4 h-4" style={{ color: "var(--accent-2)" }} />
+                <span className="text-small font-medium">Security Defender</span>
+              </div>
             </div>
           </div>
 
