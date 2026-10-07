@@ -44,7 +44,7 @@ export default function Footer() {
             className="text-small"
             style={{ color: "var(--text-muted)", maxWidth: "28ch" }}
           >
-            SOC Analyst · Network Admin · Security Researcher
+            Network Engineer · IT Infrastructure · Cybersecurity
           </p>
         </div>
 
@@ -93,7 +93,7 @@ export default function Footer() {
             </a>
           </div>
           <p className="text-small" style={{ color: "var(--text-dim)" }}>
-            © {year} Mazweoh John Brindi N.
+            &copy; {year} Mazwewoh John Brindi N.
           </p>
         </div>
       </div>

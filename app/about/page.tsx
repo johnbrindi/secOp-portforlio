@@ -3,29 +3,57 @@ import Footer from "../components/footer";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "About — Mazweoh John Brindi",
+  title: "About — Mazwewoh John Brindi",
   description:
-    "Learn about Mazweoh John Brindi N., a cybersecurity professional specialising in SOC operations, network administration, and web penetration testing.",
+    "Enterprise networking and IT infrastructure engineer. Designed carrier-grade MPLS backbones at CRTV, mentored 50+ students at SEED, and led backend infrastructure at ZIGEX.",
 };
 
 const timeline = [
   {
+    year: "2026",
+    role: "Networking Infrastructure Intern",
+    org: "CRTV — Cameroon Radio Television, Yaounde",
+    tags: ["MPLS", "BGP", "OSPF", "VRF", "QoS", "DHCP", "Cisco IOS"],
+    points: [
+      "Designed and deployed a Carrier-Grade MPLS backbone connecting the Yaounde HQ with Douala, Bamenda, and Maroua regional hubs using a BGP-Free Core model.",
+      "Implemented L3VPN using VRF instances and MP-BGP VPNv4 signaling to ensure strict data isolation across multi-tenant broadcast traffic.",
+      "Deployed OSPF Process 100 to establish seamless /32 Loopback reachability across the Provider Edge mesh as an underlay for LDP and BGP sessions.",
+      "Engineered a QoS policy using CBWFQ and LLQ, prioritizing critical ToIP sessions and guaranteeing bandwidth for centralized HQ NAS media uploads.",
+      "Diagnosed and resolved a complete network outage: client PCs were receiving DHCP leases but could not reach the internet. Traced the fault to a misconfigured default gateway on the DHCP server and corrected it, restoring full internet connectivity across the site.",
+      "Performed physical hardware upgrades and cable management on production server racks and network panels.",
+    ],
+  },
+  {
+    year: "2025 – present",
+    role: "Backend Infrastructure Lead and System Architect",
+    org: "ZIGEX",
+    tags: ["Node.js", "PostgreSQL", "Redis", "REST API", "System Architecture", "WebSockets"],
+    points: [
+      "Designed and led the backend infrastructure and system architecture for ZIGEX, a technology platform serving real-time operational needs.",
+      "Architected the API layer, database schema, authentication system, and service communication patterns for the core platform.",
+      "Implemented scalable patterns including connection pooling, Redis caching, and WebSocket real-time channels.",
+    ],
+  },
+  {
+    year: "2024 – present",
+    role: "Networking and Cybersecurity Mentor",
+    org: "SEED",
+    tags: ["Teaching", "Cisco", "Networking", "Cybersecurity", "Linux"],
+    points: [
+      "Mentored over 50 students in networking fundamentals, Cisco configuration, and cybersecurity practices.",
+      "Delivered hands-on lab sessions covering topics including VLANs, routing protocols, firewall configuration, and Linux system hardening.",
+      "Guided students through practical projects and real-world scenarios bridging theoretical knowledge with applied engineering skills.",
+    ],
+  },
+  {
     year: "2024",
     role: "Web Penetration Testing Intern",
     org: "SEED Cybersecurity",
-    note: "Research, exploit, and report on OWASP Top 10 vulnerabilities in a controlled lab environment.",
-  },
-  {
-    year: "2023",
-    role: "SOC Analyst",
-    org: "Freelance / Consulting",
-    note: "Monitored SIEM alerts, triaged incidents, and performed log analysis across multiple client environments.",
-  },
-  {
-    year: "2022",
-    role: "Network Administrator",
-    org: "Academic / Personal Projects",
-    note: "Designed and deployed network topologies; built an Intrusion Detection System from scratch.",
+    tags: ["OWASP", "Burp Suite", "SQLi", "XSS", "CSRF", "Kali Linux"],
+    points: [
+      "Researched, exploited, and reported on OWASP Top 10 vulnerabilities in controlled lab environments.",
+      "Documented findings and remediation recommendations following standard penetration testing reporting formats.",
+    ],
   },
 ];
 
@@ -36,7 +64,7 @@ export default function AboutMePage() {
       <main className="pt-[7rem] pb-[var(--space-xl)]">
         <div className="container">
 
-          {/* ── Bio block ───────────────────────────────── */}
+          {/* Bio block */}
           <div
             className="grid md:grid-cols-[200px_1fr] gap-12 items-start mb-20"
             style={{ borderBottom: "1px solid var(--border)", paddingBottom: "var(--space-xl)" }}
@@ -53,7 +81,7 @@ export default function AboutMePage() {
               />
               <img
                 src="/pic.jpg"
-                alt="Mazweoh John Brindi"
+                alt="Mazwewoh John Brindi"
                 className="relative w-full h-full object-cover rounded-2xl"
                 style={{ border: "1px solid var(--border-hi)" }}
               />
@@ -63,35 +91,32 @@ export default function AboutMePage() {
             <div>
               <p className="text-label mb-3">About me</p>
               <h1 className="text-headline mb-4">
-                Mazweoh John Brindi N.
+                Mazwewoh John Brindi N.
               </h1>
               <p
                 className="text-small font-medium mb-6 tracking-wide"
                 style={{ color: "var(--accent)" }}
               >
-                SOC Analyst · Network Administrator · Security Researcher · Web Pentester
+                Enterprise Networking · IT Infrastructure · Cybersecurity Engineer
               </p>
               <div className="prose" style={{ fontSize: "var(--step-1)" }}>
                 <p>
-                  I got into security because I wanted to understand how things
-                  break — not just how to patch them. That curiosity led me from
-                  building network topologies to designing IDS systems, and
-                  eventually to web penetration testing and SOC operations.
+                  I am a networking and IT infrastructure engineer who builds systems that hold together under pressure. My work began with a deep curiosity about how networks actually function at scale, which led me into designing routing architectures, diagnosing production failures, and eventually into the overlapping world of defensive security.
                 </p>
                 <p>
-                  My approach is simple: think like an attacker, document like an
-                  engineer, and communicate like a human. I care deeply about making
-                  security accessible — not just for enterprises, but for everyone.
+                  At CRTV, Cameroon&apos;s national broadcaster, I designed a Carrier-Grade MPLS backbone to unify four geographically distributed sites under a single high-performance transit fabric. That project required not just technical knowledge but the ability to reason about path control, traffic isolation, and quality of service simultaneously under real broadcast constraints.
                 </p>
                 <p>
-                  When I&apos;m not in a terminal, I&apos;m writing about what I&apos;ve learned,
-                  competing in CTFs, or exploring the next vulnerability class.
+                  Beyond infrastructure, I lead the backend engineering at ZIGEX and spend a significant part of my time mentoring the next generation of engineers at SEED, where I have worked with over 50 students across networking and cybersecurity disciplines.
+                </p>
+                <p>
+                  My approach is straightforward: understand the system deeply, document everything, and build things that can be trusted.
                 </p>
               </div>
             </div>
           </div>
 
-          {/* ── Timeline ────────────────────────────────── */}
+          {/* Timeline */}
           <div>
             <p className="text-label mb-8">Experience</p>
             <div className="relative flex flex-col gap-0">
@@ -118,7 +143,6 @@ export default function AboutMePage() {
                     >
                       {item.year}
                     </span>
-                    {/* dot */}
                     <div
                       className="hidden md:block w-2 h-2 rounded-full mt-1 ml-auto mr-[-4.5px] flex-shrink-0"
                       style={{ background: "var(--accent)" }}
@@ -133,12 +157,43 @@ export default function AboutMePage() {
                     >
                       {item.role}
                     </h3>
-                    <p className="text-small mb-2" style={{ color: "var(--accent-2)" }}>
+                    <p className="text-small mb-3" style={{ color: "var(--accent-2)" }}>
                       {item.org}
                     </p>
-                    <p className="text-small" style={{ color: "var(--text-muted)" }}>
-                      {item.note}
-                    </p>
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-1.5 mb-4">
+                      {item.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="text-small px-2 py-0.5 rounded-full"
+                          style={{
+                            background: "var(--surface-3)",
+                            color: "var(--text-muted)",
+                            fontSize: ".68rem",
+                            border: "1px solid var(--border)",
+                          }}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Bullet points */}
+                    <ul
+                      className="flex flex-col gap-2"
+                      style={{ paddingLeft: "1.1rem", listStyleType: "disc" }}
+                    >
+                      {item.points.map((point, j) => (
+                        <li
+                          key={j}
+                          className="text-small"
+                          style={{ color: "var(--text-muted)" }}
+                        >
+                          {point}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
               ))}

@@ -13,11 +13,12 @@ const routes = [
 
 // Ticker items — the "Latest Activity" strip inside the navbar
 const TICKER_ITEMS = [
-	{ icon: "●", color: "#6e8efb", text: "Actively researching web app pentesting techniques" },
-	{ icon: "●", color: "#a777e3", text: "New blog post: SIEM tuning for SOC teams" },
-	{ icon: "●", color: "#6e8efb", text: "DVWA lab — SQL Injection & CSRF modules complete" },
-	{ icon: "●", color: "#4ade80", text: "Available for security consulting engagements" },
-	{ icon: "●", color: "#a777e3", text: "CTF Write-up: Web Exploitation Challenge published" },
+	{ icon: "●", color: "#6e8efb", text: "Published: Architecting a Carrier-Grade MPLS Backbone for CRTV" },
+	{ icon: "●", color: "#4ade80", text: "Designed and implemented L3VPN across 4 national broadcast sites" },
+	{ icon: "●", color: "#a777e3", text: "Mentoring 50+ students in networking and cybersecurity at SEED" },
+	{ icon: "●", color: "#6e8efb", text: "Led backend infrastructure and system architecture at ZIGEX" },
+	{ icon: "●", color: "#4ade80", text: "Available for networking and infrastructure engineering roles" },
+	{ icon: "●", color: "#a777e3", text: "New article: SSH Public Key Authentication on Linux" },
 ];
 
 // Double the list so the seamless loop works

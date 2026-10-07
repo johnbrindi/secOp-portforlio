@@ -7,7 +7,7 @@ export default function HeroSection() {
       <div className="container">
         <div className="grid md:grid-cols-[1fr_auto] gap-16 items-center">
 
-          {/* ── Left: Text ──────────────────────────────── */}
+          {/* Left: Text */}
           <div className="space-y-8 max-w-2xl">
 
             {/* Status pill */}
@@ -18,9 +18,9 @@ export default function HeroSection() {
 
             {/* Headline */}
             <h1 className="text-display animate-fade-up animate-fade-up-2">
-              Security researcher.<br />
-              <span className="gradient-text">Threat hunter.</span><br />
-              Human first.
+              Network engineer.<br />
+              <span className="gradient-text">Security defender.</span><br />
+              Always building.
             </h1>
 
             {/* Sub-copy */}
@@ -33,9 +33,7 @@ export default function HeroSection() {
                 maxWidth: "52ch",
               }}
             >
-              I&apos;m <strong style={{ color: "var(--text)", fontWeight: 600 }}>Mazweoh John Brindi N.</strong> — a SOC analyst,
-              network administrator, and web pentester who thinks like an attacker
-              to build defenses that actually hold.
+              I&apos;m <strong style={{ color: "var(--text)", fontWeight: 600 }}>Mazwewoh John Brindi N.</strong> Enterprise networking and IT infrastructure engineer with hands-on experience designing carrier-grade MPLS backbones, resolving high-stakes network failures, and leading backend system architecture. Mentored 50+ students in networking and cybersecurity at SEED. Networking infrastructure intern at CRTV Yaounde where I diagnosed and resolved critical production network failures.
             </p>
 
             {/* CTAs */}
@@ -54,9 +52,9 @@ export default function HeroSection() {
               style={{ borderTop: "1px solid var(--border)", paddingTop: "var(--space-md)" }}
             >
               {[
-                { value: "3+", label: "Years in security" },
-                { value: "10+", label: "Projects completed" },
-                { value: "CTF", label: "Active competitor" },
+                { value: "50+", label: "Students mentored" },
+                { value: "MPLS", label: "L3VPN architect" },
+                { value: "CRTV", label: "Network intern" },
               ].map((s) => (
                 <div key={s.label}>
                   <p
@@ -73,9 +71,8 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* ── Right: Avatar ───────────────────────────── */}
+          {/* Right: Avatar */}
           <div className="hidden md:block relative flex-shrink-0">
-            {/* Background aura */}
             <div
               className="absolute inset-0 rounded-full"
               style={{
@@ -86,7 +83,6 @@ export default function HeroSection() {
               }}
             />
 
-            {/* Avatar ring */}
             <div
               className="relative w-56 h-56 rounded-full overflow-hidden"
               style={{
@@ -97,25 +93,24 @@ export default function HeroSection() {
             >
               <img
                 src="/me.jpg"
-                alt="Mazweoh John Brindi"
+                alt="Mazwewoh John Brindi"
                 className="w-full h-full object-cover"
               />
             </div>
 
-            {/* Floating badges */}
             <div
               className="absolute -bottom-4 -left-6 card flex items-center gap-2 px-3 py-2"
               style={{ zIndex: 2, background: "var(--surface-2)" }}
             >
               <Shield className="w-4 h-4" style={{ color: "var(--accent)" }} />
-              <span className="text-small font-medium">SOC Analyst</span>
+              <span className="text-small font-medium">Network Engineer</span>
             </div>
             <div
               className="absolute -top-3 -right-4 card flex items-center gap-2 px-3 py-2"
               style={{ zIndex: 2, background: "var(--surface-2)" }}
             >
               <Terminal className="w-4 h-4" style={{ color: "var(--accent-2)" }} />
-              <span className="text-small font-medium">Web Pentester</span>
+              <span className="text-small font-medium">Security Defender</span>
             </div>
           </div>
 
