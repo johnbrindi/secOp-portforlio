@@ -24,7 +24,7 @@ export default function HeroSection() {
               <span className="gradient-text">defender.</span>
             </h1>
 
-            {/* Sub-copy */}
+            {/* Sub-copy — updated bio */}
             <p
               className="animate-fade-up animate-fade-up-3 hero-bio"
             >
@@ -39,6 +39,17 @@ export default function HeroSection() {
               <Link href="/contact" className="btn btn-outline">
                 Get in Touch
               </Link>
+              {/* CV — opens print-optimized page; user saves as PDF */}
+              <a
+                href="/cv"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-outline"
+                style={{ borderColor: "var(--border)" }}
+              >
+                <Download className="w-4 h-4" />
+                Download CV
+              </a>
             </div>
 
             {/* Quick stats */}
@@ -93,6 +104,7 @@ export default function HeroSection() {
                 <span className="text-small font-medium">Security Defender</span>
               </div>
             </div>
+
           </div>
 
         </div>

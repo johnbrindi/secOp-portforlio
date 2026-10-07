@@ -5,6 +5,8 @@ import {
   NavigationCards,
   CTASection,
 } from "./components";
+import FeaturedProjects from "./components/FeaturedProjects";
+import CommunitySection from "./components/CommunitySection";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
 
@@ -16,7 +18,9 @@ export default async function Home() {
       <Navbar />
       <main>
         <HeroSection />
+        <FeaturedProjects />
         <SkillsSection skills={skills} />
+        <CommunitySection />
         <NavigationCards />
         <CTASection />
       </main>

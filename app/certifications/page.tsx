@@ -1,13 +1,17 @@
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
-import { Award, ExternalLink } from "lucide-react";
+import { Award, ExternalLink, Clock } from "lucide-react";
 import certificationsData from "./certificationsData";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Certifications — Mazweoh John Brindi",
-  description: "Professional cybersecurity certifications earned by Mazweoh John Brindi N.",
+  title: "Certifications — Mazwewoh John Brindi",
+  description:
+    "Professional cybersecurity certifications earned and in-progress by Mazwewoh John Brindi Nwosoh.",
 };
+
+const earned = certificationsData.filter((c) => c.status === "earned");
+const inProgress = certificationsData.filter((c) => c.status === "in-progress");
 
 export default function CertificationsPage() {
   return (
@@ -24,8 +28,7 @@ export default function CertificationsPage() {
               <span className="gradient-text">prove the work</span>
             </h1>
             <p className="text-body" style={{ color: "var(--text-muted)", maxWidth: "48ch" }}>
-              Every certification here is backed by hands-on practice — not just
-              exam prep.
+              Every certification here is backed by hands-on practice — not just exam prep.
             </p>
           </div>
 

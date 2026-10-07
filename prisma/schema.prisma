@@ -54,3 +54,13 @@ model posts {
   featured   Boolean? @default(false)
   created_at DateTime @default(now()) @db.Timestamptz(6)
 }
+
+model contacts {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String
+  email      String
+  subject    String?
+  message    String
+  read       Boolean? @default(false)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+}

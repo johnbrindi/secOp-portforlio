@@ -5,6 +5,8 @@ const links = [
   { name: "About", href: "/about" },
   { name: "Projects", href: "/projects" },
   { name: "Blog", href: "/blog" },
+  { name: "Lab", href: "/lab" },
+  { name: "Achievements", href: "/achievements" },
   { name: "Certifications", href: "/certifications" },
   { name: "Contact", href: "/contact" },
 ];

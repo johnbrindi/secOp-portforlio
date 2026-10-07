@@ -1,5 +1,6 @@
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
+import { GraduationCap, Mic, Award, BookOpen, Shield, Network, Globe, Terminal } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -47,7 +48,7 @@ const timeline = [
   },
   {
     year: "2024",
-    role: "Web Penetration Testing Intern",
+    role: "Web Penetration Testing",
     org: "SEED Cybersecurity",
     tags: ["OWASP", "Burp Suite", "SQLi", "XSS", "CSRF", "Kali Linux"],
     points: [
@@ -66,11 +67,11 @@ export default function AboutMePage() {
 
           {/* Bio block */}
           <div
-            className="grid md:grid-cols-[200px_1fr] gap-12 items-start mb-20"
+            className="grid md:grid-cols-[220px_1fr] gap-12 items-start mb-20"
             style={{ borderBottom: "1px solid var(--border)", paddingBottom: "var(--space-xl)" }}
           >
             {/* Avatar */}
-            <div className="relative w-40 h-40 md:w-48 md:h-48 mx-auto md:mx-0 flex-shrink-0">
+            <div className="relative flex-shrink-0 mx-auto md:mx-0">
               <div
                 className="absolute inset-0 rounded-2xl"
                 style={{
@@ -113,6 +114,43 @@ export default function AboutMePage() {
                   My approach is straightforward: understand the system deeply, document everything, and build things that can be trusted.
                 </p>
               </div>
+            </div>
+          </div>
+
+          {/* ── Skills Proficiency ───────────────────────── */}
+          <div
+            className="mb-20"
+            style={{ borderBottom: "1px solid var(--border)", paddingBottom: "var(--space-xl)" }}
+          >
+            <p className="text-label mb-8">Skills proficiency</p>
+            <div className="grid md:grid-cols-2 gap-x-16 gap-y-6">
+              {skills.map((skill) => (
+                <div key={skill.name}>
+                  <div className="flex justify-between mb-2">
+                    <span className="text-small font-medium" style={{ color: "var(--text)" }}>
+                      {skill.name}
+                    </span>
+                    <span className="text-small font-mono" style={{ color: "var(--text-dim)" }}>
+                      {skill.level}%
+                    </span>
+                  </div>
+                  <div
+                    className="h-1.5 rounded-full overflow-hidden"
+                    style={{ background: "var(--surface-3)" }}
+                  >
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${skill.level}%`,
+                        background: "linear-gradient(90deg, var(--accent), var(--accent-2))",
+                      }}
+                    />
+                  </div>
+                  <p className="text-small mt-1" style={{ color: "var(--text-dim)", fontSize: ".65rem" }}>
+                    {skill.category}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
 
