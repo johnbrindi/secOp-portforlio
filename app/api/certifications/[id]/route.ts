@@ -35,9 +35,9 @@ function buildCertificationPayload(body: any) {
   return { title, issuer, date_issued, description, link, image_url };
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     validateId(id);
     const body = await request.json();
     const payload = buildCertificationPayload(body);
@@ -48,9 +48,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
     validateId(id);
     await prisma.certifications.delete({ where: { id } });
     return NextResponse.json({ data: { id } });

@@ -5,7 +5,7 @@ function parseSkills(body: any) {
   const skillsString = typeof body.skills === 'string' ? body.skills : '';
   return skillsString
     .split(',')
-    .map((skill) => skill.trim())
+    .map((skill: string) => skill.trim())
     .filter(Boolean)
     .slice(0, 200);
 }
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Please provide at least one skill.' }, { status: 400 });
     }
 
-    const records = skills.map((name) => ({ name, category: 'General' }));
+    const records = skills.map((name: string) => ({ name, category: 'General' }));
 
     await prisma.skills.createMany({ data: records, skipDuplicates: true });
 
