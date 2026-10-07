@@ -2,32 +2,47 @@
 import React, { useState } from 'react';
 import { createCertification } from '@/app/actions/certification';
 
+type CertificationFormData = {
+  title?: string;
+  issuer?: string;
+  date?: string;
+  description?: string;
+  link?: string;
+  image?: string;
+  imageFile?: File | null;
+};
+
+type Status = {
+  type: 'success' | 'error';
+  message: string;
+} | null;
+
 export default function AdminCertificationForm({
   initialData,
   onCancel,
+  onSubmit,
+  onSuccess,
+  onError,
   submitLabel = 'Add Certification',
 }: {
-  initialData?: {
-    title?: string;
-    issuer?: string;
-    date?: string;
-    description?: string;
-    link?: string;
-    image?: string;
-    imageFile?: File | null;
-  };
+  initialData?: CertificationFormData;
   onCancel?: () => void;
+  onSubmit?: (formData: FormData) => Promise<void>;
+  onSuccess?: () => void;
+  onError?: (message: string) => void;
   submitLabel?: string;
 }) {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<CertificationFormData>({
     title: initialData?.title || '',
     issuer: initialData?.issuer || '',
     date: initialData?.date || '',
     description: initialData?.description || '',
     link: initialData?.link || '',
     image: initialData?.image || '',
-    imageFile: null as File | null,
+    imageFile: null,
   });
+  const [status, setStatus] = useState<Status>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const target = e.target as HTMLInputElement;
@@ -44,41 +59,72 @@ export default function AdminCertificationForm({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setStatus(null);
+    setIsSubmitting(true);
 
     const formData = new FormData();
-    formData.append('title', form.title);
-    formData.append('issuer', form.issuer);
-    formData.append('date', form.date);
-    formData.append('description', form.description);
-    formData.append('link', form.link);
-    formData.append('image', form.image);
+    formData.append('title', form.title || '');
+    formData.append('issuer', form.issuer || '');
+    formData.append('date', form.date || '');
+    formData.append('description', form.description || '');
+    formData.append('link', form.link || '');
+    formData.append('image', form.image || '');
+
     if (form.imageFile) {
       formData.append('imageFile', form.imageFile);
     }
 
-    await createCertification(formData);
+    try {
+      if (onSubmit) {
+        await onSubmit(formData);
+      } else {
+        await createCertification(formData);
+      }
 
-    if (!initialData) {
-      setForm({
-        title: '',
-        issuer: '',
-        date: '',
-        description: '',
-        link: '',
-        image: '',
-        imageFile: null,
-      });
+      const successMessage = initialData ? 'Certification saved successfully.' : 'Certification added successfully.';
+      setStatus({ type: 'success', message: successMessage });
+      onSuccess?.();
+
+      if (!initialData) {
+        setForm({
+          title: '',
+          issuer: '',
+          date: '',
+          description: '',
+          link: '',
+          image: '',
+          imageFile: null,
+        });
+      }
+    } catch (error: any) {
+      const message = error?.message || 'Failed to save certification.';
+      setStatus({ type: 'error', message });
+      onError?.(message);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 p-4 sm:p-6 bg-gray-800 rounded-xl shadow-lg border border-gray-700 w-full max-w-2xl mx-auto">
       <h2 className="text-2xl font-bold text-cyan-400 mb-2">{submitLabel}</h2>
+      {status && (
+        <div
+          className={`rounded-xl px-4 py-3 border ${
+            status.type === 'success'
+              ? 'border-emerald-400/30 bg-emerald-500/10 text-emerald-200'
+              : 'border-rose-400/30 bg-rose-500/10 text-rose-100'
+          }`}
+          role="alert"
+        >
+          {status.message}
+        </div>
+      )}
       <input
         name="title"
         type="text"
         placeholder="Certification Name"
-        value={form.title}
+        value={form.title || ''}
         onChange={handleChange}
         className="w-full px-4 py-3 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
         required
@@ -87,7 +133,7 @@ export default function AdminCertificationForm({
         name="issuer"
         type="text"
         placeholder="Issuer (e.g. EC-Council, CompTIA)"
-        value={form.issuer}
+        value={form.issuer || ''}
         onChange={handleChange}
         className="w-full px-4 py-3 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
         required
@@ -96,7 +142,7 @@ export default function AdminCertificationForm({
         name="date"
         type="text"
         placeholder="Date (e.g. Jan 2024)"
-        value={form.date}
+        value={form.date || ''}
         onChange={handleChange}
         className="w-full px-4 py-3 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
         required
@@ -104,7 +150,7 @@ export default function AdminCertificationForm({
       <textarea
         name="description"
         placeholder="Description (skills, topics, etc.)"
-        value={form.description}
+        value={form.description || ''}
         onChange={handleChange}
         rows={3}
         className="w-full px-4 py-3 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 resize-none"
@@ -114,7 +160,7 @@ export default function AdminCertificationForm({
         name="link"
         type="url"
         placeholder="Certification Link (optional)"
-        value={form.link}
+        value={form.link || ''}
         onChange={handleChange}
         className="w-full px-4 py-3 bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500"
       />
@@ -131,10 +177,11 @@ export default function AdminCertificationForm({
           <img src={form.image} alt="Preview" className="mt-2 rounded-lg max-h-40" />
         )}
       </div>
-      <div className="flex gap-4 pt-4">
+      <div className="flex flex-col gap-4 pt-4 sm:flex-row">
         <button
           type="submit"
-          className="flex-1 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all"
+          disabled={isSubmitting}
+          className="flex-1 px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-lg font-semibold hover:shadow-lg hover:shadow-cyan-500/50 transition-all disabled:cursor-not-allowed disabled:opacity-60"
         >
           {submitLabel}
         </button>

@@ -14,7 +14,7 @@ export default function CertificationsPage() {
     <>
       <Navbar />
       <main className="pt-[7rem] pb-[var(--space-xl)]">
-        <div className="container">
+        <div className="container mx-auto px-4 sm:px-6">
 
           {/* Header */}
           <div className="mb-14">
@@ -30,15 +30,15 @@ export default function CertificationsPage() {
           </div>
 
           {/* List layout */}
-          <div className="flex flex-col gap-0" style={{ borderTop: "1px solid var(--border)" }}>
+          <div className="grid gap-0 divide-y divide-[rgba(255,255,255,.08)]">
             {certificationsData.map((cert, i) => (
               <div
                 key={cert.id}
-                className="group grid md:grid-cols-[auto_1fr_auto] gap-6 py-8 items-start transition-colors duration-200"
+                className="group grid gap-6 py-8 sm:grid-cols-[auto_1fr_auto] items-start transition-colors duration-200"
                 style={{ borderBottom: "1px solid var(--border)" }}
               >
                 {/* Index + icon */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 min-w-0">
                   <span
                     className="font-mono text-small w-8 text-right"
                     style={{ color: "var(--text-dim)" }}
@@ -57,7 +57,7 @@ export default function CertificationsPage() {
                 </div>
 
                 {/* Content */}
-                <div>
+                <div className="space-y-3 min-w-0">
                   <h2
                     className="font-display font-semibold mb-1"
                     style={{ fontSize: "var(--step-1)" }}
@@ -71,25 +71,27 @@ export default function CertificationsPage() {
                     {cert.issuer} · {cert.date}
                   </p>
                   <p
-                    className="text-small"
-                    style={{ color: "var(--text-muted)", maxWidth: "56ch" }}
+                    className="text-small break-words"
+                    style={{ color: "var(--text-muted)", maxWidth: "100%" }}
                   >
                     {cert.description}
                   </p>
                 </div>
 
                 {/* Link */}
-                {cert.link && (
-                  <a
-                    href={cert.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-outline text-small flex-shrink-0 self-start"
-                    style={{ padding: ".4em .9em", gap: ".4em" }}
-                  >
-                    Verify <ExternalLink className="w-3.5 h-3.5" />
-                  </a>
-                )}
+                {cert.link ? (
+                  <div className="flex w-full justify-start sm:justify-end">
+                    <a
+                      href={cert.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn btn-outline text-small flex-shrink-0 self-start w-full sm:w-auto justify-center text-center"
+                      style={{ padding: ".7em 1rem", gap: ".4em" }}
+                    >
+                      Verify <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                ) : null}
               </div>
             ))}
           </div>
