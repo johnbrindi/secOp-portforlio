@@ -14,7 +14,7 @@ interface Project {
   title: string;
   category: string;
   date: string;
-  image: string;
+  images: string[];
   tags: string[];
   summary: string;
   detail: string[];
@@ -27,7 +27,7 @@ const PROJECTS: Project[] = [
     title: "Architecting a Carrier-Grade MPLS Backbone for CRTV",
     category: "Network Engineering",
     date: "Aug 2026",
-    image: "/projects/mpls-topology.png",
+    images: ["/projects/mpls-1.png", "/projects/mpls-2.png"],
     tags: ["MPLS", "L3VPN", "BGP", "OSPF", "VRF", "LDP", "QoS", "Cisco IOS"],
     summary:
       "Designed and implemented a multi-site carrier-grade MPLS backbone to unify Cameroon Radio Television's Yaounde headquarters with regional hubs in Douala, Bamenda, and Maroua under a single high-performance transit fabric.",
@@ -50,7 +50,7 @@ const PROJECTS: Project[] = [
     title: "Inside the Trenches: Core Infrastructure and High-Stakes Troubleshooting at CRTV",
     category: "Network Engineering",
     date: "Jul 2026",
-    image: "/projects/crtv-infrastructure.png",
+    images: ["/projects/troubleshooting-1.png", "/projects/troubleshooting-2.jpg"],
     tags: ["DHCP", "Routing", "Cisco", "Network Troubleshooting", "Server Administration", "Hardware"],
     summary:
       "Resolved a complete network outage at CRTV where client PCs received valid DHCP leases but could not reach the internet. Traced the fault, corrected the misconfiguration, and performed physical hardware upgrades to keep critical broadcast operations running.",
@@ -72,7 +72,7 @@ const PROJECTS: Project[] = [
     title: "ZIGEX Backend Infrastructure and System Architecture",
     category: "System Architecture",
     date: "2025 – Present",
-    image: "/projects/zigex-architecture.png",
+    images: [],
     tags: ["Node.js", "PostgreSQL", "Redis", "REST API", "WebSockets", "System Design", "JWT"],
     summary:
       "Led the full backend infrastructure design and system architecture for ZIGEX. Responsible for the API layer, database schema, authentication system, real-time communication layer, and overall service architecture.",
@@ -90,7 +90,7 @@ const PROJECTS: Project[] = [
     title: "Networking and Cybersecurity Mentorship at SEED",
     category: "Education and Mentorship",
     date: "2024 – Present",
-    image: "/projects/seed-mentorship.png",
+    images: [],
     tags: ["Teaching", "Cisco", "Networking", "Cybersecurity", "Linux", "Packet Tracer", "Mentorship"],
     summary:
       "Mentored over 50 students in networking fundamentals, Cisco configuration, and cybersecurity practices at SEED. Delivered hands-on lab sessions and guided students through applied engineering projects.",
@@ -107,7 +107,7 @@ const PROJECTS: Project[] = [
     title: "Strengthening Linux Security: SSH Public Key Authentication",
     category: "Cybersecurity",
     date: "Dec 2025",
-    image: "/projects/ssh-security.png",
+    images: ["/projects/ssh-hardening.png"],
     tags: ["Linux", "SSH", "Cybersecurity", "Server Hardening", "Sysadmin", "Ed25519"],
     summary:
       "Documented a complete step-by-step implementation of SSH public key authentication on Linux, replacing password-based access to eliminate brute-force attack vectors on remote servers.",
@@ -245,14 +245,20 @@ export default function ProjectsPage() {
                     )}
                   </div>
 
-                  {/* Right: Image */}
-                  <div className="project-image-wrap">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="project-image"
-                    />
-                  </div>
+                  {/* Right: Images */}
+                  {project.images.length > 0 && (
+                    <div className="flex flex-col gap-4">
+                      {project.images.map((img, idx) => (
+                        <div key={idx} className="project-image-wrap">
+                          <img
+                            src={img}
+                            alt={`${project.title} - Image ${idx + 1}`}
+                            className="project-image"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
                 </div>
               </article>
