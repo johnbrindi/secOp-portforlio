@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
+import { JsonLd, breadcrumbSchema, pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Contact",
   description:
-    "Get in touch with Mazwewoh John Brindi for network engineering, infrastructure, and cybersecurity roles, consulting, or collaboration.",
-  alternates: { canonical: "/contact" },
-};
+    "Contact Mazwewoh John Brindi about network engineering, infrastructure and cybersecurity roles or collaboration. Bamenda, Cameroon · remote.",
+  path: "/contact",
+});
 
 export default function ContactLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      <JsonLd data={breadcrumbSchema([["Contact", "/contact"]])} />
+      {children}
+    </>
+  );
 }

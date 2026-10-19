@@ -3,12 +3,14 @@ import Footer from "../components/footer";
 import { Shield, Terminal, Network, Lock, Server, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
+import { JsonLd, breadcrumbSchema, pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Lab — Mazwewoh John Brindi",
+export const metadata: Metadata = pageMetadata({
+  title: "Security Home Lab",
   description:
-    "Active security labs and home lab environment built by Mazwewoh John Brindi — SOC simulation, web security testing, IAM demonstration, and enterprise network design.",
-};
+    "Mazwewoh John Brindi's home lab: SOC simulation with Wazuh, Elastic and Suricata, web security testing, Okta IAM, and enterprise network design with pfSense and GNS3.",
+  path: "/lab",
+});
 
 const activeLabs = [
   {
@@ -127,6 +129,7 @@ export default function LabPage() {
     <>
       <Navbar />
       <main className="pt-[7rem] pb-[var(--space-xl)]">
+        <JsonLd data={breadcrumbSchema([["Lab", "/lab"]])} />
         <div className="container">
 
           {/* Header */}

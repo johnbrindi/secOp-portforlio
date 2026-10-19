@@ -1,62 +1,46 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 import { Inter, Space_Grotesk, Space_Mono } from "next/font/google";
-import { SITE_URL as BASE_URL } from "@/lib/site";
+import { CORE_KEYWORDS, PERSON, SITE_URL } from "@/lib/site";
+import { JsonLd, organizationSchema, personSchema, websiteSchema } from "@/lib/seo";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space-grotesk" });
 const spaceMono = Space_Mono({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-space-mono" });
 
+const DEFAULT_TITLE = `${PERSON.name} — Network & Security Engineer, Cameroon`;
 
 export const metadata: Metadata = {
-  metadataBase: new URL(BASE_URL),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Mazwewoh John Brindi — Network & Infrastructure Engineer · Security Lead",
-    template: "%s — Mazwewoh John Brindi",
+    default: DEFAULT_TITLE,
+    template: `%s | ${PERSON.name}`,
   },
-  description:
-    "Mazwewoh John Brindi Nwosoh (also known as John Brindi or Mazwewoh Nwosoh) — Founder of ZIGEX (ZigexConnect), Network & Systems Infrastructure Engineer, Security Lead, and SOC Analyst. Specializing in LAN/WAN design, SIEM deployment, penetration testing, and hardened server environments. Based in Cameroon.",
-  keywords: [
-    "Mazwewoh John Brindi",
-    "John Brindi",
-    "Mazwewoh Nwosoh",
-    "Mazwewoh John Brindi Nwosoh",
-    "founder of Zigex",
-    "who founded zigexconnect",
-    "zigexconnect founder",
-    "Zigex Cameroon",
-    "ZIGEX platform",
-    "network infrastructure engineer",
-    "systems administrator",
-    "security lead",
-    "SOC analyst",
-    "cybersecurity Cameroon",
-    "penetration tester",
-    "Wazuh SIEM",
-    "LAN WAN design",
-    "ZIGEX",
-    "ethical hacker",
-    "Cisco networking",
-    "backend developer",
-    "NAHPI Bamenda",
-  ],
-  authors: [{ name: "Mazwewoh John Brindi Nwosoh", url: BASE_URL }],
-  creator: "Mazwewoh John Brindi Nwosoh",
+  description: PERSON.description,
+  applicationName: PERSON.name,
+  keywords: CORE_KEYWORDS,
+  authors: [{ name: PERSON.name, url: SITE_URL }],
+  creator: PERSON.name,
+  publisher: PERSON.name,
+  category: "technology",
+  alternates: {
+    types: { "application/rss+xml": [{ url: "/feed.xml", title: `${PERSON.name} — Blog` }] },
+  },
   openGraph: {
-    type: "website",
+    type: "profile",
+    firstName: "John Brindi",
+    lastName: "Mazwewoh",
     locale: "en_US",
-    url: BASE_URL,
-    siteName: "Mazwewoh John Brindi — Portfolio",
-    title: "Mazwewoh John Brindi — Network & Infrastructure Engineer · Security Lead",
-    description:
-      "Portfolio of Mazwewoh John Brindi Nwosoh — Network & Systems Infrastructure Engineer, Security Lead, SOC Analyst, and Founder of ZIGEX. Based in Cameroon.",
+    url: "/",
+    siteName: PERSON.name,
+    title: DEFAULT_TITLE,
+    description: PERSON.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mazwewoh John Brindi — Network & Infrastructure Engineer",
-    description:
-      "Network & Systems Infrastructure Engineer, Security Lead, SOC Analyst, Founder of ZIGEX. Based in Cameroon.",
+    title: DEFAULT_TITLE,
+    description: PERSON.description,
   },
   robots: {
     index: true,
@@ -69,7 +53,12 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  formatDetection: { telephone: false },
+};
 
+export const viewport: Viewport = {
+  themeColor: "#09090f",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({
@@ -78,109 +67,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <head>
-        {/* JSON-LD Structured Data for Google */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify([
-              {
-                "@context": "https://schema.org",
-                "@type": "Person",
-                "@id": `${BASE_URL}/#person`,
-                name: "Mazwewoh John Brindi Nwosoh",
-                alternateName: ["Mazwewoh John Brindi", "John Brindi", "Mazwewoh Nwosoh"],
-                url: BASE_URL,
-                image: `${BASE_URL}/me.jpg`,
-                jobTitle: "Network & Systems Infrastructure Engineer",
-                description:
-                  "Security Lead, SOC Analyst, Founder of ZIGEX (zigexconnect.com). Specializing in network infrastructure, SIEM deployment, and penetration testing.",
-                email: "johnbrindimazwewoh@gmail.com",
-                telephone: "+237650146590",
-                address: {
-                  "@type": "PostalAddress",
-                  addressLocality: "Bambili",
-                  addressCountry: "CM",
-                },
-                sameAs: [
-                  "https://www.linkedin.com/in/mazwewohjohnbrindi/",
-                  "https://github.com/johnbrindi/",
-                  "https://zigexconnect.com/",
-                ],
-                founder: {
-                  "@type": "Organization",
-                  "@id": "https://zigexconnect.com/#organization"
-                },
-                worksFor: {
-                  "@type": "Organization",
-                  "@id": "https://zigexconnect.com/#organization"
-                },
-                alumniOf: {
-                  "@type": "CollegeOrUniversity",
-                  name: "National Higher Polytechnic Institute (NAHPI)",
-                  address: { "@type": "PostalAddress", addressLocality: "Bamenda", addressCountry: "CM" },
-                },
-                knowsAbout: [
-                  "Network Infrastructure",
-                  "LAN/WAN Design",
-                  "Security Operations Center",
-                  "SIEM",
-                  "Penetration Testing",
-                  "Identity and Access Management",
-                  "Wazuh",
-                  "Suricata",
-                  "Backend Development",
-                ],
-              },
-              {
-                "@context": "https://schema.org",
-                "@type": "Organization",
-                "@id": "https://zigexconnect.com/#organization",
-                name: "ZIGEX",
-                alternateName: "ZigexConnect",
-                url: "https://zigexconnect.com/",
-                description: "Zone for Internship, Growth and Experience",
-                founder: {
-                  "@type": "Person",
-                  "@id": `${BASE_URL}/#person`
-                }
-              },
-              {
-                "@context": "https://schema.org",
-                "@type": "WebSite",
-                "@id": `${BASE_URL}/#website`,
-                url: BASE_URL,
-                name: "Mazwewoh John Brindi",
-                publisher: {
-                  "@type": "Person",
-                  "@id": `${BASE_URL}/#person`
-                }
-              },
-              {
-                "@context": "https://schema.org",
-                "@type": "BreadcrumbList",
-                "@id": `${BASE_URL}/#breadcrumb`,
-                itemListElement: [
-                  {
-                    "@type": "ListItem",
-                    position: 1,
-                    name: "Home",
-                    item: BASE_URL
-                  },
-                  {
-                    "@type": "ListItem",
-                    position: 2,
-                    name: "Founder of ZIGEX",
-                    item: `${BASE_URL}/zigex`
-                  }
-                ]
-              }
-            ]),
-          }}
-        />
-      </head>
+    <html lang="en" data-scroll-behavior="smooth">
       <body className={`antialiased ${inter.variable} ${spaceGrotesk.variable} ${spaceMono.variable}`}>
+        {/* Site-wide entity graph: who the site is about, the site itself, and ZIGEX */}
+        <JsonLd data={[personSchema(), websiteSchema(), organizationSchema()]} />
         {children}
       </body>
     </html>

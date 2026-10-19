@@ -36,6 +36,28 @@ Public pages (projects, blog, certifications, skills) are statically generated f
 - HSTS (preload), `X-Frame-Options: DENY`, `nosniff`, strict referrer policy, COOP/COEP, and a locked-down `Permissions-Policy`. The `X-Powered-By` header is removed.
 - [`/.well-known/security.txt`](public/.well-known/security.txt) for responsible disclosure.
 
+## SEO
+
+Built to Google Search Central's guidance: helpful content, unique titles and descriptions, canonical URLs, structured data, and accurate sitemaps. No keyword stuffing; Google ignores the meta keywords tag.
+
+| What | Where |
+| --- | --- |
+| Identity (name, roles, profiles), keywords | `lib/site.ts` |
+| Per-page title / description / canonical / OG helpers, JSON-LD builders | `lib/seo.tsx` |
+| Verified public sources ("Around the web" on /about) | `lib/footprint.ts` |
+| Entity graph on every page: `Person` + `WebSite` + `Organization` (ZIGEX) | `app/layout.tsx` |
+| Page schemas: `ProfilePage`, `ItemList`, `Blog`, `BlogPosting`, `AboutPage`, `BreadcrumbList` | each page |
+| Sitemap (accurate `lastmod`; blog posts added automatically) | `app/sitemap.ts` |
+| RSS feed generated from posts | `app/feed.xml/route.ts` |
+| Social card, favicon, Apple icon, web manifest | `app/opengraph-image.tsx`, `app/icon.tsx`, `app/apple-icon.tsx`, `app/manifest.ts` |
+
+**Automation** (`.github/workflows/seo.yml`)
+- After every successful Vercel production deploy, `scripts/indexnow.mjs` submits recently changed sitemap URLs to IndexNow (Bing, Yandex, Seznam, Naver). Google doesn't support IndexNow and retired sitemap pings in 2023; it re-reads the sitemap submitted in Search Console.
+- The same workflow, plus every Monday, runs `scripts/seo-audit.mjs` (status codes, unique titles and descriptions, canonicals, one `<h1>`, OG tags, valid JSON-LD, image alt text) and Lighthouse (SEO score ≥ 95). The job fails if SEO regresses.
+- Run locally: `npm run seo:audit -- http://localhost:3000` · `npm run seo:indexnow -- --dry-run`
+
+**When you publish or change content:** add the post to `app/blog/posts.ts` (the sitemap and feed update themselves), or bump that page's date in `app/sitemap.ts`. The next deploy notifies search engines.
+
 ## Getting started
 
 ```bash

@@ -32,7 +32,7 @@ export default async function OpengraphImage() {
           </div>
           <div style={{ display: "flex", flexDirection: "column", fontSize: 32, color: "#8b8ba7", marginTop: 24, lineHeight: 1.35 }}>
             <div style={{ display: "flex" }}>Network & Infrastructure Engineer</div>
-            <div style={{ display: "flex" }}>Security Lead · Founder of ZIGEX</div>
+            <div style={{ display: "flex" }}>Security Lead · CEO &amp; Founder, ZIGEX</div>
           </div>
           <div style={{ display: "flex", gap: 14, marginTop: 40 }}>
             {["MPLS / L3VPN", "SOC & SIEM", "Pentesting"].map((tag) => (

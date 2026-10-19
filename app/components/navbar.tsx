@@ -10,7 +10,7 @@ const routes = [
 	{ name: "Projects", path: "/projects" },
 	{ name: "Blog", path: "/blog" },
 	{ name: "Lab", path: "/lab" },
-	{ name: "Achievements", path: "/achievements" },
+	{ name: "Practice", path: "/achievements" },
 	{ name: "Certifications", path: "/certifications" },
 	{ name: "Contact", path: "/contact" },
 ];
@@ -20,7 +20,7 @@ const TICKER_ITEMS = [
 	{ icon: "●", color: "#6e8efb", text: "Published: Architecting a Carrier-Grade MPLS Backbone for CRTV" },
 	{ icon: "●", color: "#4ade80", text: "Designed and implemented L3VPN across 4 national broadcast sites" },
 	{ icon: "●", color: "#a777e3", text: "Mentoring 50+ students in networking and cybersecurity at SEED" },
-	{ icon: "●", color: "#6e8efb", text: "Led backend infrastructure and system architecture at ZIGEX" },
+	{ icon: "●", color: "#6e8efb", text: "CEO & Founder of ZIGEX — connecting students with internships" },
 	{ icon: "●", color: "#4ade80", text: "Available for networking and infrastructure engineering roles" },
 	{ icon: "●", color: "#a777e3", text: "New article: SSH Public Key Authentication on Linux" },
 ];
@@ -55,7 +55,7 @@ export default function Navbar() {
 		>
 			{/* ── Ticker Strip ────────────────────────────────── */}
 			<div
-				className="border-b border-[var(--border)] overflow-hidden"
+				className="hidden sm:block border-b border-[var(--border)] overflow-hidden"
 				style={{ height: "32px" }}
 			>
 				<div className="ticker-track h-full flex items-center" aria-label="Latest activity">
@@ -73,7 +73,7 @@ export default function Navbar() {
 			</div>
 
 			{/* ── Main Nav Row ────────────────────────────────── */}
-			<div className="container flex items-center justify-between py-4">
+			<div className="container flex items-center justify-between h-[68px]">
 				{/* Logo */}
 				<Link href="/" className="flex items-center gap-2.5 group" aria-label="Home">
 					<div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[var(--accent)] to-[var(--accent-2)] flex items-center justify-center flex-shrink-0 group-hover:shadow-[0_0_16px_var(--accent-glow)] transition-shadow duration-300">
@@ -103,7 +103,7 @@ export default function Navbar() {
 					<a
 						href="https://github.com/johnbrindi/"
 						target="_blank"
-						rel="noreferrer"
+						rel="me noopener noreferrer"
 						aria-label="GitHub"
 						className="w-9 h-9 flex items-center justify-center rounded-md text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface-3)] transition-all duration-200"
 					>
@@ -112,7 +112,7 @@ export default function Navbar() {
 					<a
 						href="https://www.linkedin.com/in/mazwewohjohnbrindi/"
 						target="_blank"
-						rel="noreferrer"
+						rel="me noopener noreferrer"
 						aria-label="LinkedIn"
 						className="w-9 h-9 flex items-center justify-center rounded-md text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface-3)] transition-all duration-200"
 					>

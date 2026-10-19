@@ -2,12 +2,15 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/site";
+import { JsonLd, PERSON_ID, breadcrumbSchema, pageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Projects — Mazwewoh John Brindi",
+export const metadata: Metadata = pageMetadata({
+  title: "Projects — MPLS, SOC & Infrastructure",
   description:
-    "Networking and infrastructure projects: Carrier-Grade MPLS backbone design, CRTV core infrastructure troubleshooting, ZIGEX backend architecture, SSH hardening, and more.",
-};
+    "Projects by Mazwewoh John Brindi: a 4-site MPLS L3VPN backbone for CRTV, outage troubleshooting, ZIGEX backend architecture and SSH hardening.",
+  path: "/projects",
+});
 
 interface Project {
   id: string;
@@ -138,6 +141,29 @@ export default function ProjectsPage() {
     <>
       <Navbar />
       <main className="pt-[7rem] pb-[var(--space-xl)]">
+        <JsonLd
+          data={[
+            breadcrumbSchema([["Projects", "/projects"]]),
+            {
+              "@type": "ItemList",
+              name: "Projects by Mazwewoh John Brindi",
+              itemListElement: PROJECTS.map((p, i) => ({
+                "@type": "ListItem",
+                position: i + 1,
+                url: `${SITE_URL}/projects#project-${p.id}`,
+                item: {
+                  "@type": "CreativeWork",
+                  name: p.title,
+                  description: p.summary,
+                  keywords: p.tags.join(", "),
+                  image: `${SITE_URL}${p.images[0]}`,
+                  author: { "@id": PERSON_ID },
+                  ...(p.links[0] ? { sameAs: p.links[0].href } : {}),
+                },
+              })),
+            },
+          ]}
+        />
         <div className="container">
 
           {/* Header */}

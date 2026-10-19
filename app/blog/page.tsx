@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/site";
+import { JsonLd, PERSON_ID, breadcrumbSchema, pageMetadata } from "@/lib/seo";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import BlogList from "./_components/BlogList";
 import posts from "./posts";
 
-export const metadata: Metadata = {
-  title: "Blog",
+export const metadata: Metadata = pageMetadata({
+  title: "Blog — Network & Security Field Notes",
   description:
-    "Field notes from Mazwewoh John Brindi: SOC operations, SIEM tuning, penetration testing methodology, CTF writeups, and network security.",
-  alternates: { canonical: "/blog" },
-};
+    "Field notes from Mazwewoh John Brindi on SOC operations, SIEM tuning, penetration testing methodology, CTF writeups, MPLS and network security.",
+  path: "/blog",
+});
 
 const sortedPosts = [...posts].sort(
   (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
@@ -20,6 +22,24 @@ export default function BlogListPage() {
     <>
       <Navbar />
       <main className="pt-[7rem] pb-[var(--space-xl)]">
+        <JsonLd
+          data={[
+            breadcrumbSchema([["Blog", "/blog"]]),
+            {
+              "@type": "Blog",
+              "@id": `${SITE_URL}/blog#blog`,
+              name: "Network & Security Field Notes",
+              url: `${SITE_URL}/blog`,
+              author: { "@id": PERSON_ID },
+              blogPost: sortedPosts.map((p) => ({
+                "@type": "BlogPosting",
+                headline: p.title,
+                url: `${SITE_URL}/blog/${p.slug}`,
+                datePublished: p.publishedAt,
+              })),
+            },
+          ]}
+        />
         <div className="container">
 
           {/* Header */}

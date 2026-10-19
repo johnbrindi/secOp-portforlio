@@ -7,7 +7,8 @@ import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
 import ShareButtons from "../_components/ShareButtons";
 import posts from "../posts";
-import { SITE_URL } from "@/lib/site";
+import { JsonLd, MAX_TITLE, PERSON_ID, breadcrumbSchema } from "@/lib/seo";
+import { PERSON, SITE_URL } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -22,8 +23,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const blog = posts.find((b) => b.slug === slug);
   if (!blog) return { title: "Article not found" };
 
+  const title = `${blog.title} | ${PERSON.name}`.length > MAX_TITLE ? { absolute: blog.title } : blog.title;
+
   return {
-    title: blog.title,
+    title,
     description: blog.excerpt,
     keywords: blog.tags,
     alternates: { canonical: `/blog/${blog.slug}` },
@@ -195,7 +198,6 @@ export default async function BlogDetailPage({ params }: Props) {
     .slice(0, 2);
 
   const jsonLd = {
-    "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: blog.title,
     description: blog.excerpt,
@@ -204,17 +206,16 @@ export default async function BlogDetailPage({ params }: Props) {
     mainEntityOfPage: url,
     keywords: blog.tags.join(", "),
     ...(blog.image ? { image: blog.image } : {}),
-    author: { "@type": "Person", "@id": `${SITE_URL}/#person`, name: "Mazwewoh John Brindi" },
+    inLanguage: "en",
+    author: { "@id": PERSON_ID },
+    publisher: { "@id": PERSON_ID },
   };
 
   return (
     <>
       <Navbar />
       <main className="pt-[7rem] pb-[var(--space-xl)]">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
-        />
+        <JsonLd data={[jsonLd, breadcrumbSchema([["Blog", "/blog"], [blog.title, `/blog/${blog.slug}`]])]} />
         <div className="container">
           <article style={{ maxWidth: "720px", margin: "0 auto" }}>
 

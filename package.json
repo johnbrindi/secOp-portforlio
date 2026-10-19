@@ -9,7 +9,9 @@
     "lint": "eslint",
     "sanity:dev": "sanity dev",
     "postinstall": "prisma generate",
-    "seed": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' prisma/seed.ts"
+    "seed": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' prisma/seed.ts",
+    "seo:audit": "node scripts/seo-audit.mjs",
+    "seo:indexnow": "node scripts/indexnow.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

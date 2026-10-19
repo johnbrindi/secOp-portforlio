@@ -1,29 +1,18 @@
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/site";
+import { JsonLd, PERSON_ID, WEBSITE_ID, ZIGEX_ID, breadcrumbSchema, pageMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowRight, Globe, Shield } from "lucide-react";
 
-export const metadata: Metadata = {
-  title: "Mazwewoh John Brindi Nwosoh — Founder of ZigexConnect | ZIGEX",
+export const metadata: Metadata = pageMetadata({
+  title: "ZIGEX (ZigexConnect) — Founded by Mazwewoh John Brindi",
   description:
-    "Learn about Mazwewoh John Brindi Nwosoh (John Brindi), the founder of ZIGEX (ZigexConnect), a platform bridging the gap between education and the professional ecosystem in Cameroon.",
-  alternates: {
-    canonical: "https://mazwewohjohnbrindi.vercel.app/zigex",
-  },
-  keywords: [
-    "founder of Zigex",
-    "founder of ZigexConnect",
-    "who founded Zigex",
-    "who founded ZigexConnect",
-    "Mazwewoh John Brindi",
-    "John Brindi",
-    "Mazwewoh Nwosoh",
-    "Mazwewoh John Brindi Nwosoh",
-    "Zigex Cameroon",
-    "ZIGEX platform",
-  ]
-};
+    "The story of ZIGEX (ZigexConnect), the Bamenda career platform connecting students with internships, and of its founder Mazwewoh John Brindi.",
+  path: "/zigex",
+  absoluteTitle: true,
+});
 
 export default function ZigexFounderPage() {
   return (
@@ -31,31 +20,19 @@ export default function ZigexFounderPage() {
       <Navbar />
       <main className="pt-[7rem] pb-[var(--space-xl)]">
         <div className="container max-w-4xl">
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
+          <JsonLd
+            data={[
+              breadcrumbSchema([["ZIGEX", "/zigex"]]),
+              {
                 "@type": "AboutPage",
-                mainEntity: {
-                  "@type": "Person",
-                  name: "Mazwewoh John Brindi Nwosoh",
-                  alternateName: ["Mazwewoh John Brindi", "John Brindi", "Mazwewoh Nwosoh"],
-                  jobTitle: "Founder",
-                  worksFor: {
-                    "@type": "Organization",
-                    name: "ZIGEX",
-                    alternateName: "ZigexConnect",
-                    url: "https://zigexconnect.com/"
-                  },
-                  url: "https://mazwewohjohnbrindi.vercel.app",
-                  sameAs: [
-                    "https://zigexconnect.com/",
-                    "https://www.linkedin.com/in/mazwewohjohnbrindi/"
-                  ]
-                }
-              })
-            }}
+                "@id": `${SITE_URL}/zigex#webpage`,
+                url: `${SITE_URL}/zigex`,
+                name: "ZIGEX (ZigexConnect) — Founded by Mazwewoh John Brindi",
+                about: { "@id": ZIGEX_ID },
+                mainEntity: { "@id": PERSON_ID },
+                isPartOf: { "@id": WEBSITE_ID },
+              },
+            ]}
           />
 
           <div className="mb-12">

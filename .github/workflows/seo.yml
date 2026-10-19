@@ -1,0 +1,62 @@
+name: SEO
+
+# Runs after every successful Vercel production deployment (Vercel posts a
+# deployment_status event to GitHub), every Monday, or on demand.
+on:
+  deployment_status:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+    inputs:
+      submit_all:
+        description: "Submit every sitemap URL to IndexNow (not just recently changed ones)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+env:
+  SITE_URL: https://mazwewohjohnbrindi.vercel.app
+
+jobs:
+  indexnow:
+    # Only after a successful *production* deploy, or when run by hand
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'deployment_status' &&
+       github.event.deployment_status.state == 'success' &&
+       github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Notify Bing, Yandex, Seznam & Naver via IndexNow
+        run: node scripts/indexnow.mjs ${{ inputs.submit_all && '--all' || '' }}
+
+  audit:
+    if: >-
+      github.event_name != 'deployment_status' ||
+      (github.event.deployment_status.state == 'success' &&
+       github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: On-page SEO audit (titles, descriptions, canonicals, h1, JSON-LD, alt text)
+        run: node scripts/seo-audit.mjs "$SITE_URL"
+      - name: Lighthouse (SEO score must stay ≥ 95)
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            ${{ env.SITE_URL }}/
+            ${{ env.SITE_URL }}/about
+            ${{ env.SITE_URL }}/projects
+            ${{ env.SITE_URL }}/blog
+          configPath: ./lighthouserc.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true

@@ -4,68 +4,140 @@ export interface Certification {
   issuer: string;
   date: string;
   description: string;
+  /** Public verification link (Credly, Cisco badge, etc.). Leave empty until a real one exists. */
   link?: string;
   status: "earned" | "in-progress";
 }
 
+// Source of truth: the CV (app/cv/page.tsx). Only list credentials that can be verified on request.
 const certificationsData: Certification[] = [
   // Earned
   {
-    id: "1",
-    title: "Certified Ethical Hacker (CEH)",
-    issuer: "EC-Council",
-    date: "Jan 2024",
+    id: "cisco-ethical-hacker",
+    title: "Ethical Hacker",
+    issuer: "Cisco Networking Academy",
+    date: "2024",
     description:
-      "Comprehensive ethical hacking and penetration testing skills across 20 security domains including network scanning, enumeration, system hacking, session hijacking, and more.",
-    link: "https://www.eccouncil.org/programs/certified-ethical-hacker-ceh/",
+      "End-to-end penetration testing: planning and scoping, reconnaissance, vulnerability scanning, exploiting network and application weaknesses, post-exploitation, and reporting.",
     status: "earned",
   },
   {
-    id: "2",
+    id: "cisco-network-defense",
+    title: "Network Defense",
+    issuer: "Cisco Networking Academy",
+    date: "2024",
+    description:
+      "Defending networks with system and endpoint hardening, access control, firewalls, cloud security, cryptography, and security monitoring.",
+    status: "earned",
+  },
+  {
+    id: "cisco-network-basics",
+    title: "Network Basics",
+    issuer: "Cisco Networking Academy",
+    date: "2024",
+    description:
+      "Networking fundamentals: protocols and models, IPv4/IPv6 addressing, Ethernet, the network and transport layers, and basic device configuration.",
+    status: "earned",
+  },
+  {
+    id: "cisco-intro-cybersecurity",
+    title: "Introduction to Cybersecurity",
+    issuer: "Cisco Networking Academy",
+    date: "2024",
+    description:
+      "Core cybersecurity concepts: threats and attacks, protecting personal and organisational data, and the security operations landscape.",
+    status: "earned",
+  },
+  {
+    id: "cisco-pentest-planning",
+    title: "Planning & Scoping a Penetration Testing Assessment",
+    issuer: "Cisco",
+    date: "2024",
+    description:
+      "Rules of engagement, legal and compliance considerations, scoping, and methodology selection for professional penetration tests.",
+    status: "earned",
+  },
+  {
+    id: "cisco-info-gathering",
+    title: "Information Gathering & Vulnerability Scanning",
+    issuer: "Cisco",
+    date: "2024",
+    description:
+      "Passive and active reconnaissance, enumeration, and running and analysing vulnerability scans.",
+    status: "earned",
+  },
+  {
+    id: "cisco-social-engineering",
+    title: "Social Engineering Attacks",
+    issuer: "Cisco",
+    date: "2024",
+    description: "Phishing, pretexting, physical attacks, and the tools used to simulate social engineering in authorised tests.",
+    status: "earned",
+  },
+  {
+    id: "cisco-wired-wireless",
+    title: "Exploiting Wired & Wireless Networks",
+    issuer: "Cisco",
+    date: "2024",
+    description: "Attacking switched networks, network protocols, and Wi-Fi in a lab setting, and recommending mitigations.",
+    status: "earned",
+  },
+  {
+    id: "cisco-app-vulns",
+    title: "Exploiting Application-Based Vulnerabilities",
+    issuer: "Cisco",
+    date: "2024",
+    description: "Web application attacks — injection, authentication and authorisation flaws, and insecure code — mapped to the OWASP Top 10.",
+    status: "earned",
+  },
+  {
+    id: "cisco-cloud-mobile-iot",
+    title: "Cloud, Mobile & IoT Security",
+    issuer: "Cisco",
+    date: "2024",
+    description: "Attack surfaces and testing approaches for cloud services, mobile platforms, and IoT devices.",
+    status: "earned",
+  },
+  {
+    id: "cisco-post-exploitation",
+    title: "Performing Post-Exploitation Techniques",
+    issuer: "Cisco",
+    date: "2024",
+    description: "Persistence, lateral movement, privilege escalation, and covering tracks — and how defenders detect them.",
+    status: "earned",
+  },
+  {
+    id: "seed-backend",
+    title: "Certified Backend Developer",
+    issuer: "SEED, Bamenda",
+    date: "2026",
+    description: "Backend engineering with Node.js, REST APIs, databases, and deployment.",
+    status: "earned",
+  },
+
+  // Working towards
+  {
+    id: "goal-security-plus",
     title: "CompTIA Security+",
     issuer: "CompTIA",
-    date: "Mar 2023",
-    description:
-      "Foundational cybersecurity knowledge covering threats, vulnerabilities, architecture, identity management, risk management, and incident response.",
-    link: "https://www.comptia.org/certifications/security",
-    status: "earned",
+    date: "Goal",
+    description: "Baseline security certification covering threats, architecture, operations, and governance.",
+    status: "in-progress",
   },
   {
-    id: "3",
-    title: "AWS Certified Solutions Architect — Associate",
-    issuer: "Amazon Web Services",
-    date: "Aug 2022",
-    description:
-      "Cloud architecture design and security on the AWS platform including IAM, VPC, EC2, S3, and secure multi-tier application design.",
-    link: "https://aws.amazon.com/certification/certified-solutions-architect-associate/",
-    status: "earned",
+    id: "goal-ceh",
+    title: "Certified Ethical Hacker (CEH)",
+    issuer: "EC-Council",
+    date: "Goal",
+    description: "Vendor-neutral ethical hacking certification following on from the Cisco Ethical Hacker pathway.",
+    status: "in-progress",
   },
-  // In Progress
   {
-    id: "4",
+    id: "goal-oscp",
     title: "Offensive Security Certified Professional (OSCP)",
-    issuer: "Offensive Security",
-    date: "Target: 2025",
-    description:
-      "Advanced hands-on penetration testing certification. Currently working through the PEN-200 coursework and PWK lab machines.",
-    status: "in-progress",
-  },
-  {
-    id: "5",
-    title: "Okta Certified Professional",
-    issuer: "Okta",
-    date: "Target: 2025",
-    description:
-      "Validates expertise in Okta platform fundamentals, identity lifecycle management, SSO, MFA configuration, and OIDC/OAuth 2.0 implementation.",
-    status: "in-progress",
-  },
-  {
-    id: "6",
-    title: "AWS Security Specialty",
-    issuer: "Amazon Web Services",
-    date: "Target: 2026",
-    description:
-      "Advanced certification covering data protection, infrastructure security, identity management, logging, monitoring, and incident response in AWS environments.",
+    issuer: "OffSec",
+    date: "Goal",
+    description: "Hands-on, exam-lab-based penetration testing certification.",
     status: "in-progress",
   },
 ];

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getSkills } from "@/sanity/lib/fetch";
 import {
   HeroSection,
@@ -9,6 +10,13 @@ import FeaturedProjects from "./components/FeaturedProjects";
 import CommunitySection from "./components/CommunitySection";
 import Navbar from "./components/navbar";
 import Footer from "./components/footer";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+    types: { "application/rss+xml": [{ url: "/feed.xml", title: "Mazwewoh John Brindi — Blog" }] },
+  },
+};
 
 export default async function Home() {
   const skills = await getSkills();

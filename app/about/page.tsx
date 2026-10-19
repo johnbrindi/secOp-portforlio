@@ -1,13 +1,19 @@
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import type { Metadata } from "next";
+import { ExternalLink } from "lucide-react";
+import { JsonLd, PERSON_ID, breadcrumbSchema, pageMetadata } from "@/lib/seo";
+import { FOOTPRINT, MEDIUM_ARTICLES } from "@/lib/footprint";
+import { SITE_URL } from "@/lib/site";
 import Image from "next/image";
 
-export const metadata: Metadata = {
-  title: "About — Mazwewoh John Brindi",
+export const metadata: Metadata = pageMetadata({
+  title: "About",
   description:
-    "Enterprise networking and IT infrastructure engineer. Designed carrier-grade MPLS backbones at CRTV, mentored 50+ students at SEED, and led backend infrastructure at ZIGEX.",
-};
+    "About Mazwewoh John Brindi, network and infrastructure engineer in Bamenda, Cameroon: MPLS design at CRTV, cybersecurity teaching at SEED, and ZIGEX.",
+  path: "/about",
+  ogType: "profile",
+});
 
 const timeline = [
   {
@@ -26,10 +32,11 @@ const timeline = [
   },
   {
     year: "2025 – present",
-    role: "Backend Infrastructure Lead and System Architect",
-    org: "ZIGEX",
-    tags: ["Node.js", "PostgreSQL", "Redis", "REST API", "System Architecture", "WebSockets"],
+    role: "CEO & Founder",
+    org: "ZIGEX — Bamenda",
+    tags: ["Leadership", "Product Strategy", "Node.js", "PostgreSQL", "System Architecture", "Security"],
     points: [
+      "Founded ZIGEX, a career platform connecting students in Bamenda and across Cameroon with internships, programs and tech opportunities; lead the company's strategy, partnerships and product.",
       "Designed and led the backend infrastructure and system architecture for ZIGEX, a technology platform serving real-time operational needs.",
       "Architected the API layer, database schema, authentication system, and service communication patterns for the core platform.",
       "Implemented scalable patterns including connection pooling, Redis caching, and WebSocket real-time channels.",
@@ -72,6 +79,26 @@ export default function AboutMePage() {
     <>
       <Navbar />
       <main className="pt-[7rem] pb-[var(--space-xl)]">
+        <JsonLd
+          data={[
+            breadcrumbSchema([["About", "/about"]]),
+            {
+              "@type": "ProfilePage",
+              "@id": `${SITE_URL}/about#profilepage`,
+              url: `${SITE_URL}/about`,
+              name: "About Mazwewoh John Brindi",
+              dateCreated: "2025-10-01T00:00:00Z",
+              dateModified: "2026-10-19T00:00:00Z",
+              mainEntity: { "@id": PERSON_ID },
+              hasPart: MEDIUM_ARTICLES.map((a) => ({
+                "@type": "Article",
+                headline: a.title,
+                url: a.url,
+                author: { "@id": PERSON_ID },
+              })),
+            },
+          ]}
+        />
         <div className="container">
 
           {/* Bio block */}
@@ -120,7 +147,7 @@ export default function AboutMePage() {
                   At CRTV, Cameroon&apos;s national broadcaster, I designed a Carrier-Grade MPLS backbone to unify four geographically distributed sites under a single high-performance transit fabric. That project required not just technical knowledge but the ability to reason about path control, traffic isolation, and quality of service simultaneously under real broadcast constraints.
                 </p>
                 <p>
-                  Beyond infrastructure, I lead the backend engineering at ZIGEX and spend a significant part of my time mentoring the next generation of engineers at SEED, where I have worked with over 50 students across networking and cybersecurity disciplines.
+                  Beyond infrastructure, I am the CEO and founder of ZIGEX — where I also built the backend and security architecture — and I spend a significant part of my time mentoring the next generation of engineers at SEED, where I have worked with over 50 students across networking and cybersecurity disciplines.
                 </p>
                 <p>
                   My approach is straightforward: understand the system deeply, document everything, and build things that can be trusted.
@@ -249,6 +276,69 @@ export default function AboutMePage() {
               ))}
             </div>
           </div>
+
+          {/* ── Writing ───────────────────────────────────── */}
+          <section className="mt-20" aria-labelledby="writing">
+            <h2 id="writing" className="text-label mb-8">Published writing</h2>
+            <ul className="grid md:grid-cols-3 gap-4">
+              {MEDIUM_ARTICLES.map((a) => (
+                <li key={a.url}>
+                  <a
+                    href={a.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="card p-6 h-full flex flex-col gap-3 no-underline"
+                  >
+                    <span className="text-label" style={{ fontSize: ".65rem", color: "var(--accent)" }}>
+                      {a.source}
+                    </span>
+                    <span className="font-display font-semibold leading-snug" style={{ fontSize: "var(--step-1)" }}>
+                      {a.title}
+                    </span>
+                    <span className="text-small flex-1" style={{ color: "var(--text-muted)", lineHeight: 1.65 }}>
+                      {a.summary}
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 text-small font-medium" style={{ color: "var(--accent)" }}>
+                      Read on Medium <ExternalLink className="w-3.5 h-3.5" aria-hidden />
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          {/* ── Around the web (sources) ──────────────────── */}
+          <section className="mt-20" aria-labelledby="around-the-web">
+            <h2 id="around-the-web" className="text-label mb-3">Around the web</h2>
+            <p className="text-small mb-8" style={{ color: "var(--text-muted)", maxWidth: "60ch" }}>
+              Public profiles and independent sources about my work. Each link goes to the original source.
+            </p>
+            <ul style={{ borderTop: "1px solid var(--border)" }}>
+              {FOOTPRINT.map((f) => (
+                <li key={f.url} style={{ borderBottom: "1px solid var(--border)" }}>
+                  <a
+                    href={f.url}
+                    target="_blank"
+                    rel="noopener noreferrer me"
+                    className="group grid sm:grid-cols-[200px_1fr_auto] gap-x-6 gap-y-1 py-5 items-start"
+                  >
+                    <span className="text-label" style={{ fontSize: ".68rem" }}>{f.source}</span>
+                    <span>
+                      <span className="block font-medium" style={{ color: "var(--text)" }}>{f.title}</span>
+                      <span className="block text-small mt-1" style={{ color: "var(--text-muted)", lineHeight: 1.65 }}>
+                        {f.summary}
+                      </span>
+                    </span>
+                    <ExternalLink
+                      className="hidden sm:block w-4 h-4 mt-1 transition-colors group-hover:text-[var(--text)]"
+                      style={{ color: "var(--text-dim)" }}
+                      aria-hidden
+                    />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
 
         </div>
       </main>

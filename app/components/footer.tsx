@@ -1,4 +1,4 @@
-import { Github, Linkedin, Shield } from "lucide-react";
+import { Github, Linkedin, PenLine, Rss, Shield } from "lucide-react";
 import Link from "next/link";
 
 const links = [
@@ -6,7 +6,7 @@ const links = [
   { name: "Projects", href: "/projects" },
   { name: "Blog", href: "/blog" },
   { name: "Lab", href: "/lab" },
-  { name: "Achievements", href: "/achievements" },
+  { name: "Practice", href: "/achievements" },
   { name: "Certifications", href: "/certifications" },
   { name: "Contact", href: "/contact" },
 ];
@@ -46,7 +46,7 @@ export default function Footer() {
             className="text-small"
             style={{ color: "var(--text-muted)", maxWidth: "28ch" }}
           >
-            Network Engineer · IT Infrastructure · Cybersecurity
+            Network &amp; Infrastructure Engineer · Security Lead · Bamenda, Cameroon
           </p>
         </div>
 
@@ -70,7 +70,7 @@ export default function Footer() {
             <a
               href="https://github.com/johnbrindi/"
               target="_blank"
-              rel="noreferrer"
+              rel="me noopener noreferrer"
               aria-label="GitHub"
               className="w-8 h-8 flex items-center justify-center rounded-md transition-colors duration-200"
               style={{
@@ -83,7 +83,7 @@ export default function Footer() {
             <a
               href="https://www.linkedin.com/in/mazwewohjohnbrindi/"
               target="_blank"
-              rel="noreferrer"
+              rel="me noopener noreferrer"
               aria-label="LinkedIn"
               className="w-8 h-8 flex items-center justify-center rounded-md transition-colors duration-200"
               style={{
@@ -93,9 +93,33 @@ export default function Footer() {
             >
               <Linkedin className="w-4 h-4" />
             </a>
+            <a
+              href="https://medium.com/@johnbrindimazwewoh"
+              target="_blank"
+              rel="me noopener noreferrer"
+              aria-label="Medium"
+              className="w-8 h-8 flex items-center justify-center rounded-md transition-colors duration-200"
+              style={{
+                color: "var(--text-muted)",
+                background: "var(--surface-2)",
+              }}
+            >
+              <PenLine className="w-4 h-4" />
+            </a>
+            <a
+              href="/feed.xml"
+              aria-label="RSS feed"
+              className="w-8 h-8 flex items-center justify-center rounded-md transition-colors duration-200"
+              style={{
+                color: "var(--text-muted)",
+                background: "var(--surface-2)",
+              }}
+            >
+              <Rss className="w-4 h-4" />
+            </a>
           </div>
           <p className="text-small" style={{ color: "var(--text-dim)" }}>
-            &copy; {year} Mazwewoh John Brindi N.
+            &copy; {year} Mazwewoh John Brindi Nwosoh
           </p>
         </div>
       </div>
