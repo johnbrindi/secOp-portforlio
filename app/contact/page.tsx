@@ -4,7 +4,6 @@ import { useState } from "react";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import { Mail, Github, Linkedin, Send, CheckCircle, AlertCircle, Loader2, Phone } from "lucide-react";
-import type { Metadata } from "next";
 
 const SOCIALS = [
   {
@@ -34,7 +33,7 @@ const SOCIALS = [
 ];
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "", website: "" });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
@@ -104,7 +103,7 @@ export default function ContactPage() {
                     Thanks for reaching out. I&apos;ll get back to you within 1-2 business days.
                   </p>
                   <button
-                    onClick={() => { setStatus("idle"); setForm({ name: "", email: "", subject: "", message: "" }); }}
+                    onClick={() => { setStatus("idle"); setForm({ name: "", email: "", subject: "", message: "", website: "" }); }}
                     className="btn btn-outline text-small"
                     style={{ marginTop: "1rem", padding: ".5em 1.2em" }}
                   >
@@ -113,6 +112,11 @@ export default function ContactPage() {
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
+                  {/* Honeypot — hidden from people, bots tend to fill it in */}
+                  <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", width: 1, height: 1, overflow: "hidden" }}>
+                    <label htmlFor="website">Website</label>
+                    <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" value={form.website} onChange={handleChange} />
+                  </div>
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div className="flex flex-col gap-1.5">
                       <label htmlFor="name" className="text-label" style={{ fontSize: ".7rem" }}>
@@ -121,6 +125,7 @@ export default function ContactPage() {
                       <input
                         id="name"
                         name="name"
+                        maxLength={100}
                         type="text"
                         placeholder="John Doe"
                         value={form.name}
@@ -137,6 +142,7 @@ export default function ContactPage() {
                       <input
                         id="email"
                         name="email"
+                        maxLength={254}
                         type="email"
                         placeholder="john@example.com"
                         value={form.email}
@@ -155,6 +161,7 @@ export default function ContactPage() {
                     <input
                       id="subject"
                       name="subject"
+                      maxLength={200}
                       type="text"
                       placeholder="Consulting inquiry, collaboration, networking project..."
                       value={form.subject}
@@ -171,6 +178,7 @@ export default function ContactPage() {
                     <textarea
                       id="message"
                       name="message"
+                      maxLength={5000}
                       placeholder="Describe what you need..."
                       value={form.message}
                       onChange={handleChange}

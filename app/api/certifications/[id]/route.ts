@@ -1,46 +1,25 @@
 import prisma from '@/lib/prisma';
+import { adminGuard } from '@/lib/auth';
+import { validateCertificationInput } from '@/lib/certification';
 import { NextRequest, NextResponse } from 'next/server';
 
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 function validateId(id: string) {
-  if (!id) {
-    throw new Error('Certification id is required.');
+  if (!id || !UUID_PATTERN.test(id)) {
+    throw new Error('A valid certification id is required.');
   }
-}
-
-function normalizeString(value: unknown, maxLength: number) {
-  return typeof value === 'string' ? value.trim().slice(0, maxLength) : '';
-}
-
-function validateUrl(value: string) {
-  if (!value) return null;
-  try {
-    return new URL(value).toString();
-  } catch {
-    throw new Error('The provided URL is invalid.');
-  }
-}
-
-function buildCertificationPayload(body: any) {
-  const title = normalizeString(body.title, 255);
-  const issuer = normalizeString(body.issuer, 120);
-  const date_issued = normalizeString(body.date, 60);
-  const description = normalizeString(body.description, 1000);
-  const link = validateUrl(normalizeString(body.link, 2048)) || null;
-  const image_url = validateUrl(normalizeString(body.image, 2048)) || null;
-
-  if (!title || !issuer || !date_issued || !description) {
-    throw new Error('Title, issuer, date, and description are required.');
-  }
-
-  return { title, issuer, date_issued, description, link, image_url };
 }
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const denied = await adminGuard();
+  if (denied) return denied;
+
   try {
     const { id } = await params;
     validateId(id);
     const body = await request.json();
-    const payload = buildCertificationPayload(body);
+    const payload = validateCertificationInput(body);
     const certification = await prisma.certifications.update({ where: { id }, data: payload });
     return NextResponse.json({ data: certification });
   } catch (error: any) {
@@ -49,6 +28,9 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 }
 
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const denied = await adminGuard();
+  if (denied) return denied;
+
   try {
     const { id } = await params;
     validateId(id);

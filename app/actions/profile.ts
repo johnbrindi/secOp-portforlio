@@ -1,10 +1,13 @@
 'use server';
 
 import prisma from '@/lib/prisma';
+import { requireAdmin } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
 import { randomUUID } from 'crypto';
 
 export async function updateProfile(formData: FormData) {
+    await requireAdmin();
+
     const name = formData.get('name') as string;
     const title = formData.get('title') as string;
     const bio = formData.get('bio') as string;

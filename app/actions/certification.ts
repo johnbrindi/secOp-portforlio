@@ -1,73 +1,13 @@
 'use server';
 
 import prisma from '@/lib/prisma';
+import { requireAdmin } from '@/lib/auth';
+import { validateCertificationInput } from '@/lib/certification';
 import { revalidatePath } from 'next/cache';
 
-const MAX_TITLE_LENGTH = 255;
-const MAX_ISSUER_LENGTH = 120;
-const MAX_DATE_LENGTH = 60;
-const MAX_DESCRIPTION_LENGTH = 1000;
-const MAX_LINK_LENGTH = 2048;
-const MAX_IMAGE_URL_LENGTH = 2048;
-
-function normalizeText(value: unknown, maxLength: number): string {
-  return typeof value === 'string' ? value.trim().slice(0, maxLength) : '';
-}
-
-function validateUrl(value: string): string | null {
-  if (!value) {
-    return null;
-  }
-
-  try {
-    return new URL(value).toString();
-  } catch {
-    throw new Error('Certification link must be a valid URL.');
-  }
-}
-
-function validateCertificationInput(input: {
-  title?: unknown;
-  issuer?: unknown;
-  date?: unknown;
-  description?: unknown;
-  link?: unknown;
-  image?: unknown;
-}) {
-  const title = normalizeText(input.title, MAX_TITLE_LENGTH);
-  const issuer = normalizeText(input.issuer, MAX_ISSUER_LENGTH);
-  const date = normalizeText(input.date, MAX_DATE_LENGTH);
-  const description = normalizeText(input.description, MAX_DESCRIPTION_LENGTH);
-  const linkValue = normalizeText(input.link, MAX_LINK_LENGTH);
-  const imageUrl = normalizeText(input.image, MAX_IMAGE_URL_LENGTH);
-
-  if (!title) {
-    throw new Error('Certification title is required.');
-  }
-
-  if (!issuer) {
-    throw new Error('Certification issuer is required.');
-  }
-
-  if (!date) {
-    throw new Error('Certification date is required.');
-  }
-
-  if (!description) {
-    throw new Error('Certification description is required.');
-  }
-
-  return {
-    title,
-    issuer,
-    date_issued: date,
-    description,
-    link: validateUrl(linkValue),
-    image_url: validateUrl(imageUrl) || '',
-  };
-}
-
 export async function createCertification(formData: FormData) {
+  await requireAdmin();
+
   const payload = validateCertificationInput({
     title: formData.get('title'),
     issuer: formData.get('issuer'),
@@ -90,6 +30,8 @@ export async function createCertification(formData: FormData) {
 }
 
 export async function updateCertification(id: string, formData: FormData) {
+  await requireAdmin();
+
   if (!id || typeof id !== 'string') {
     throw new Error('Certification id is required to update a record.');
   }
@@ -117,6 +59,8 @@ export async function updateCertification(id: string, formData: FormData) {
 }
 
 export async function deleteCertification(id: string) {
+  await requireAdmin();
+
   if (!id || typeof id !== 'string') {
     throw new Error('Certification id is required to delete a record.');
   }

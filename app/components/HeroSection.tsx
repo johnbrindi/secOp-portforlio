@@ -1,5 +1,6 @@
 import { Shield, Network, ArrowRight, Download } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function HeroSection() {
   return (
@@ -79,9 +80,14 @@ export default function HeroSection() {
 
               {/* Photo */}
               <div className="hero-avatar-ring">
-                <img
+                <Image
                   src="/me.jpg"
-                  alt="Mazwewoh John Brindi"
+                  alt="Portrait of Mazwewoh John Brindi"
+                  width={1200}
+                  height={1800}
+                  loading="eager"
+                  fetchPriority="high"
+                  sizes="320px"
                   className="hero-avatar-img"
                 />
               </div>

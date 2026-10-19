@@ -1,6 +1,21 @@
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import type { Metadata } from "next";
+import { authOptions, isAdminEmail } from "@/lib/auth";
 import AdminSidebar from "../components/admin/AdminSidebar";
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export const metadata: Metadata = {
+  title: "Admin",
+  robots: { index: false, follow: false },
+};
+
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  // Defense in depth: proxy.ts already gates /admin, but never render admin data without a verified session
+  const session = await getServerSession(authOptions);
+  if (!isAdminEmail(session?.user?.email)) {
+    redirect("/api/auth/signin?callbackUrl=/admin");
+  }
+
   return (
     <div
       style={{

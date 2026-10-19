@@ -1,22 +1,16 @@
 import { MetadataRoute } from "next";
+import { SITE_URL } from "@/lib/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/zigex", "/about", "/cv"],
+        allow: "/",
         disallow: ["/admin/", "/api/"],
       },
-      {
-        userAgent: "Googlebot-News",
-        allow: ["/", "/zigex", "/about"],
-      },
-      {
-        userAgent: "bingbot",
-        allow: ["/", "/zigex", "/about"],
-      }
     ],
-    sitemap: "https://mazwewohjohnbrindi.vercel.app/sitemap.xml",
+    sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   };
 }

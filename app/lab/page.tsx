@@ -1,6 +1,6 @@
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
-import { Shield, Terminal, Network, Lock, Server, ArrowRight, ExternalLink } from "lucide-react";
+import { Shield, Terminal, Network, Lock, Server, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
 

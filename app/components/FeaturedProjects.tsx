@@ -1,4 +1,4 @@
-import { Shield, GitBranch, Users, Globe, Mic, ArrowRight } from "lucide-react";
+import { Shield, GitBranch, Users, Globe, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 const featuredProjects = [

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Shield, Github, Linkedin, Menu, X } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const routes = [
 	{ name: "About", path: "/about" },
@@ -29,12 +30,21 @@ const DOUBLED = [...TICKER_ITEMS, ...TICKER_ITEMS];
 export default function Navbar() {
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [scrolled, setScrolled] = useState(false);
+	const pathname = usePathname();
+	const isActive = (path: string) => pathname === path || pathname.startsWith(`${path}/`);
 
 	useEffect(() => {
 		const handler = () => setScrolled(window.scrollY > 20);
 		window.addEventListener("scroll", handler, { passive: true });
 		return () => window.removeEventListener("scroll", handler);
 	}, []);
+
+	useEffect(() => {
+		if (!menuOpen) return;
+		const onKey = (e: KeyboardEvent) => e.key === "Escape" && setMenuOpen(false);
+		window.addEventListener("keydown", onKey);
+		return () => window.removeEventListener("keydown", onKey);
+	}, [menuOpen]);
 
 	return (
 		<header
@@ -48,13 +58,14 @@ export default function Navbar() {
 				className="border-b border-[var(--border)] overflow-hidden"
 				style={{ height: "32px" }}
 			>
-				<div className="ticker-track h-full flex items-center">
+				<div className="ticker-track h-full flex items-center" aria-label="Latest activity">
 					{DOUBLED.map((item, i) => (
 						<span
 							key={i}
+							aria-hidden={i >= TICKER_ITEMS.length || undefined}
 							className="flex items-center gap-2 px-8 whitespace-nowrap text-small text-[var(--text-muted)]"
 						>
-							<span style={{ color: item.color, fontSize: "8px" }}>●</span>
+							<span aria-hidden style={{ color: item.color, fontSize: "8px" }}>●</span>
 							{item.text}
 						</span>
 					))}
@@ -79,7 +90,8 @@ export default function Navbar() {
 						<Link
 							key={r.path}
 							href={r.path}
-							className="px-3 py-2 rounded-md text-[var(--step--1)] text-[var(--text-muted)] font-medium hover:text-[var(--text)] hover:bg-[var(--surface-3)] transition-all duration-200 tracking-wide"
+							aria-current={isActive(r.path) ? "page" : undefined}
+							className={`px-3 py-2 rounded-md text-[var(--step--1)] font-medium hover:text-[var(--text)] hover:bg-[var(--surface-3)] transition-all duration-200 tracking-wide ${isActive(r.path) ? "text-[var(--text)] bg-[var(--surface-3)]" : "text-[var(--text-muted)]"}`}
 						>
 							{r.name}
 						</Link>
@@ -112,6 +124,8 @@ export default function Navbar() {
 						className="lg:hidden w-9 h-9 flex items-center justify-center rounded-md text-[var(--text-muted)] hover:bg-[var(--surface-3)] transition-colors"
 						onClick={() => setMenuOpen(!menuOpen)}
 						aria-label={menuOpen ? "Close menu" : "Open menu"}
+						aria-expanded={menuOpen}
+						aria-controls="mobile-menu"
 					>
 						{menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
 					</button>
@@ -120,14 +134,15 @@ export default function Navbar() {
 
 			{/* ── Mobile Menu ─────────────────────────────────── */}
 			{menuOpen && (
-				<div className="lg:hidden border-t border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur-xl">
+				<div id="mobile-menu" className="lg:hidden border-t border-[var(--border)] bg-[var(--bg)]/95 backdrop-blur-xl">
 					<nav className="container py-4 flex flex-col gap-1">
 						{routes.map((r) => (
 							<Link
 								key={r.path}
 								href={r.path}
 								onClick={() => setMenuOpen(false)}
-								className="px-4 py-3 rounded-md text-[var(--step-0)] text-[var(--text-muted)] font-medium hover:text-[var(--text)] hover:bg-[var(--surface-3)] transition-all duration-200"
+								aria-current={isActive(r.path) ? "page" : undefined}
+								className={`px-4 py-3 rounded-md text-[var(--step-0)] font-medium hover:text-[var(--text)] hover:bg-[var(--surface-3)] transition-all duration-200 ${isActive(r.path) ? "text-[var(--text)] bg-[var(--surface-3)]" : "text-[var(--text-muted)]"}`}
 							>
 								{r.name}
 							</Link>

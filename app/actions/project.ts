@@ -1,9 +1,12 @@
 'use server';
 
 import prisma from '@/lib/prisma';
+import { requireAdmin } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
 
 export async function createProject(formData: FormData) {
+    await requireAdmin();
+
     const title = formData.get('title') as string;
     const description = formData.get('description') as string;
     const tagsString = formData.get('tags') as string;

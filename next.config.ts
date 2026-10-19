@@ -1,6 +1,42 @@
 import type { NextConfig } from "next";
 
+const isDev = process.env.NODE_ENV !== "production";
+
+// The NextAuth sign-in form POSTs to /api/auth, which redirects to Okta — browsers
+// apply form-action to that redirect, so the Okta origin must be allowed.
+function oktaOrigin() {
+  try {
+    return new URL(process.env.OKTA_ISSUER || "").origin;
+  } catch {
+    return "https:";
+  }
+}
+
+// Inline scripts stay allowed because pages are statically rendered (nonces would
+// force dynamic rendering of every page), but no third-party script origins are trusted
+// and eval is only permitted in dev for React Refresh.
+const csp = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' blob: data: https:",
+  "font-src 'self'",
+  `connect-src 'self'${isDev ? " ws: wss:" : ""}`,
+  "frame-ancestors 'none'",
+  "base-uri 'self'",
+  `form-action 'self' ${oktaOrigin()}`,
+  "object-src 'none'",
+  ...(isDev ? [] : ["upgrade-insecure-requests"]),
+].join("; ");
+
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "cdn.sanity.io" },
+    ],
+  },
   async headers() {
     return [
       {
@@ -16,7 +52,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: "X-Frame-Options",
-            value: "SAMEORIGIN",
+            value: "DENY",
           },
           {
             key: "X-Content-Type-Options",
@@ -24,7 +60,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: "Referrer-Policy",
-            value: "origin-when-cross-origin",
+            value: "strict-origin-when-cross-origin",
           },
           {
             key: "Cross-Origin-Opener-Policy",
@@ -39,12 +75,8 @@ const nextConfig: NextConfig = {
             value: "credentialless",
           },
           {
-            key: "X-XSS-Protection",
-            value: "1; mode=block",
-          },
-          {
             key: "Content-Security-Policy",
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' blob: data: https:; font-src 'self' data: https:; connect-src 'self' https: wss:; frame-ancestors 'self'; base-uri 'self'; form-action 'self' https:; object-src 'none';",
+            value: csp,
           },
           {
             key: "Permissions-Policy",

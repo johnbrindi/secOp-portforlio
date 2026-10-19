@@ -1,5 +1,7 @@
 export interface Blog {
+  /** Legacy numeric id — old /blog/<id> links redirect to the slug */
   id: string;
+  slug: string;
   title: string;
   excerpt: string;
   content: string;
@@ -8,12 +10,12 @@ export interface Blog {
   image?: string;
   readTime: number;
   publishedAt: string;
-  likes: number;
 }
 
-const dummyBlogs: Blog[] = [
+const posts: Blog[] = [
   {
     id: "1",
+    slug: "siem-tuning-reducing-false-positives",
     title: "SIEM Tuning for SOC Teams: Reducing False Positives Without Missing Real Threats",
     excerpt:
       "Most SIEM deployments generate more noise than signal. Here is how to tune your rules intelligently without creating blind spots.",
@@ -59,10 +61,10 @@ SIEM tuning is not a project — it is a continuous process. Run a weekly review
     image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=800&q=80",
     readTime: 7,
     publishedAt: "2025-05-14",
-    likes: 0,
   },
   {
     id: "2",
+    slug: "web-application-pentesting-methodology",
     title: "Web Application Pentesting Methodology: From Recon to Report",
     excerpt:
       "A structured approach to web application penetration testing that covers every phase from initial recon through to delivering a professional report.",
@@ -133,10 +135,10 @@ A good pentest report has two audiences:
     image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80",
     readTime: 10,
     publishedAt: "2025-04-02",
-    likes: 0,
   },
   {
     id: "3",
+    slug: "ctf-writeup-sql-injection-to-admin",
     title: "CTF Writeup: Web Exploitation — SQL Injection to Admin Access",
     excerpt:
       "Step-by-step walkthrough of a CTF web challenge involving SQL injection, filter bypass, and privilege escalation to admin.",
@@ -202,10 +204,10 @@ Returns the flag.
     image: "https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?auto=format&fit=crop&w=800&q=80",
     readTime: 6,
     publishedAt: "2025-03-18",
-    likes: 0,
   },
   {
     id: "4",
+    slug: "home-soc-lab-wazuh-elastic-siem",
     title: "Building a Home SOC Lab with Wazuh and Elastic SIEM",
     excerpt:
       "How I set up a functional Security Operations Center lab environment at home using open-source tools — without breaking the bank.",
@@ -275,10 +277,10 @@ Building this lab forced me to understand:
     image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80",
     readTime: 12,
     publishedAt: "2025-02-10",
-    likes: 0,
   },
   {
     id: "5",
+    slug: "network-segmentation-vlans-dmz-firewall-rules",
     title: "Network Segmentation: VLANs, DMZ, and Firewall Rules That Make Sense",
     excerpt:
       "Practical network segmentation design — how to architect VLANs, a proper DMZ, and firewall rule sets that actually reduce your attack surface.",
@@ -334,8 +336,7 @@ Suricata runs in IPS mode on the perimeter firewall and in IDS mode on the inter
     image: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=800&q=80",
     readTime: 9,
     publishedAt: "2025-01-05",
-    likes: 0,
   },
 ];
 
-export default dummyBlogs;
+export default posts;

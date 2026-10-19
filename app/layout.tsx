@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 import { Inter, Space_Grotesk, Space_Mono } from "next/font/google";
+import { SITE_URL as BASE_URL } from "@/lib/site";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space-grotesk" });
 const spaceMono = Space_Mono({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-space-mono" });
 
-const BASE_URL = "https://mazwewohjohnbrindi.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
@@ -51,21 +51,12 @@ export const metadata: Metadata = {
     title: "Mazwewoh John Brindi — Network & Infrastructure Engineer · Security Lead",
     description:
       "Portfolio of Mazwewoh John Brindi Nwosoh — Network & Systems Infrastructure Engineer, Security Lead, SOC Analyst, and Founder of ZIGEX. Based in Cameroon.",
-    images: [
-      {
-        url: "/profile.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Mazwewoh John Brindi — Network & Infrastructure Engineer",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Mazwewoh John Brindi — Network & Infrastructure Engineer",
     description:
       "Network & Systems Infrastructure Engineer, Security Lead, SOC Analyst, Founder of ZIGEX. Based in Cameroon.",
-    images: ["/profile.jpg"],
   },
   robots: {
     index: true,
@@ -101,7 +92,7 @@ export default function RootLayout({
                 name: "Mazwewoh John Brindi Nwosoh",
                 alternateName: ["Mazwewoh John Brindi", "John Brindi", "Mazwewoh Nwosoh"],
                 url: BASE_URL,
-                image: `${BASE_URL}/profile.jpg`,
+                image: `${BASE_URL}/me.jpg`,
                 jobTitle: "Network & Systems Infrastructure Engineer",
                 description:
                   "Security Lead, SOC Analyst, Founder of ZIGEX (zigexconnect.com). Specializing in network infrastructure, SIEM deployment, and penetration testing.",

@@ -1,7 +1,7 @@
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
-import { GraduationCap, Mic, Award, BookOpen, Shield, Network, Globe, Terminal } from "lucide-react";
 import type { Metadata } from "next";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "About — Mazwewoh John Brindi",
@@ -89,9 +89,12 @@ export default function AboutMePage() {
                   transform: "scale(1.2)",
                 }}
               />
-              <img
+              <Image
                 src="/pic.jpg"
                 alt="Mazwewoh John Brindi"
+                width={1152}
+                height={1101}
+                sizes="220px"
                 className="relative w-full h-full object-cover rounded-2xl"
                 style={{ border: "1px solid var(--border-hi)" }}
               />

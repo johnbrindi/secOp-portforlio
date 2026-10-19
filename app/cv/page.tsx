@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { Download, Phone, Mail, Globe, Linkedin, Github, MapPin } from "lucide-react";
 
 export default function CVPage() {
@@ -43,7 +44,7 @@ export default function CVPage() {
           <Download size={15} />
           Save as PDF
         </button>
-        <a
+        <Link
           href="/"
           style={{
             display: "flex",
@@ -58,7 +59,7 @@ export default function CVPage() {
           }}
         >
           Back
-        </a>
+        </Link>
       </div>
 
       {/* ── CV Document ───────────────────────────── */}

@@ -1,216 +1,222 @@
-"use client";
-
-import dummyBlogs from "../dummyBlogs";
-import { use, useState } from "react";
-import {
-  Heart,
-  ArrowLeft,
-  Clock,
-  Share2,
-  Linkedin,
-  Twitter,
-  Link as LinkIcon,
-} from "lucide-react";
+import type { Metadata } from "next";
+import { notFound, permanentRedirect } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
+import { ArrowLeft, Clock } from "lucide-react";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
+import ShareButtons from "../_components/ShareButtons";
+import posts from "../posts";
+import { SITE_URL } from "@/lib/site";
 
-export default function BlogDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = use(params);
-  const blog = dummyBlogs.find((b) => String(b.id) === id);
-  const relatedBlogs = dummyBlogs
-    .filter((b) => b.id !== id && b.category === blog?.category)
-    .slice(0, 2);
+type Props = { params: Promise<{ slug: string }> };
 
-  const [likeCount, setLikeCount] = useState(blog ? blog.likes || 0 : 0);
-  const [liked, setLiked] = useState(false);
-  const [copied, setCopied] = useState(false);
+export const dynamicParams = true;
 
-  function handleLike() {
-    if (liked) return;
-    setLikeCount((c) => c + 1);
-    setLiked(true);
-  }
+export function generateStaticParams() {
+  return posts.map((post) => ({ slug: post.slug }));
+}
 
-  function handleShare(platform: "twitter" | "linkedin") {
-    if (!blog) return;
-    const url = typeof window !== "undefined" ? window.location.href : "";
-    const text = `${blog.title} — by Mazwewoh John Brindi`;
-    const urls = {
-      twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`,
-      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
-    };
-    window.open(urls[platform], "_blank", "width=600,height=400");
-  }
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const blog = posts.find((b) => b.slug === slug);
+  if (!blog) return { title: "Article not found" };
 
-  function handleCopyLink() {
-    if (typeof navigator !== "undefined") {
-      navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  }
+  return {
+    title: blog.title,
+    description: blog.excerpt,
+    keywords: blog.tags,
+    alternates: { canonical: `/blog/${blog.slug}` },
+    openGraph: {
+      type: "article",
+      title: blog.title,
+      description: blog.excerpt,
+      url: `/blog/${blog.slug}`,
+      publishedTime: blog.publishedAt,
+      authors: ["Mazwewoh John Brindi"],
+      tags: blog.tags,
+      ...(blog.image ? { images: [{ url: blog.image }] } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: blog.title,
+      description: blog.excerpt,
+      ...(blog.image ? { images: [blog.image] } : {}),
+    },
+  };
+}
 
-  function formatDate(dateStr: string) {
-    const d = new Date(dateStr);
-    return d.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  }
+function formatDate(dateStr: string) {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
 
-  if (!blog) {
-    return (
-      <>
-        <Navbar />
-        <main className="pt-[7rem] pb-[var(--space-xl)]">
-          <div className="container text-center py-20">
-            <p className="text-label mb-4">404</p>
-            <h1 className="text-headline mb-4">Article not found</h1>
-            <Link href="/blog" className="btn btn-outline">
-              <ArrowLeft className="w-4 h-4" /> Back to Blog
-            </Link>
-          </div>
-        </main>
-        <Footer />
-      </>
-    );
-  }
+// Convert markdown-style code blocks and headings to styled HTML
+function renderContent(content: string) {
+  const lines = content.split("\n");
+  const elements: React.ReactNode[] = [];
+  let i = 0;
+  let key = 0;
 
-  // Convert markdown-style code blocks and headings to styled HTML
-  function renderContent(content: string) {
-    const lines = content.split("\n");
-    const elements: React.ReactNode[] = [];
-    let i = 0;
-    let key = 0;
+  while (i < lines.length) {
+    const line = lines[i];
 
-    while (i < lines.length) {
-      const line = lines[i];
-
-      if (line.startsWith("## ")) {
-        elements.push(
-          <h2
-            key={key++}
-            className="font-display font-semibold mt-10 mb-4"
-            style={{ fontSize: "var(--step-2)", color: "var(--text)" }}
-          >
-            {line.replace("## ", "")}
-          </h2>
-        );
-        i++;
-      } else if (line.startsWith("```")) {
-        // Code block
-        const codeLines: string[] = [];
-        i++;
-        while (i < lines.length && !lines[i].startsWith("```")) {
-          codeLines.push(lines[i]);
-          i++;
-        }
-        elements.push(
-          <pre
-            key={key++}
-            className="font-mono rounded-lg p-4 my-4 overflow-x-auto"
-            style={{
-              background: "var(--surface-3)",
-              color: "var(--text-muted)",
-              fontSize: ".82rem",
-              lineHeight: 1.7,
-              border: "1px solid var(--border)",
-            }}
-          >
-            {codeLines.join("\n")}
-          </pre>
-        );
-        i++; // skip closing ```
-      } else if (line.startsWith("| ") || line.startsWith("|---")) {
-        // Table — collect all rows
-        const tableLines: string[] = [line];
-        i++;
-        while (i < lines.length && lines[i].startsWith("|")) {
-          tableLines.push(lines[i]);
-          i++;
-        }
-        const rows = tableLines.filter((l) => !l.startsWith("|---"));
-        elements.push(
-          <div key={key++} className="overflow-x-auto my-6">
-            <table
-              style={{
-                width: "100%",
-                borderCollapse: "collapse",
-                fontSize: "var(--step--1)",
-              }}
-            >
-              <tbody>
-                {rows.map((row, ri) => (
-                  <tr key={ri}>
-                    {row
-                      .split("|")
-                      .filter((_, ci) => ci > 0 && ci < row.split("|").length - 1)
-                      .map((cell, ci) => {
-                        const Tag = ri === 0 ? "th" : "td";
-                        return (
-                          <Tag
-                            key={ci}
-                            style={{
-                              padding: ".5em .75em",
-                              borderBottom: "1px solid var(--border)",
-                              color:
-                                ri === 0 ? "var(--text)" : "var(--text-muted)",
-                              fontWeight: ri === 0 ? 600 : 400,
-                              textAlign: "left",
-                            }}
-                          >
-                            {cell.trim()}
-                          </Tag>
-                        );
-                      })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        );
-      } else if (line.startsWith("- ")) {
-        elements.push(
-          <li
-            key={key++}
-            className="text-small ml-5 my-1"
-            style={{ color: "var(--text-muted)", listStyleType: "disc" }}
-          >
-            {line.replace("- ", "")}
-          </li>
-        );
-        i++;
-      } else if (line.trim() === "") {
-        elements.push(<div key={key++} style={{ height: ".75em" }} />);
-        i++;
-      } else {
-        elements.push(
-          <p
-            key={key++}
-            className="text-small leading-relaxed"
-            style={{ color: "var(--text-muted)", lineHeight: 1.8 }}
-          >
-            {line}
-          </p>
-        );
+    if (line.startsWith("## ")) {
+      elements.push(
+        <h2
+          key={key++}
+          className="font-display font-semibold mt-10 mb-4"
+          style={{ fontSize: "var(--step-2)", color: "var(--text)" }}
+        >
+          {line.replace("## ", "")}
+        </h2>
+      );
+      i++;
+    } else if (line.startsWith("```")) {
+      // Code block
+      const codeLines: string[] = [];
+      i++;
+      while (i < lines.length && !lines[i].startsWith("```")) {
+        codeLines.push(lines[i]);
         i++;
       }
+      elements.push(
+        <pre
+          key={key++}
+          className="font-mono rounded-lg p-4 my-4 overflow-x-auto"
+          style={{
+            background: "var(--surface-3)",
+            color: "var(--text-muted)",
+            fontSize: ".82rem",
+            lineHeight: 1.7,
+            border: "1px solid var(--border)",
+          }}
+        >
+          {codeLines.join("\n")}
+        </pre>
+      );
+      i++; // skip closing ```
+    } else if (line.startsWith("| ") || line.startsWith("|---")) {
+      // Table — collect all rows
+      const tableLines: string[] = [line];
+      i++;
+      while (i < lines.length && lines[i].startsWith("|")) {
+        tableLines.push(lines[i]);
+        i++;
+      }
+      const rows = tableLines.filter((l) => !l.startsWith("|---"));
+      elements.push(
+        <div key={key++} className="overflow-x-auto my-6">
+          <table
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              fontSize: "var(--step--1)",
+            }}
+          >
+            <tbody>
+              {rows.map((row, ri) => (
+                <tr key={ri}>
+                  {row
+                    .split("|")
+                    .filter((_, ci) => ci > 0 && ci < row.split("|").length - 1)
+                    .map((cell, ci) => {
+                      const Tag = ri === 0 ? "th" : "td";
+                      return (
+                        <Tag
+                          key={ci}
+                          style={{
+                            padding: ".5em .75em",
+                            borderBottom: "1px solid var(--border)",
+                            color:
+                              ri === 0 ? "var(--text)" : "var(--text-muted)",
+                            fontWeight: ri === 0 ? 600 : 400,
+                            textAlign: "left",
+                          }}
+                        >
+                          {cell.trim()}
+                        </Tag>
+                      );
+                    })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    } else if (line.startsWith("- ")) {
+      elements.push(
+        <li
+          key={key++}
+          className="text-small ml-5 my-1"
+          style={{ color: "var(--text-muted)", listStyleType: "disc" }}
+        >
+          {line.replace("- ", "")}
+        </li>
+      );
+      i++;
+    } else if (line.trim() === "") {
+      elements.push(<div key={key++} style={{ height: ".75em" }} />);
+      i++;
+    } else {
+      elements.push(
+        <p
+          key={key++}
+          className="text-small leading-relaxed"
+          style={{ color: "var(--text-muted)", lineHeight: 1.8 }}
+        >
+          {line}
+        </p>
+      );
+      i++;
     }
-    return elements;
   }
+  return elements;
+}
+
+export default async function BlogDetailPage({ params }: Props) {
+  const { slug } = await params;
+  const blog = posts.find((b) => b.slug === slug);
+
+  if (!blog) {
+    // Old links used numeric ids (/blog/1) — send them to the canonical slug URL
+    const legacy = posts.find((b) => b.id === slug);
+    if (legacy) permanentRedirect(`/blog/${legacy.slug}`);
+    notFound();
+  }
+
+  const url = `${SITE_URL}/blog/${blog.slug}`;
+  const relatedBlogs = posts
+    .filter((b) => b.slug !== blog.slug && b.category === blog.category)
+    .slice(0, 2);
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: blog.title,
+    description: blog.excerpt,
+    datePublished: blog.publishedAt,
+    url,
+    mainEntityOfPage: url,
+    keywords: blog.tags.join(", "),
+    ...(blog.image ? { image: blog.image } : {}),
+    author: { "@type": "Person", "@id": `${SITE_URL}/#person`, name: "Mazwewoh John Brindi" },
+  };
 
   return (
     <>
       <Navbar />
       <main className="pt-[7rem] pb-[var(--space-xl)]">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+        />
         <div className="container">
-          <div style={{ maxWidth: "720px", margin: "0 auto" }}>
+          <article style={{ maxWidth: "720px", margin: "0 auto" }}>
 
             {/* Back link */}
             <Link
@@ -243,7 +249,7 @@ export default function BlogDetailPage({
                   {blog.readTime} min read
                 </span>
                 <span className="text-small" style={{ color: "var(--text-muted)" }}>
-                  {formatDate(blog.publishedAt)}
+                  <time dateTime={blog.publishedAt}>{formatDate(blog.publishedAt)}</time>
                 </span>
                 <div className="flex flex-wrap gap-1.5">
                   {blog.tags.map((t) => (
@@ -266,13 +272,17 @@ export default function BlogDetailPage({
             {/* Hero image */}
             {blog.image && (
               <div
-                className="overflow-hidden rounded-[var(--radius-lg)] mb-10"
+                className="relative overflow-hidden rounded-[var(--radius-lg)] mb-10"
                 style={{ height: "340px" }}
               >
-                <img
+                <Image
                   src={blog.image}
-                  alt={blog.title}
-                  className="w-full h-full object-cover"
+                  alt=""
+                  fill
+                  loading="eager"
+                  fetchPriority="high"
+                  sizes="(max-width: 768px) 100vw, 720px"
+                  className="object-cover"
                 />
               </div>
             )}
@@ -287,52 +297,12 @@ export default function BlogDetailPage({
               className="flex flex-wrap items-center gap-3 py-6 mb-12"
               style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}
             >
-              <button
-                onClick={handleLike}
-                className="btn text-small flex items-center gap-2"
-                style={{
-                  background: liked ? "rgba(249,115,22,.12)" : "var(--surface-2)",
-                  color: liked ? "#f97316" : "var(--text-muted)",
-                  borderColor: liked ? "rgba(249,115,22,.3)" : "var(--border)",
-                  padding: ".5em 1.1em",
-                  cursor: liked ? "default" : "pointer",
-                }}
-              >
-                <Heart className="w-4 h-4" fill={liked ? "currentColor" : "none"} />
-                {likeCount > 0 ? likeCount : ""} {liked ? "Liked" : "Like this"}
-              </button>
-
-              <div className="flex items-center gap-2 ml-auto">
-                <span className="text-small" style={{ color: "var(--text-dim)" }}>
-                  Share:
-                </span>
-                <button
-                  onClick={() => handleShare("twitter")}
-                  className="w-8 h-8 rounded-md flex items-center justify-center transition-colors duration-200"
-                  style={{ color: "var(--text-muted)", background: "var(--surface-2)" }}
-                  aria-label="Share on Twitter/X"
-                >
-                  <Twitter className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => handleShare("linkedin")}
-                  className="w-8 h-8 rounded-md flex items-center justify-center transition-colors duration-200"
-                  style={{ color: "var(--text-muted)", background: "var(--surface-2)" }}
-                  aria-label="Share on LinkedIn"
-                >
-                  <Linkedin className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={handleCopyLink}
-                  className="w-8 h-8 rounded-md flex items-center justify-center transition-colors duration-200"
-                  style={{
-                    color: copied ? "var(--accent)" : "var(--text-muted)",
-                    background: "var(--surface-2)",
-                  }}
-                  aria-label="Copy link"
-                >
-                  <LinkIcon className="w-4 h-4" />
-                </button>
+              <p className="text-small" style={{ color: "var(--text-muted)" }}>
+                Questions or corrections?{" "}
+                <Link href="/contact" style={{ color: "var(--accent)" }}>Get in touch</Link>
+              </p>
+              <div className="ml-auto">
+                <ShareButtons title={blog.title} url={url} />
               </div>
             </div>
 
@@ -343,19 +313,21 @@ export default function BlogDetailPage({
                 <div className="flex flex-col gap-4">
                   {relatedBlogs.map((related) => (
                     <Link
-                      key={related.id}
-                      href={`/blog/${related.id}`}
+                      key={related.slug}
+                      href={`/blog/${related.slug}`}
                       className="card group flex gap-4 p-4 no-underline"
                     >
                       {related.image && (
                         <div
-                          className="flex-shrink-0 overflow-hidden rounded-lg"
+                          className="relative flex-shrink-0 overflow-hidden rounded-lg"
                           style={{ width: "80px", height: "64px" }}
                         >
-                          <img
+                          <Image
                             src={related.image}
-                            alt={related.title}
-                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            alt=""
+                            fill
+                            sizes="80px"
+                            className="object-cover transition-transform duration-300 group-hover:scale-105"
                           />
                         </div>
                       )}
@@ -375,7 +347,7 @@ export default function BlogDetailPage({
                 </div>
               </div>
             )}
-          </div>
+          </article>
         </div>
       </main>
       <Footer />

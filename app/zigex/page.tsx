@@ -2,7 +2,7 @@ import Navbar from "../components/navbar";
 import Footer from "../components/footer";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowRight, Globe, Shield, Users, Network } from "lucide-react";
+import { ArrowRight, Globe, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Mazwewoh John Brindi Nwosoh — Founder of ZigexConnect | ZIGEX",
@@ -69,7 +69,7 @@ export default function ZigexFounderPage() {
             </h1>
             
             <p className="text-lg md:text-xl text-[var(--text-muted)] leading-relaxed mb-8">
-              Hi, I'm Mazwewoh John Brindi Nwosoh (often known as John Brindi or Mazwewoh Nwosoh). I am the founder of 
+              Hi, I&apos;m Mazwewoh John Brindi Nwosoh (often known as John Brindi or Mazwewoh Nwosoh). I am the founder of 
               <a href="https://zigexconnect.com" target="_blank" rel="me noopener noreferrer" className="mx-1 text-[var(--accent)] font-semibold hover:underline">ZIGEX (zigexconnect.com)</a>, 
               the Zone for Internship, Growth and Experience.
             </p>
@@ -91,7 +91,7 @@ export default function ZigexFounderPage() {
               <Shield className="w-10 h-10 text-[var(--accent-2)] mb-6" />
               <h2 className="text-2xl font-semibold mb-4">The Mission</h2>
               <p className="text-[var(--text-muted)] leading-relaxed">
-                As the founder of ZigexConnect, my goal is to empower students and young professionals by connecting them with world-class internship opportunities, mentorships, and practical tech programs. We've scaled to over 500+ active users.
+                As the founder of ZigexConnect, my goal is to empower students and young professionals by connecting them with world-class internship opportunities, mentorships, and practical tech programs. We&apos;ve scaled to over 500+ active users.
               </p>
             </div>
           </div>
@@ -102,7 +102,7 @@ export default function ZigexFounderPage() {
               When I started my journey as a Network & Systems Infrastructure Engineer and Cybersecurity Lead, I noticed a significant disconnect between what students were learning and what the industry demanded. Many talented individuals in Cameroon struggled to find the right internships or mentors.
             </p>
             <p className="mb-6 text-[var(--text-muted)] leading-relaxed">
-              That's why I founded <strong>ZIGEX</strong>. I wanted to create a centralized hub where verified companies could discover exceptional local talent, and students could find roles that fit their skills perfectly. Through ZIGEX, we are building a thriving community of innovators.
+              That&apos;s why I founded <strong>ZIGEX</strong>. I wanted to create a centralized hub where verified companies could discover exceptional local talent, and students could find roles that fit their skills perfectly. Through ZIGEX, we are building a thriving community of innovators.
             </p>
             
             <div className="mt-12 pt-8 border-t border-[var(--border)]">

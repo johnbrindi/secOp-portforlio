@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma';
+import { adminGuard } from '@/lib/auth';
 import { NextRequest, NextResponse } from 'next/server';
 
 function parseSkills(body: any) {
@@ -7,10 +8,14 @@ function parseSkills(body: any) {
     .split(',')
     .map((skill: string) => skill.trim())
     .filter(Boolean)
+    .map((skill: string) => skill.slice(0, 80))
     .slice(0, 200);
 }
 
 export async function POST(request: NextRequest) {
+  const denied = await adminGuard();
+  if (denied) return denied;
+
   try {
     const body = await request.json();
     const skills = parseSkills(body);
