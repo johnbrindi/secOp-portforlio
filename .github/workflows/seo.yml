@@ -1,7 +1,8 @@
 name: SEO
 
 # Runs after every successful Vercel production deployment (Vercel posts a
-# deployment_status event to GitHub), every Monday, or on demand.
+# deployment_status event to GitHub, with an environment named like
+# "Production – <project>"), every Monday, or on demand.
 on:
   deployment_status:
   schedule:
@@ -26,7 +27,7 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'deployment_status' &&
        github.event.deployment_status.state == 'success' &&
-       github.event.deployment.environment == 'Production')
+       startsWith(github.event.deployment.environment, 'Production'))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -40,7 +41,7 @@ jobs:
     if: >-
       github.event_name != 'deployment_status' ||
       (github.event.deployment_status.state == 'success' &&
-       github.event.deployment.environment == 'Production')
+       startsWith(github.event.deployment.environment, 'Production'))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
