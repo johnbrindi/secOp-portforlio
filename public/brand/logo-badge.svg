@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Monochrome notification badge: Android only uses the alpha channel. -->
+  <path d="M256 64 L404 116 V246 C404 344 340 414 256 448 C172 414 108 344 108 246 V116 Z" fill="none" stroke="#fff" stroke-width="22" stroke-linejoin="round"/>
+  <g fill="none" stroke="#fff" stroke-width="34" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M226 168 V286 C226 326 202 344 172 338"/>
+    <path d="M270 168 V340 M270 168 H304 C332 168 346 186 346 210 C346 234 332 252 304 252 H270 M270 252 H310 C340 252 356 272 356 296 C356 322 340 340 310 340 H270"/>
+  </g>
+</svg>

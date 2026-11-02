@@ -114,16 +114,23 @@ stored in the `opportunities` table (never emailed twice) and each run in `oppor
 Scholarships (cards with the same details and links as the emails, last 30 days), Visitors, and
 Status (run health, source health, run history). "Run now & email" triggers a run on demand.
 
+## Logo and icons
+
+The brand logo is `public/brand/logo.svg` (512×512 viewBox). Every icon (favicon, Apple icon, admin
+app icons, maskable icon, notification badge from `public/brand/logo-badge.svg`) is generated from
+it: replace the SVG and run `npm run icons`.
+
 ## PWA and push notifications
 
-The site is an installable PWA (`app/manifest.ts`, icons at `/icons/[size]`, service worker
-`public/sw.js`). The service worker caches public pages for offline use and never caches
-`/admin` or `/api`.
+Only the admin dashboard is installable ("JB Admin", opens `/admin/opportunities`): the manifest
+`/admin-app.webmanifest` is linked from admin pages only, so the public portfolio never offers an
+install. The service worker `public/sw.js` is registered with scope `/admin/`, handles push only and
+caches nothing. Install from the "Install app" button on `/admin/opportunities`.
 
 Web push goes only to the admin's devices: enable it per device with "Enable on this device" on
 `/admin/opportunities` (on iPhone, add the site to the Home Screen first). You get a notification
 for each new opportunity / scholarship batch and for new portfolio visitors. Visits are reported
-once per browser session by `app/components/PwaClient.tsx` to `/api/visit`, which ignores bots and
+once per browser session by `app/components/VisitBeacon.tsx` to `/api/visit`, which ignores bots and
 the admin, stores the IP only as a salted hash, notifies at most once per visitor per 30 minutes
 and caps visitor notifications at 30 per hour.
 

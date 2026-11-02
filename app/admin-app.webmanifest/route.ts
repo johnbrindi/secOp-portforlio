@@ -15,14 +15,14 @@ export function GET() {
     background_color: "#09090f",
     theme_color: "#09090f",
     icons: [
-      { src: "/icons/192", sizes: "192x192", type: "image/png", purpose: "any" },
-      { src: "/icons/512", sizes: "512x512", type: "image/png", purpose: "any" },
-      { src: "/icons/512", sizes: "512x512", type: "image/png", purpose: "maskable" },
+      { src: "/icons/192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: "/icons/512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+      { src: "/icons/maskable-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
     shortcuts: [
-      { name: "Opportunities", url: "/admin/opportunities?view=tech", icons: [{ src: "/icons/96", sizes: "96x96" }] },
-      { name: "Scholarships", url: "/admin/opportunities?view=scholarships", icons: [{ src: "/icons/96", sizes: "96x96" }] },
-      { name: "Visitors", url: "/admin/opportunities?view=visitors", icons: [{ src: "/icons/96", sizes: "96x96" }] },
+      { name: "Opportunities", url: "/admin/opportunities?view=tech", icons: [{ src: "/icons/96.png", sizes: "96x96" }] },
+      { name: "Scholarships", url: "/admin/opportunities?view=scholarships", icons: [{ src: "/icons/96.png", sizes: "96x96" }] },
+      { name: "Visitors", url: "/admin/opportunities?view=visitors", icons: [{ src: "/icons/96.png", sizes: "96x96" }] },
     ],
   };
   return Response.json(manifest, { headers: { "Content-Type": "application/manifest+json" } });

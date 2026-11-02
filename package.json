@@ -12,7 +12,8 @@
     "seed": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' prisma/seed.ts",
     "seo:audit": "node scripts/seo-audit.mjs",
     "seo:indexnow": "node scripts/indexnow.mjs",
-    "admin:set-password": "npx tsx --env-file=.env --tsconfig tsconfig.json scripts/set-admin-password.ts"
+    "admin:set-password": "npx tsx --env-file=.env --tsconfig tsconfig.json scripts/set-admin-password.ts",
+    "icons": "node scripts/build-icons.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
