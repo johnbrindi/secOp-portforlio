@@ -1,4 +1,5 @@
 import type { RawItem } from "./sources";
+import { extractDeadline } from "./deadline";
 import {
   TOPICS, PROFILE_BOOSTERS, OPPORTUNITY_TYPES, LOCAL_TERMS, REMOTE_ELIGIBLE, EXCLUDE, SENIOR,
   SCHOLARSHIP_TERMS, MASTERS_TERMS, MAJOR_PROGRAMMES, FIELD_FIT, ELIGIBILITY_TERMS, PHD_TERMS,
@@ -25,6 +26,7 @@ export type Opportunity = RawItem & {
   // Scholarship details, when found in the listing.
   destination?: string;
   deadline?: string;
+  deadlineAt?: Date;
   fullyFunded?: boolean;
 };
 
@@ -64,8 +66,6 @@ const tooOld = (item: RawItem, stream: Stream) =>
   item.publishedAt && !isNaN(+item.publishedAt) &&
   Date.now() - +item.publishedAt > MAX_AGE_DAYS[stream] * 86_400_000;
 
-const DEADLINE = /deadline[:\s-]*(?:is\s+|on\s+)?((?:\d{1,2}(?:st|nd|rd|th)?\s+[A-Z][a-z]+,?\s+20\d\d)|(?:[A-Z][a-z]+\s+\d{1,2}(?:st|nd|rd|th)?,?\s+20\d\d)|(?:\d{1,2}\/\d{1,2}\/20\d\d))/i;
-
 // Funded Master's study. Returns null when the item is not a degree scholarship.
 function classifyScholarship(item: RawItem, text: string): Opportunity | null {
   if (!hits(text, SCHOLARSHIP_TERMS).length || NOT_DEGREE.test(item.title)) return null;
@@ -100,7 +100,6 @@ function classifyScholarship(item: RawItem, text: string): Opportunity | null {
     topics: fieldHits.slice(0, 3),
     score,
     destination: DESTINATIONS.find((d) => new RegExp(`\\b${d}\\b`).test(text)),
-    deadline: text.match(DEADLINE)?.[1],
     fullyFunded,
   };
 }
@@ -149,8 +148,12 @@ function classifyTech(item: RawItem, text: string): Opportunity | null {
 function classify(item: RawItem): Opportunity | null {
   const text = [item.title, item.summary, item.company, item.location].filter(Boolean).join(" · ");
   if (hits(text, EXCLUDE).length) return null;
+  // Never send something whose deadline (or event end date) has already passed.
+  const deadline = extractDeadline(text);
+  if (deadline && deadline.at.getTime() < Date.now()) return null;
   // A Master's scholarship never appears in the tech digest, and vice versa.
-  return classifyScholarship(item, text) ?? classifyTech(item, text);
+  const o = classifyScholarship(item, text) ?? classifyTech(item, text);
+  return o && deadline ? { ...o, deadline: deadline.label, deadlineAt: deadline.at } : o;
 }
 
 function arrange(list: Opportunity[], sections: readonly string[]): Opportunity[] {

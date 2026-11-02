@@ -11,7 +11,8 @@
     "postinstall": "prisma generate",
     "seed": "ts-node --compiler-options '{\"module\":\"CommonJS\"}' prisma/seed.ts",
     "seo:audit": "node scripts/seo-audit.mjs",
-    "seo:indexnow": "node scripts/indexnow.mjs"
+    "seo:indexnow": "node scripts/indexnow.mjs",
+    "admin:hash-password": "npx tsx scripts/hash-password.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

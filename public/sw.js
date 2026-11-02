@@ -1,60 +1,12 @@
-// Service worker: offline support for the public portfolio and web push
-// notifications for the admin. Admin pages and API calls are never cached.
+// Admin service worker, registered with scope /admin/ by app/components/admin/AdminPwa.tsx.
+// It only handles web push notifications; nothing is cached, so private data never
+// stays on the device. The public portfolio has no service worker.
 
-const CACHE = "portfolio-v1";
-const OFFLINE_PAGES = ["/", "/about", "/projects", "/contact"];
-
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(OFFLINE_PAGES)).catch(() => {}),
-  );
-  self.skipWaiting();
-});
-
-self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
-      .then(() => self.clients.claim()),
-  );
-});
-
-self.addEventListener("fetch", (event) => {
-  const { request } = event;
-  const url = new URL(request.url);
-  if (request.method !== "GET" || url.origin !== self.location.origin) return;
-  if (url.pathname.startsWith("/admin") || url.pathname.startsWith("/api")) return;
-
-  // Build assets are content-hashed: cache first.
-  if (url.pathname.startsWith("/_next/static/")) {
-    event.respondWith(
-      caches.match(request).then((hit) => hit || fetch(request).then((res) => {
-        const copy = res.clone();
-        caches.open(CACHE).then((cache) => cache.put(request, copy));
-        return res;
-      })),
-    );
-    return;
-  }
-
-  // Pages: network first, fall back to the cached copy when offline.
-  if (request.mode === "navigate") {
-    event.respondWith(
-      fetch(request)
-        .then((res) => {
-          if (res.ok) {
-            const copy = res.clone();
-            caches.open(CACHE).then((cache) => cache.put(request, copy));
-          }
-          return res;
-        })
-        .catch(() => caches.match(request).then((hit) => hit || caches.match("/"))),
-    );
-  }
-});
+self.addEventListener("install", () => self.skipWaiting());
+self.addEventListener("activate", (event) => event.waitUntil(self.clients.claim()));
 
 self.addEventListener("push", (event) => {
-  let data = { title: "Portfolio", body: "", url: "/admin" };
+  let data = { title: "JB Admin", body: "", url: "/admin/opportunities" };
   try {
     data = { ...data, ...event.data.json() };
   } catch {
@@ -73,11 +25,11 @@ self.addEventListener("push", (event) => {
 
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
-  const target = new URL(event.notification.data?.url || "/admin", self.location.origin).href;
+  const target = new URL(event.notification.data?.url || "/admin/opportunities", self.location.origin).href;
   event.waitUntil(
     self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((windows) => {
-      const open = windows.find((w) => w.url === target);
-      if (open) return open.focus();
+      const open = windows.find((w) => w.url.startsWith(self.location.origin + "/admin"));
+      if (open) return open.navigate(target).then((w) => (w || open).focus());
       return self.clients.openWindow(target);
     }),
   );

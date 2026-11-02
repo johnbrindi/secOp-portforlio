@@ -3,10 +3,14 @@ import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { authOptions, isAdminEmail } from "@/lib/auth";
 import AdminSidebar from "../components/admin/AdminSidebar";
+import AdminPwa from "../components/admin/AdminPwa";
 
 export const metadata: Metadata = {
   title: "Admin",
   robots: { index: false, follow: false },
+  // Only admin pages link the manifest, so only the admin dashboard is installable.
+  manifest: "/admin-app.webmanifest",
+  appleWebApp: { capable: true, title: "JB Admin", statusBarStyle: "black-translucent" },
 };
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -24,6 +28,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         background: "var(--bg)",
       }}
     >
+      <AdminPwa />
       <AdminSidebar />
       <main
         style={{

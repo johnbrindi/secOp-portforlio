@@ -25,6 +25,14 @@ function pushFor(stream: Stream, items: Opportunity[]): PushMessage {
   };
 }
 
+// Listings stay visible for two days after their deadline, then are deleted.
+// (Expired listings are also never re-sent: see classify() in score.ts.)
+export const EXPIRED_GRACE_DAYS = 2;
+export async function deleteExpired() {
+  const cutoff = new Date(Date.now() - EXPIRED_GRACE_DAYS * 86_400_000);
+  return prisma.opportunities.deleteMany({ where: { deadline_at: { lt: cutoff } } });
+}
+
 export type RunSummary = {
   techNew: number;
   scholarshipNew: number;
@@ -38,6 +46,7 @@ export type RunSummary = {
 // `dry` returns what would be sent without emailing or writing anything.
 export async function runDigest({ trigger, dry = false }: { trigger: string; dry?: boolean }): Promise<RunSummary> {
   const started = Date.now();
+  if (!dry) await deleteExpired();
   const sources = await fetchAllSources();
   const { tech, scholarships } = rankOpportunities(sources.flatMap((s) => s.items));
 
@@ -90,6 +99,7 @@ export async function runDigest({ trigger, dry = false }: { trigger: string; dry
           topics: o.topics,
           destination: o.destination || null,
           deadline: o.deadline || null,
+          deadline_at: o.deadlineAt ?? null,
           fully_funded: o.stream === "scholarship" ? !!o.fullyFunded : null,
           published_at: o.publishedAt && !isNaN(+o.publishedAt) ? o.publishedAt : null,
         })),

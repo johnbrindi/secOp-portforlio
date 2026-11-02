@@ -43,7 +43,10 @@ async function getData() {
   try {
     const [items, runs, visits, visitsToday, visitsWeek, devices] = await Promise.all([
       prisma.opportunities.findMany({
-        where: { created_at: { gte: since } },
+        where: {
+          created_at: { gte: since },
+          OR: [{ deadline_at: null }, { deadline_at: { gte: new Date(Date.now() - 2 * 86_400_000) } }],
+        },
         orderBy: [{ created_at: "desc" }, { score: "desc" }],
         take: 400,
       }),

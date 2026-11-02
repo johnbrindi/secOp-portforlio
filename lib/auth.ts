@@ -1,5 +1,8 @@
 import { getServerSession, type NextAuthOptions } from "next-auth";
 import OktaProvider from "next-auth/providers/okta";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { verifyPassword } from "@/lib/password";
+import { rateLimit } from "@/lib/rate-limit";
 
 /**
  * Comma-separated list of emails allowed into /admin (ADMIN_EMAILS env var).
@@ -26,6 +29,26 @@ export const authOptions: NextAuthOptions = {
       issuer: process.env.OKTA_ISSUER || "",
       httpOptions: {
         timeout: 10000, // Increase timeout to 10 seconds to prevent OAUTH_ERROR
+      },
+    }),
+    // Fallback that works without Okta. The email must be on ADMIN_EMAILS and the
+    // password must match ADMIN_PASSWORD_HASH (see lib/password.ts); unset = disabled.
+    CredentialsProvider({
+      id: "password",
+      name: "email and password",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials, req) {
+        const email = credentials?.email?.trim().toLowerCase();
+        if (!email || !credentials?.password || !process.env.ADMIN_PASSWORD_HASH) return null;
+        const forwarded = req?.headers?.["x-forwarded-for"];
+        const ip = (Array.isArray(forwarded) ? forwarded[0] : forwarded || "").split(",")[0].trim() || "unknown";
+        // 5 attempts per 15 minutes per IP (per instance — a speed bump against guessing).
+        if (!rateLimit(`login:${ip}`, 5, 15 * 60_000).ok) return null;
+        if (!isAdminEmail(email) || !verifyPassword(credentials.password, process.env.ADMIN_PASSWORD_HASH)) return null;
+        return { id: email, email, name: "Admin" };
       },
     }),
   ],

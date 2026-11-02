@@ -4,7 +4,7 @@ import "./globals.css";
 import { Inter, Space_Grotesk, Space_Mono } from "next/font/google";
 import { CORE_KEYWORDS, PERSON, SITE_URL } from "@/lib/site";
 import { JsonLd, organizationSchema, personSchema, websiteSchema } from "@/lib/seo";
-import PwaClient from "./components/PwaClient";
+import VisitBeacon from "./components/VisitBeacon";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space-grotesk" });
@@ -73,7 +73,7 @@ export default function RootLayout({
         {/* Site-wide entity graph: who the site is about, the site itself, and ZIGEX */}
         <JsonLd data={[personSchema(), websiteSchema(), organizationSchema()]} />
         {children}
-        <PwaClient />
+        <VisitBeacon />
       </body>
     </html>
   );

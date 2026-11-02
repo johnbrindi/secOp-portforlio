@@ -82,6 +82,8 @@ model opportunities {
   topics       String[]  @default([])
   destination  String?
   deadline     String?
+  // Parsed deadline; listings are deleted two days after it (lib/opportunities/run.ts).
+  deadline_at  DateTime? @db.Timestamptz(6)
   fully_funded Boolean?
   published_at DateTime? @db.Timestamptz(6)
   created_at   DateTime  @default(now()) @db.Timestamptz(6)

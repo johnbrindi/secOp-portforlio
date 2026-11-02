@@ -3,16 +3,10 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 
-// Registers the service worker (installable PWA, offline pages, push) and reports
-// one visit per browser session on public pages, for the visitor notification.
-export default function PwaClient() {
+// Reports one visit per browser session on public pages, for the admin's
+// "new visitor" notification (app/api/visit/route.ts).
+export default function VisitBeacon() {
   const pathname = usePathname();
-
-  useEffect(() => {
-    if ("serviceWorker" in navigator && process.env.NODE_ENV === "production") {
-      navigator.serviceWorker.register("/sw.js").catch(() => {});
-    }
-  }, []);
 
   useEffect(() => {
     if (!pathname || pathname.startsWith("/admin")) return;

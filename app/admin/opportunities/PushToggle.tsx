@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bell, BellOff, BellRing, Loader2 } from "lucide-react";
+import { Bell, BellOff, BellRing, Download, Loader2 } from "lucide-react";
 import { savePushSubscription, removePushSubscription, sendTestPush } from "./actions";
+import { ADMIN_SW_SCOPE } from "@/app/components/admin/AdminPwa";
 
 type State = "loading" | "unsupported" | "denied" | "off" | "on";
 
@@ -12,7 +13,40 @@ function base64ToBytes(base64: string) {
 }
 
 async function registration() {
-  return (await navigator.serviceWorker.getRegistration()) ?? navigator.serviceWorker.register("/sw.js");
+  return (await navigator.serviceWorker.getRegistration(ADMIN_SW_SCOPE))
+    ?? navigator.serviceWorker.register("/sw.js", { scope: ADMIN_SW_SCOPE });
+}
+
+// "Install app": Chrome/Android uses the saved prompt; iPhone needs Share → Add to Home Screen.
+function InstallButton() {
+  const [mode, setMode] = useState<"hidden" | "prompt" | "ios" | "installed">("hidden");
+
+  useEffect(() => {
+    if (window.matchMedia("(display-mode: standalone)").matches) return setMode("installed");
+    if (/iphone|ipad/i.test(navigator.userAgent)) return setMode("ios");
+    const update = () => window.adminInstallPrompt && setMode("prompt");
+    update();
+    window.addEventListener("admin-installable", update);
+    return () => window.removeEventListener("admin-installable", update);
+  }, []);
+
+  if (mode === "installed") return <span className="text-small" style={{ color: "#4ade80" }}>App installed</span>;
+  if (mode === "ios") {
+    return <span className="text-small" style={{ color: "var(--text-muted)" }}>Install: Share → Add to Home Screen</span>;
+  }
+  if (mode !== "prompt") return null;
+  return (
+    <button
+      className="btn btn-outline"
+      onClick={async () => {
+        await window.adminInstallPrompt?.prompt();
+        window.adminInstallPrompt = undefined;
+        setMode("hidden");
+      }}
+    >
+      <Download className="w-4 h-4" /> Install app
+    </button>
+  );
 }
 
 // Turns web push on or off for the current device.
@@ -86,13 +120,14 @@ export default function PushToggle({ publicKey, devices }: { publicKey: string |
         <div className="flex items-center gap-3">
           {state === "on" ? <BellRing className="w-5 h-5" style={{ color: "#4ade80" }} /> : <Bell className="w-5 h-5" style={{ color: "var(--text-muted)" }} />}
           <div>
-            <p className="font-display font-semibold">Push notifications</p>
+            <p className="font-display font-semibold">Admin app & notifications</p>
             <p className="text-small" style={{ color: "var(--text-muted)" }}>
               New visitors, opportunities and scholarships · {devices} device{devices === 1 ? "" : "s"} subscribed
             </p>
           </div>
         </div>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <InstallButton />
           {state === "off" && (
             <button className="btn btn-primary" onClick={enable} disabled={busy}>
               {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bell className="w-4 h-4" />} Enable on this device

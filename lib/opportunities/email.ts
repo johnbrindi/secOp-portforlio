@@ -161,7 +161,7 @@ export function buildTechDigest(items: Opportunity[], sources: SourceResult[]): 
       sections,
       sources,
       footnote: "Always confirm an offer on the organiser's official page. Never pay a fee or share ID documents to apply.",
-      badges: () => [],
+      badges: (o) => (o.deadline ? [`Deadline: ${o.deadline}`] : []),
       button: "View & apply",
     }),
     text: plainText(`DAILY OPPORTUNITY DIGEST · ${longDate()}`, sections),
