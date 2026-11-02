@@ -28,7 +28,7 @@ export const TOPICS: Record<string, string[]> = {
   "Web Development": [
     "web developer", "web development", "développeur web", "developpeur web", "frontend",
     "front-end", "backend", "back-end", "full stack", "fullstack", "full-stack", "next.js",
-    "nextjs", "react", "typescript", "javascript", "node.js", "php", "laravel", "django",
+    "nextjs", "react", "typescript", "javascript", "node.js", "php developer", "développeur php", "laravel", "django",
     "software developer", "software engineer", "développeur", "developer",
   ],
   // Broad tech words: only count for local (Cameroon) items, where any tech

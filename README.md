@@ -134,10 +134,20 @@ once per browser session by `app/components/VisitBeacon.tsx` to `/api/visit`, wh
 the admin, stores the IP only as a salted hash, notifies at most once per visitor per 30 minutes
 and caps visitor notifications at 30 per hour.
 
-Sources: LinkedIn Jobs (Cameroon), ReliefWeb Cameroon, Google News (EN + FR), Opportunity Desk,
-Opportunities For Africans, Opportunities Corners, Scholarship Region, Scholars4Dev,
-Scholarship Union, Scholarships Corner, Opportunities Circle, CTFtime, Remotive, Jobicy,
-We Work Remotely — plus LinkedIn posts, Facebook and X when `SERPER_API_KEY` is set.
+Sources (each one is skipped, not fatal, if it fails on a given day):
+
+- **Cameroon jobs:** LinkedIn Jobs (Cameroon), JobInfoCamer, Job Cameroun, Emplois Cameroun,
+  CARI Africa (MinaJobs notices), Taf4all, ReliefWeb Cameroon. Boards without feeds are read
+  from their IT listing pages (`listingPage` in `sources.ts`).
+- **Cameroon events & programmes:** dev.events (Cameroon tech and security), Kamerpower,
+  Google News Cameroon (English and French).
+- **Africa & international:** Opportunity Desk, Opportunities For Africans, Opportunities Corners,
+  dev.events (Africa security), Devpost online hackathons, CTFtime.
+- **Remote jobs:** Remotive, Jobicy, We Work Remotely (only roles open to Cameroon/Africa).
+- **Master's scholarships:** Scholars4Dev, Scholarship Union, Scholarships Corner, Opportunities
+  Circle, Scholarship Region, Opportunities For Africans (scholarships), Global South
+  Opportunities, After School Africa, Google News scholarship searches.
+- **Optional:** LinkedIn posts, Facebook and X via Google search when `SERPER_API_KEY` is set.
 
 Environment variables (Vercel → Project → Settings → Environment Variables):
 

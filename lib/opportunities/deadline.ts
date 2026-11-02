@@ -58,3 +58,20 @@ export function extractDeadline(text: string, now = new Date()): Deadline | unde
   }
   return undefined;
 }
+
+// Any date in a snippet of listing text ("20 Octobre 2026", "Il y a 5 jour(s)", "Hier").
+// Used to date items scraped from job boards that have no feed.
+const ANY_DATE = new RegExp(DATE, "i");
+export function findDate(text: string, now = new Date()): Date | undefined {
+  const ago = text.match(/il y a\s+(\d+)\s*(jour|heure|semaine)|(\d+)\s+(day|hour|week)s?\s+ago/i);
+  if (ago) {
+    const n = +(ago[1] ?? ago[3]);
+    const unit = (ago[2] ?? ago[4]).toLowerCase();
+    const ms = unit.startsWith("h") ? 3_600_000 : unit.startsWith("s") || unit.startsWith("w") ? 7 * 86_400_000 : 86_400_000;
+    return new Date(now.getTime() - n * ms);
+  }
+  if (/aujourd['’]hui|today/i.test(text)) return now;
+  if (/\bhier\b|yesterday/i.test(text)) return new Date(now.getTime() - 86_400_000);
+  const m = text.match(ANY_DATE);
+  return m ? parse(m.slice(1), now) : undefined;
+}

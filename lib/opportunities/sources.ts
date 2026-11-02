@@ -1,6 +1,8 @@
 // Fetchers for every opportunity source. Each returns RawItem[] and never
 // throws: a broken source is reported in the email instead of killing the run.
 
+import { findDate } from "./deadline";
+
 export type RawItem = {
   title: string;
   url: string;
@@ -50,6 +52,12 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 // ── Minimal RSS / Atom parsing (no dependency needed for these feeds) ──────
 
+const NAMED_ENTITIES: Record<string, string> = {
+  eacute: "é", Eacute: "É", egrave: "è", Egrave: "È", ecirc: "ê", Ecirc: "Ê", euml: "ë", agrave: "à", Agrave: "À",
+  acirc: "â", ccedil: "ç", Ccedil: "Ç", icirc: "î", iuml: "ï", ocirc: "ô", ucirc: "û", ugrave: "ù", oelig: "œ",
+  rsquo: "'", lsquo: "'", ldquo: '"', rdquo: '"', laquo: "«", raquo: "»", hellip: "…", ndash: "-", mdash: "-",
+};
+
 function decode(s: string): string {
   return s
     .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1")
@@ -61,6 +69,7 @@ function decode(s: string): string {
     .replace(/&nbsp;|&#160;/g, " ")
     .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
     .replace(/&amp;/g, "&")
+    .replace(/&([A-Za-z]+);/g, (m, name) => NAMED_ENTITIES[name] ?? m)
     .replace(/<[^>]+>/g, " ")
     .replace(/\s+/g, " ")
     .trim();
@@ -217,6 +226,142 @@ async function jobicy(): Promise<SourceResult> {
   }
 }
 
+// ── WordPress sites whose RSS feed is off: the built-in JSON API still works ─
+
+async function wordpress(name: string, site: string, extra: Partial<RawItem> = {}): Promise<SourceResult> {
+  try {
+    const posts = await (await get(`${site}/wp-json/wp/v2/posts?per_page=20&_fields=date_gmt,link,title,excerpt`)).json();
+    return {
+      name,
+      items: (posts as { date_gmt: string; link: string; title: { rendered: string }; excerpt: { rendered: string } }[])
+        .map((p) => ({
+          title: decode(p.title.rendered),
+          url: p.link,
+          source: name,
+          summary: decode(p.excerpt.rendered).slice(0, 300),
+          publishedAt: new Date(`${p.date_gmt}Z`),
+          ...extra,
+        })),
+    };
+  } catch (e) {
+    return { name, items: [], error: String(e) };
+  }
+}
+
+// ── Cameroonian job boards without feeds: read the listing page ────────────
+// Each job is a link matching `link`; its date is read from the text around it.
+
+async function listingPage(name: string, url: string, link: RegExp, extra: Partial<RawItem> = {}): Promise<SourceResult> {
+  try {
+    const page = await (await get(url)).text();
+    const items: RawItem[] = [];
+    const seen = new Set<string>();
+    for (const m of page.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)) {
+      const href = m[1].match(/href="([^"]+)"/)?.[1];
+      if (!href || !link.test(href)) continue;
+      const absolute = new URL(href.replace(/&amp;/g, "&"), url).href;
+      if (seen.has(absolute)) continue;
+      // Card-style links hold the title in a heading; plain links are the title themselves.
+      const heading = m[2].match(/<h[1-6][^>]*>([\s\S]*?)<\/h[1-6]>/)?.[1];
+      const title = decode(heading || m[1].match(/title="([^"]+)"/)?.[1] || m[2])
+        // CARI Africa wraps titles as "Avis de recrutement : X Nouveau" (sometimes split around X).
+        .replace(/^Avis de\s*(recrutement)?\s*:?\s*/i, "")
+        .replace(/\s*(Nouveau|recrutement)\s*$/i, "")
+        .trim();
+      const desc = heading ? decode(m[2].match(/<p[^>]*>([\s\S]*?)<\/p>/)?.[1] ?? "") : "";
+      if (title.length < 8) continue;
+      seen.add(absolute);
+      const before = decode(page.slice(Math.max(0, m.index - 400), m.index));
+      const after = decode(page.slice(m.index, m.index + 700));
+      items.push({
+        title: title.slice(0, 200),
+        url: absolute,
+        source: name,
+        summary: desc && desc !== title ? desc.slice(0, 300) : undefined,
+        // Boards show the date either just before the title or just after it.
+        publishedAt: findDate(after.slice(0, 300)) ?? findDate(before.slice(-200)),
+        local: true,
+        ...extra,
+      });
+    }
+    return { name, items };
+  } catch (e) {
+    return { name, items: [], error: String(e) };
+  }
+}
+
+// ── dev.events: tech and security conferences, read from the page's schema.org data ─
+
+// dev.events pads regional pages with worldwide events, so `keep` filters on the event location.
+async function devEvents(name: string, url: string, keep: RegExp): Promise<SourceResult> {
+  try {
+    const page = await (await get(url)).text();
+    const items: RawItem[] = [];
+    for (const [, json] of page.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+      let data: unknown;
+      try {
+        data = JSON.parse(json);
+      } catch {
+        continue;
+      }
+      const list = Array.isArray(data) ? data : (data as { itemListElement?: unknown[] }).itemListElement ?? [data];
+      for (const entry of list as Record<string, unknown>[]) {
+        const e = (entry.item ?? entry) as Record<string, unknown>;
+        if (!String(e["@type"] ?? "").includes("Event") || typeof e.url !== "string") continue;
+        const place = (e.location as { name?: string } | undefined)?.name;
+        if (!place || !keep.test(place)) continue;
+        const start = typeof e.startDate === "string" ? new Date(e.startDate) : undefined;
+        const end = typeof e.endDate === "string" ? e.endDate.slice(0, 10) : start?.toISOString().slice(0, 10);
+        items.push({
+          title: String(e.name),
+          url: e.url,
+          source: name,
+          location: place,
+          // "Event" makes it an opportunity; the end date becomes its deadline.
+          summary: `Tech event in ${place}. ${e.description ? decode(String(e.description)).slice(0, 200) : ""} Deadline: ${end}`.trim(),
+        });
+      }
+    }
+    return { name, items };
+  } catch (e) {
+    return { name, items: [], error: String(e) };
+  }
+}
+
+const CAMEROON = /cameroon|cameroun/i;
+const AFRICA = /cameroon|cameroun|nigeria|ghana|kenya|rwanda|senegal|sénégal|south africa|egypt|morocco|maroc|tunisia|algeria|ivory coast|côte d'ivoire|ethiopia|uganda|tanzania|zambia|zimbabwe|botswana|namibia|benin|togo|gabon|congo|mauritius|africa/i;
+
+// ── Devpost: open online hackathons (cybersecurity and web) anyone can enter ─
+
+async function devpost(): Promise<SourceResult> {
+  const name = "Devpost hackathons";
+  try {
+    const res = await Promise.all(["Cybersecurity", "Web"].map(async (theme) => {
+      const data = await (await get(`https://devpost.com/api/hackathons?status[]=open&status[]=upcoming&themes[]=${theme}`)).json();
+      return (data.hackathons ?? [])
+        .filter((h: { invite_only: boolean; displayed_location?: { location?: string } }) =>
+          !h.invite_only && /online/i.test(h.displayed_location?.location ?? ""))
+        .map((h: { title: string; url: string; submission_period_dates: string; themes: { name: string }[]; organization_name?: string; prize_amount?: string }): RawItem => {
+          // "Oct 17 - Nov 22, 2026" or "Nov 01 - 30, 2026" → submission deadline
+          const [, startMonth, , endMonth, endDay, year] =
+            h.submission_period_dates.match(/([A-Z][a-z]{2})\s+(\d+)\s*-\s*(?:([A-Z][a-z]{2})\s+)?(\d+),\s*(\d{4})/) ?? [];
+          const deadline = year ? `${endMonth ?? startMonth} ${endDay}, ${year}` : "";
+          return {
+            title: `${h.title} (online hackathon)`,
+            url: h.url,
+            source: name,
+            company: h.organization_name || undefined,
+            location: "Online",
+            summary: `Hackathon · ${h.themes.map((t) => t.name).join(", ")} · prizes ${decode(h.prize_amount ?? "").replace(/\s+/g, "")}. ${deadline ? `Deadline: ${deadline}` : ""}`,
+          };
+        });
+    }));
+    return { name, items: res.flat() };
+  } catch (e) {
+    return { name, items: [], error: String(e) };
+  }
+}
+
 // ── Optional: social posts (LinkedIn posts, Facebook, X) via Serper ────────
 // Facebook and X do not allow anonymous scraping, so their public posts are
 // found through Google search. Enabled only when SERPER_API_KEY is set.
@@ -258,9 +403,17 @@ async function serperSocial(): Promise<SourceResult | null> {
 
 export async function fetchAllSources(): Promise<SourceResult[]> {
   const tasks: Promise<SourceResult | null>[] = [
-    // Cameroon first
+    // Cameroon first: job boards, LinkedIn, NGO/UN jobs, events, local programmes
     linkedInCameroon(),
+    listingPage("JobInfoCamer", "https://www.jobinfocamer.com/jobs/Informatique/", /^\/job\/\d+\//),
+    listingPage("Job Cameroun", "https://job-cameroun.com/offres?categorie=informatique", /^\/offre\/\d+-/),
+    listingPage("Emplois Cameroun", "https://emploiscameroun.com/offres/informatique/", /\/offre\/\d+-/),
+    listingPage("CARI Africa / MinaJobs", "https://emploi.cm.cari.africa/emploi/informatique", /\/emploi\/view\/\d+\//),
+    listingPage("Taf4all (Cameroon)", "https://www.taf4all.fr/en/emploi/cameroun/informatique", /^\/en\/offre\/\d+-/),
     feed("ReliefWeb (Cameroon)", "https://reliefweb.int/jobs/rss.xml?advanced-search=%28C49%29", { local: true }),
+    devEvents("dev.events (Cameroon tech)", "https://dev.events/AF/CM/tech", CAMEROON),
+    devEvents("dev.events (Cameroon security)", "https://dev.events/AF/CM/security", CAMEROON),
+    wordpress("Kamerpower", "https://kamerpower.com", { local: true }),
     ...NEWS_QUERIES.map(([name, q, lang]) => feed(name, googleNews(q, lang))),
     serperSocial(),
     // Africa / international programmes
@@ -268,12 +421,17 @@ export async function fetchAllSources(): Promise<SourceResult[]> {
     feed("Opportunities For Africans", "https://www.opportunitiesforafricans.com/feed/"),
     feed("Opportunities Corners", "https://opportunitiescorners.com/feed/"),
     feed("Scholarship Region", "https://www.scholarshipregion.com/feed/"),
+    devEvents("dev.events (Africa security)", "https://dev.events/AF/security", AFRICA),
+    devpost(),
     // Master's scholarships
     ...SCHOLARSHIP_QUERIES.map(([name, q, lang]) => feed(name, googleNews(q, lang, 7))),
     feed("Scholars4Dev", "https://www.scholars4dev.com/feed/"),
     feed("Scholarship Union", "https://scholarshipunion.com/feed/"),
     feed("Scholarships Corner", "https://www.scholarshipscorner.website/feed/"),
     feed("Opportunities Circle", "https://opportunitiescircle.com/feed/"),
+    feed("Opportunities For Africans (scholarships)", "https://www.opportunitiesforafricans.com/category/scholarships/feed/"),
+    wordpress("Global South Opportunities", "https://www.globalsouthopportunities.com"),
+    wordpress("After School Africa", "https://www.afterschoolafrica.com"),
     feed("CTFtime (upcoming CTFs)", "https://ctftime.org/event/list/upcoming/rss/"),
     // Remote jobs
     remotive(),
