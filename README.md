@@ -109,8 +109,22 @@ Relevance rules live in `lib/opportunities/profile.ts`, sources in `sources.ts`,
 `score.ts`, email templates in `email.ts`, and the pipeline in `run.ts`. Everything sent is
 stored in the `opportunities` table (never emailed twice) and each run in `opportunity_runs`.
 
-**Status page:** `/admin/opportunities` (behind the admin login) shows whether runs are healthy,
-source health, run history, everything sent, and a "Run now & email" button.
+**Dashboard:** `/admin/opportunities` (behind the admin login) has four tabs: Opportunities and
+Scholarships (cards with the same details and links as the emails, last 30 days), Visitors, and
+Status (run health, source health, run history). "Run now & email" triggers a run on demand.
+
+## PWA and push notifications
+
+The site is an installable PWA (`app/manifest.ts`, icons at `/icons/[size]`, service worker
+`public/sw.js`). The service worker caches public pages for offline use and never caches
+`/admin` or `/api`.
+
+Web push goes only to the admin's devices: enable it per device with "Enable on this device" on
+`/admin/opportunities` (on iPhone, add the site to the Home Screen first). You get a notification
+for each new opportunity / scholarship batch and for new portfolio visitors. Visits are reported
+once per browser session by `app/components/PwaClient.tsx` to `/api/visit`, which ignores bots and
+the admin, stores the IP only as a salted hash, notifies at most once per visitor per 30 minutes
+and caps visitor notifications at 30 per hour.
 
 Sources: LinkedIn Jobs (Cameroon), ReliefWeb Cameroon, Google News (EN + FR), Opportunity Desk,
 Opportunities For Africans, Opportunities Corners, Scholarship Region, Scholars4Dev,
@@ -126,6 +140,9 @@ Environment variables (Vercel → Project → Settings → Environment Variables
 | `GMAIL_APP_PASSWORD` | Gmail App Password (Google Account → Security → 2-Step Verification → App passwords) |
 | `OPPORTUNITY_EMAIL_TO` | Optional, recipient, defaults to johnbrindi4@gmail.com |
 | `SERPER_API_KEY` | Optional, from serper.dev — adds LinkedIn posts / Facebook / X |
+| `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` | Web push keys: `npx web-push generate-vapid-keys` |
+| `VAPID_SUBJECT` | `mailto:` contact for push services, e.g. `mailto:you@example.com` |
+| `VISIT_HASH_SALT` | Random string used to hash visitor IPs. `openssl rand -hex 24` |
 
 Preview without sending: `curl -H "Authorization: Bearer $CRON_SECRET" "https://<site>/api/cron/opportunities?dry=1"`
 Run it for real: same URL without `?dry=1`.

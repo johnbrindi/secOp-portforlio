@@ -124,13 +124,13 @@ const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
 // ── Tech opportunities digest ──────────────────────────────────────────────
 
-const TECH_SECTION_NOTES: Record<string, string> = {
+export const TECH_SECTION_NOTES: Record<string, string> = {
   "Cameroon": "Local jobs, internships, events and programmes",
   "Africa & Remote": "Remote roles open to Cameroon and pan-African programmes",
   "International": "Global fellowships, training and CTF competitions",
 };
 
-const TECH_CATEGORIES: { name: string; label: string; color: string }[] = [
+export const TECH_CATEGORIES: { name: string; label: string; color: string }[] = [
   { name: "Internship", label: "Internships", color: "#15803d" },
   { name: "Job", label: "Jobs", color: "#1d4ed8" },
   { name: "Event", label: "Events", color: "#7e22ce" },
@@ -170,7 +170,7 @@ export function buildTechDigest(items: Opportunity[], sources: SourceResult[]): 
 
 // ── Master's scholarship digest ────────────────────────────────────────────
 
-const SCHOLARSHIP_SECTION_NOTES: Record<string, string> = {
+export const SCHOLARSHIP_SECTION_NOTES: Record<string, string> = {
   "Your fields": "Cybersecurity, networking, telecommunications, computer engineering and related",
   "STEM & Engineering": "Engineering and technology programmes your degree qualifies you for",
   "Open to all fields": "Major programmes (Erasmus Mundus, DAAD, Chevening, MEXT…) that fund any Master's",
