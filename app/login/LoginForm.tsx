@@ -6,8 +6,7 @@ import { Shield, Eye, EyeOff, Loader2, LogIn } from "lucide-react";
 
 const MESSAGES: Record<string, string> = {
   CredentialsSignin: "Incorrect email or password.",
-  TooManyAttempts: "Too many attempts. Wait 15 minutes and try again.",
-  PasswordLoginDisabled: "Password sign-in isn't set up on the server yet (ADMIN_PASSWORD_HASH or ADMIN_EMAILS is missing in Vercel). Use Okta, or add them and redeploy.",
+  TooManyAttempts: "Too many failed attempts. The account is locked for 15 minutes.",
   AccessDenied: "This account isn't allowed into the admin area.",
 };
 const message = (code: string) => MESSAGES[code] ?? "Sign in failed. Please try again.";

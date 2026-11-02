@@ -1,25 +1,15 @@
 import { getServerSession, type NextAuthOptions } from "next-auth";
 import OktaProvider from "next-auth/providers/okta";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { verifyPassword } from "@/lib/password";
 import { rateLimit } from "@/lib/rate-limit";
+import { authenticate, isAdmin } from "@/lib/admin-users";
 
 /**
- * Comma-separated list of emails allowed into /admin (ADMIN_EMAILS env var).
- * Authenticating with Okta is not enough on its own — the identity must also
- * be on this allowlist. If the variable is empty, nobody is authorized (fail closed).
+ * Admins are the accounts in the admin_users table (lib/admin-users.ts). Signing in
+ * with Okta is not enough on its own: the Okta email must also have a row there.
+ * No rows means nobody is authorized (fail closed).
  */
-export function getAdminEmails(): string[] {
-  return (process.env.ADMIN_EMAILS || "")
-    .split(",")
-    .map((e) => e.trim().toLowerCase())
-    .filter(Boolean);
-}
-
-export function isAdminEmail(email: string | null | undefined): boolean {
-  if (!email) return false;
-  return getAdminEmails().includes(email.toLowerCase());
-}
+export { isAdmin };
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -31,8 +21,7 @@ export const authOptions: NextAuthOptions = {
         timeout: 10000, // Increase timeout to 10 seconds to prevent OAUTH_ERROR
       },
     }),
-    // Fallback that works without Okta. The email must be on ADMIN_EMAILS and the
-    // password must match ADMIN_PASSWORD_HASH (see lib/password.ts); unset = disabled.
+    // Email + password from the admin_users table; works without Okta.
     CredentialsProvider({
       id: "password",
       name: "email and password",
@@ -42,15 +31,14 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials, req) {
         // Errors thrown here reach /login as ?error=<message>; keep them free of account details.
-        if (!process.env.ADMIN_PASSWORD_HASH || !getAdminEmails().length) throw new Error("PasswordLoginDisabled");
         const email = credentials?.email?.trim().toLowerCase();
         if (!email || !credentials?.password) return null;
         const forwarded = req?.headers?.["x-forwarded-for"];
         const ip = (Array.isArray(forwarded) ? forwarded[0] : forwarded || "").split(",")[0].trim() || "unknown";
-        // 5 attempts per 15 minutes per IP (per instance — a speed bump against guessing).
-        if (!rateLimit(`login:${ip}`, 5, 15 * 60_000).ok) throw new Error("TooManyAttempts");
-        if (!isAdminEmail(email) || !verifyPassword(credentials.password, process.env.ADMIN_PASSWORD_HASH)) return null;
-        return { id: email, email, name: "Admin" };
+        // Per-IP speed bump; the per-account lockout in authenticate() is stored in the database.
+        if (!rateLimit(`login:${ip}`, 10, 15 * 60_000).ok) throw new Error("TooManyAttempts");
+        const admin = await authenticate(email, credentials.password);
+        return admin ? { id: admin, email: admin, name: "Admin" } : null;
       },
     }),
   ],
@@ -64,12 +52,13 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async signIn({ user }) {
-      // Reject sign-in outright for identities that are not on the allowlist
-      return isAdminEmail(user.email);
+      // Reject sign-in outright for identities without an admin account
+      return isAdmin(user.email);
     },
-    async jwt({ token }) {
+    async jwt({ token, user }) {
+      // Checked at sign-in only; pages and actions re-check the database (requireAdmin).
       // Never persist the Okta access token in the session cookie — the app doesn't need it
-      token.isAdmin = isAdminEmail(token.email);
+      if (user) token.isAdmin = await isAdmin(token.email);
       return token;
     },
     async session({ session }) {
@@ -91,7 +80,7 @@ export class UnauthorizedError extends Error {
  */
 export async function requireAdmin() {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.email || !isAdminEmail(session.user.email)) {
+  if (!session?.user?.email || !(await isAdmin(session.user.email))) {
     throw new UnauthorizedError();
   }
   return session;

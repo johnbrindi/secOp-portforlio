@@ -1,8 +1,7 @@
 import { randomBytes, scryptSync, timingSafeEqual } from "crypto";
 
-// Admin password hashing for the email + password sign-in (lib/auth.ts).
-// Format: "scrypt:<salt>:<hash>" (base64url), stored in ADMIN_PASSWORD_HASH.
-// To set a new password:  npm run admin:hash-password -- 'new-password'
+// Admin password hashing (lib/admin-users.ts).
+// Format: "scrypt:<salt>:<hash>" (base64url), stored in admin_users.password_hash.
 
 const KEY_LENGTH = 64;
 
@@ -12,8 +11,7 @@ export function hashPassword(password: string): string {
 }
 
 export function verifyPassword(password: string, stored: string | undefined): boolean {
-  // Tolerate copy-paste slips in the env var: surrounding spaces or quotes.
-  const [scheme, salt, hash] = (stored || "").trim().replace(/^["']|["']$/g, "").split(":");
+  const [scheme, salt, hash] = (stored || "").split(":");
   if (scheme !== "scrypt" || !salt || !hash) return false;
   const expected = Buffer.from(hash, "base64url");
   const actual = scryptSync(password, Buffer.from(salt, "base64url"), expected.length);

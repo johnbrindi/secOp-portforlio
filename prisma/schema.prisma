@@ -127,3 +127,16 @@ model visits {
 
   @@index([ip_hash, created_at])
 }
+
+// Admin accounts (lib/admin-users.ts). Passwords are stored only as scrypt hashes.
+// Failed sign-ins lock the account for 15 minutes after 5 attempts.
+model admin_users {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email           String    @unique
+  password_hash   String
+  failed_attempts Int       @default(0)
+  locked_until    DateTime? @db.Timestamptz(6)
+  last_login_at   DateTime? @db.Timestamptz(6)
+  created_at      DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime  @default(now()) @updatedAt @db.Timestamptz(6)
+}

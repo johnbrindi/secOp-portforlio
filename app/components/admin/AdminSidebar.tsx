@@ -14,6 +14,7 @@ import {
   LogOut,
   Menu,
   Radar,
+  UserCog,
   X,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
@@ -27,6 +28,7 @@ const navItems = [
   { label: "Certifications", href: "/admin/certifications", icon: Award },
   { label: "Profile", href: "/admin/profile", icon: User },
   { label: "Skills", href: "/admin/skills", icon: Wrench },
+  { label: "Account", href: "/admin/account", icon: UserCog },
 ];
 
 export default function AdminSidebar() {

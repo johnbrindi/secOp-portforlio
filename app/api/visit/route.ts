@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createHash } from "crypto";
 import { getServerSession } from "next-auth";
 import prisma from "@/lib/prisma";
-import { authOptions, isAdminEmail } from "@/lib/auth";
+import { authOptions, isAdmin } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
 import { sendPush } from "@/lib/push";
 
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
 
   // Your own visits don't count.
   const session = await getServerSession(authOptions).catch(() => null);
-  if (isAdminEmail(session?.user?.email)) return new NextResponse(null, { status: 204 });
+  if (await isAdmin(session?.user?.email).catch(() => false)) return new NextResponse(null, { status: 204 });
 
   let path = "/";
   let referrer: string | null = null;

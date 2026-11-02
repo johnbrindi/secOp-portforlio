@@ -24,7 +24,8 @@ Public pages (projects, blog, certifications, skills) are statically generated f
 
 **Identity & access**
 - `/admin` is gated three times: `proxy.ts` blocks navigation, `app/admin/layout.tsx` re-checks the session on the server, and every Server Action and mutating API route calls `requireAdmin()` / `adminGuard()` from `lib/auth.ts`. Server Actions are reachable by direct POST, so page-level checks alone aren't enough.
-- Signing in with Okta isn't sufficient on its own. The identity must also be listed in `ADMIN_EMAILS`. An empty allowlist denies everyone (fail closed).
+- Admins are the accounts in the `admin_users` database table. Sign in at `/login` with email + password, or with Okta (the Okta email must also have an `admin_users` row). No rows denies everyone (fail closed).
+- Passwords are stored only as scrypt hashes. Five failed attempts lock the account for 15 minutes (stored in the database, so it holds across serverless instances). Change your password on `/admin/account`; create an account or reset a forgotten password with `npm run admin:set-password -- you@example.com '<password>'`.
 - The Okta access token is never written into the session cookie; sessions expire after 8 hours.
 
 **Input handling**
@@ -66,7 +67,7 @@ cp .env.example .env.local   # fill in values
 npm run dev
 ```
 
-See [`.env.example`](.env.example) for every variable. Only `DATABASE_URL` is needed to browse the public site; the Okta values and `ADMIN_EMAILS` are needed for `/admin`; `RESEND_API_KEY` + `CONTACT_NOTIFY_EMAIL` turn on email alerts for new contact messages.
+See [`.env.example`](.env.example) for every variable. Only `DATABASE_URL` is needed to browse the public site; an `admin_users` account (see above) is needed for `/admin`; `RESEND_API_KEY` + `CONTACT_NOTIFY_EMAIL` turn on email alerts for new contact messages.
 
 | Script | Purpose |
 | --- | --- |
@@ -93,7 +94,7 @@ All identity management happens in the **Okta Admin Console**:
 
 - **Assignment:** under *Applications → your app → Assignments*, assign yourself (explicit assignment), or make sure the sign-on policy has an *Allow* rule (federation broker mode).
 - **MFA:** under *Security → Authentication Policies*, require *Any 2 factor types* for the app.
-- **Revocation:** under *Directory → People*, suspending or deactivating a user blocks new sign-ins immediately. Removing their email from `ADMIN_EMAILS` and redeploying revokes access in the app as well.
+- **Revocation:** under *Directory → People*, suspending or deactivating a user blocks new sign-ins immediately. Deleting their `admin_users` row revokes access in the app as well, effective on their next request.
 
 ## Daily opportunity digests
 

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { authOptions, isAdminEmail } from "@/lib/auth";
+import { authOptions, isAdmin } from "@/lib/auth";
 import LoginForm from "./LoginForm";
 
 export const metadata: Metadata = {
@@ -27,7 +27,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
   const target = safeCallback(callbackUrl);
 
   const session = await getServerSession(authOptions);
-  if (isAdminEmail(session?.user?.email)) redirect(target);
+  if (await isAdmin(session?.user?.email)) redirect(target);
 
   return (
     <main
