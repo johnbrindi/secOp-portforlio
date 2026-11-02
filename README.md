@@ -94,3 +94,41 @@ All identity management happens in the **Okta Admin Console**:
 - **Assignment:** under *Applications → your app → Assignments*, assign yourself (explicit assignment), or make sure the sign-on policy has an *Allow* rule (federation broker mode).
 - **MFA:** under *Security → Authentication Policies*, require *Any 2 factor types* for the app.
 - **Revocation:** under *Directory → People*, suspending or deactivating a user blocks new sign-ins immediately. Removing their email from `ADMIN_EMAILS` and redeploying revokes access in the app as well.
+
+## Daily opportunity digests
+
+`app/api/cron/opportunities` runs every day at 06:00 Cameroon time (Vercel Cron, `vercel.json`)
+and sends two separate emails, each only when there is something new:
+
+- **Opportunity Digest**: networking, cybersecurity and web-dev jobs, internships, events and
+  training. Cameroon first, then Africa/remote, then international; grouped by type.
+- **Master's Scholarship Watch**: funded Master's study abroad, grouped by fit (your fields,
+  STEM & engineering, open to all fields) and by fully funded vs partial funding.
+
+Relevance rules live in `lib/opportunities/profile.ts`, sources in `sources.ts`, ranking in
+`score.ts`, email templates in `email.ts`, and the pipeline in `run.ts`. Everything sent is
+stored in the `opportunities` table (never emailed twice) and each run in `opportunity_runs`.
+
+**Status page:** `/admin/opportunities` (behind the admin login) shows whether runs are healthy,
+source health, run history, everything sent, and a "Run now & email" button.
+
+Sources: LinkedIn Jobs (Cameroon), ReliefWeb Cameroon, Google News (EN + FR), Opportunity Desk,
+Opportunities For Africans, Opportunities Corners, Scholarship Region, Scholars4Dev,
+Scholarship Union, Scholarships Corner, Opportunities Circle, CTFtime, Remotive, Jobicy,
+We Work Remotely — plus LinkedIn posts, Facebook and X when `SERPER_API_KEY` is set.
+
+Environment variables (Vercel → Project → Settings → Environment Variables):
+
+| Variable | Purpose |
+| --- | --- |
+| `CRON_SECRET` | Random string; Vercel sends it to the cron route. `openssl rand -hex 32` |
+| `GMAIL_USER` | Gmail address that sends the digests |
+| `GMAIL_APP_PASSWORD` | Gmail App Password (Google Account → Security → 2-Step Verification → App passwords) |
+| `OPPORTUNITY_EMAIL_TO` | Optional, recipient, defaults to johnbrindi4@gmail.com |
+| `SERPER_API_KEY` | Optional, from serper.dev — adds LinkedIn posts / Facebook / X |
+
+Preview without sending: `curl -H "Authorization: Bearer $CRON_SECRET" "https://<site>/api/cron/opportunities?dry=1"`
+Run it for real: same URL without `?dry=1`.
+
+On a slow local connection, start the dev server with
+`NODE_OPTIONS="--network-family-autoselection-attempt-timeout=3000" npm run dev`.

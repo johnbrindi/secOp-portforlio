@@ -64,3 +64,31 @@ model contacts {
   read       Boolean? @default(false)
   created_at DateTime @default(now()) @db.Timestamptz(6)
 }
+
+// Opportunities already emailed by the daily digest (app/api/cron/opportunities).
+model opportunities {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key          String    @unique
+  stream       String    @default("tech")
+  url          String
+  title        String
+  source       String
+  section      String
+  category     String
+  score        Int
+  published_at DateTime? @db.Timestamptz(6)
+  created_at   DateTime  @default(now()) @db.Timestamptz(6)
+}
+
+// One row per digest run, shown on /admin/opportunities.
+model opportunity_runs {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ran_at          DateTime @default(now()) @db.Timestamptz(6)
+  trigger         String
+  tech_new        Int
+  scholarship_new Int
+  emails_sent     Int
+  sources         Json
+  error           String?
+  duration_ms     Int
+}

@@ -13,6 +13,7 @@ import {
   Home,
   LogOut,
   Menu,
+  Radar,
   X,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
@@ -20,6 +21,7 @@ import { signOut } from "next-auth/react";
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: Home },
   { label: "Messages", href: "/admin/messages", icon: MessageSquare },
+  { label: "Opportunities", href: "/admin/opportunities", icon: Radar },
   { label: "Blog Posts", href: "/admin/blogs", icon: FileText },
   { label: "Projects", href: "/admin/projects", icon: Code2 },
   { label: "Certifications", href: "/admin/certifications", icon: Award },
