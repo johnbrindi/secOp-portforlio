@@ -17,9 +17,10 @@ function pushFor(stream: Stream, items: Opportunity[]): PushMessage {
     };
   }
   const local = items.filter((o) => o.section === "Cameroon").length;
+  const travel = items.filter((o) => o.section === "Fully funded travel").length;
   return {
     title: `${items.length} new opportunit${items.length === 1 ? "y" : "ies"}`,
-    body: `${local ? `${local} in Cameroon · ` : ""}Top: ${best(items)}`,
+    body: `${[local && `${local} in Cameroon`, travel && `${travel} fully funded abroad`].filter(Boolean).join(" · ")}${local || travel ? " · " : ""}Top: ${best(items)}`,
     url: "/admin/opportunities?view=tech",
     tag: "opportunities",
   };

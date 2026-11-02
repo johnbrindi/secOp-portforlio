@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { runDigest } from "@/lib/opportunities/run";
 
-// Daily job (see vercel.json). Vercel Cron sends `Authorization: Bearer $CRON_SECRET`.
+// Runs Mondays and Thursdays (see vercel.json and lib/opportunities/schedule.ts). Vercel Cron sends `Authorization: Bearer $CRON_SECRET`.
 // Manual test without emailing or saving:  GET /api/cron/opportunities?dry=1
 // Run history and status: /admin/opportunities
 export const dynamic = "force-dynamic";

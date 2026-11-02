@@ -7,6 +7,7 @@ import RunNowButton from "./RunNowButton";
 import PushToggle from "./PushToggle";
 import OpportunityCard from "./OpportunityCard";
 import { RECIPIENT } from "@/lib/opportunities/profile";
+import { nextRun, SCHEDULE_LABEL, STALE_AFTER_MS } from "@/lib/opportunities/schedule";
 import { TECH_SECTIONS, SCHOLARSHIP_SECTIONS } from "@/lib/opportunities/score";
 import { TECH_CATEGORIES, TECH_SECTION_NOTES, SCHOLARSHIP_SECTION_NOTES } from "@/lib/opportunities/email";
 
@@ -29,13 +30,6 @@ function formatDate(d: Date) {
   });
 }
 
-// The cron runs at 05:00 UTC (06:00 in Cameroon) — see vercel.json.
-function nextRun() {
-  const next = new Date();
-  next.setUTCHours(5, 0, 0, 0);
-  if (next <= new Date()) next.setUTCDate(next.getUTCDate() + 1);
-  return next;
-}
 
 async function getData() {
   const since = new Date(Date.now() - DAYS_SHOWN * 86_400_000);
@@ -92,7 +86,7 @@ function Empty({ text }: { text: string }) {
 
 // Same structure as the Opportunity Digest email: region, then type.
 function TechView({ items }: { items: opportunities[] }) {
-  if (!items.length) return <Empty text={`No opportunities in the last ${DAYS_SHOWN} days yet. They appear here after each daily run.`} />;
+  if (!items.length) return <Empty text={`No opportunities in the last ${DAYS_SHOWN} days yet. They appear here after each run (${SCHEDULE_LABEL}).`} />;
   return (
     <>
       {TECH_SECTIONS.map((section) => {
@@ -120,7 +114,7 @@ function TechView({ items }: { items: opportunities[] }) {
 
 // Same structure as the Master's Scholarship Watch email: field fit, then funding.
 function ScholarshipView({ items }: { items: opportunities[] }) {
-  if (!items.length) return <Empty text={`No Master's scholarships in the last ${DAYS_SHOWN} days yet. They appear here after each daily run.`} />;
+  if (!items.length) return <Empty text={`No Master's scholarships in the last ${DAYS_SHOWN} days yet. They appear here after each run (${SCHEDULE_LABEL}).`} />;
   return (
     <>
       {SCHOLARSHIP_SECTIONS.map((section) => {
@@ -194,7 +188,7 @@ function StatusView({ runs, dbError }: { runs: Awaited<ReturnType<typeof getData
   const last = runs[0];
   const lastSources = (last?.sources ?? []) as SourceStatus[];
   const failedSources = lastSources.filter((s) => s.error);
-  const stale = !last || Date.now() - +last.ran_at > 26 * 3_600_000;
+  const stale = !last || Date.now() - +last.ran_at > STALE_AFTER_MS;
 
   const status = dbError
     ? { color: RED, icon: AlertTriangle, title: "Database unreachable", text: dbError }
@@ -203,7 +197,7 @@ function StatusView({ runs, dbError }: { runs: Awaited<ReturnType<typeof getData
       : last.error
         ? { color: RED, icon: AlertTriangle, title: "Last run had a problem", text: last.error }
         : stale
-          ? { color: AMBER, icon: AlertTriangle, title: "No run in the last 26 hours", text: "Check the Cron Jobs tab in your Vercel project settings." }
+          ? { color: AMBER, icon: AlertTriangle, title: "A scheduled run was missed", text: "Check the Cron Jobs tab in your Vercel project settings." }
           : { color: GREEN, icon: CheckCircle2, title: "All systems working", text: `Last run ${formatDate(last.ran_at)}, ${lastSources.length - failedSources.length} of ${lastSources.length} sources responded.` };
   const StatusIcon = status.icon;
 
@@ -299,7 +293,7 @@ export default async function AdminOpportunitiesPage({ searchParams }: { searchP
   const { items, runs, visits, visitsToday, visitsWeek, devices, dbError } = await getData();
   const tech = items.filter((o) => o.stream === "tech");
   const scholarships = items.filter((o) => o.stream === "scholarship");
-  const lastRunOk = runs[0] && !runs[0].error && Date.now() - +runs[0].ran_at < 26 * 3_600_000;
+  const lastRunOk = runs[0] && !runs[0].error && Date.now() - +runs[0].ran_at < STALE_AFTER_MS;
 
   const tabs: { id: View; label: string; icon: typeof Briefcase; count?: number; dot?: string }[] = [
     { id: "tech", label: "Opportunities", icon: Briefcase, count: tech.length },
@@ -324,7 +318,7 @@ export default async function AdminOpportunitiesPage({ searchParams }: { searchP
           <div>
             <h1 className="font-display font-semibold" style={{ fontSize: "var(--step-2)" }}>Opportunities</h1>
             <p className="text-small" style={{ color: "var(--text-muted)" }}>
-              Last {DAYS_SHOWN} days · also emailed daily to {RECIPIENT} at 06:00 Cameroon time
+              Last {DAYS_SHOWN} days · also emailed to {RECIPIENT} {SCHEDULE_LABEL.replace(/^M/, "m")}
             </p>
           </div>
         </div>

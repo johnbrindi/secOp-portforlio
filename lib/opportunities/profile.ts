@@ -158,3 +158,28 @@ export const DESTINATIONS = [
   "Taiwan", "Thailand", "Singapore", "Malaysia", "India", "Saudi Arabia", "UAE", "Qatar", "Israel",
   "Rwanda", "South Africa", "Morocco", "Egypt", "Ghana", "Kenya", "Europe",
 ];
+
+// ── Fully funded travel: international summits, conferences, youth programmes ──
+// Not tied to your tech fields: leadership summits, exchanges and fellowships abroad
+// are worth seeing when the organiser pays. Shown in the Opportunity Digest's own section.
+
+export const FUNDED_TRAVEL_TERMS = [
+  "fully funded", "fully-funded", "travel grant", "travel support", "travel scholarship",
+  "airfare", "flights covered", "flight tickets", "return flight", "round trip", "round-trip",
+  "all expenses paid", "all-expenses-paid", "expenses covered", "accommodation covered",
+  "entièrement financé*", "billet d'avion", "prise en charge",
+];
+
+export const TRAVEL_PROGRAMME_TERMS = [
+  "summit", "conference", "forum", "congress", "assembly", "youth leader*", "young leader*",
+  "leadership programme", "leadership program", "exchange programme", "exchange program",
+  "summer school", "winter school", "fellowship", "delegate*", "bootcamp", "training programme",
+  "training program", "academy", "workshop", "festival", "model united nations", "mun",
+  "sommet", "conférence", "programme d'échange", "jeunes leaders",
+];
+
+// Signals that the programme is open internationally (and so to Cameroonians).
+export const OPEN_INTERNATIONALLY = /\b(all countries|any country|worldwide|international (applicants|participants|youth|students)|global|all nationalities|africa|african|developing countries|youth from around the world|cameroon|cameroun)\b/i;
+
+// Shown on funded-travel items. Update when your passport situation changes.
+export const PASSPORT_NOTE = "Passport needed for travel (you plan to apply in January 2027). Many programmes let you apply now and show the passport later — check the requirements.";

@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import type { Opportunity } from "./score";
 import { TECH_SECTIONS, SCHOLARSHIP_SECTIONS } from "./score";
 import type { SourceResult } from "./sources";
-import { RECIPIENT } from "./profile";
+import { RECIPIENT, PASSPORT_NOTE } from "./profile";
 
 export type Digest = { subject: string; html: string; text: string };
 
@@ -102,7 +102,7 @@ function render(layout: Layout): string {
       </td></tr>
       <tr><td style="padding:18px 28px;font-size:11px;line-height:1.6;color:#94a3b8">
         Sources checked: ${layout.sources.map((s) => `${esc(s.name)} (${s.items.length})`).join(", ")}.
-        ${failed.length ? `<br>Unavailable today: ${failed.map((s) => esc(s.name)).join(", ")}.` : ""}
+        ${failed.length ? `<br>Unavailable this run: ${failed.map((s) => esc(s.name)).join(", ")}.` : ""}
         <br>${layout.footnote}
       </td></tr>
     </table>
@@ -126,6 +126,7 @@ const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
 export const TECH_SECTION_NOTES: Record<string, string> = {
   "Cameroon": "Local jobs, internships, events and programmes",
+  "Fully funded travel": "Funded summits, conferences, exchanges and fellowships abroad, in any field",
   "Africa & Remote": "Remote roles open to Cameroon and pan-African programmes",
   "International": "Global fellowships, training and CTF competitions",
 };
@@ -153,18 +154,22 @@ export function buildTechDigest(items: Opportunity[], sources: SourceResult[]): 
   return {
     subject: `Opportunity Digest: ${items.length} new${local ? `, ${local} in Cameroon` : ""} (${shortDate()})`,
     html: render({
-      kicker: "Daily Opportunity Digest",
+      kicker: "Opportunity Digest · Mon & Thu",
       title: "Networking · Cybersecurity · Web Development",
       headerColor: "#0b1f3a",
       kickerColor: "#93c5fd",
-      intro: `${items.length} new opportunit${items.length === 1 ? "y" : "ies"} matched your profile today, ranked by relevance. Cameroon listings appear first; internships and entry-level roles are ranked higher.`,
+      intro: `${items.length} new opportunit${items.length === 1 ? "y" : "ies"} matched your profile since the last digest, ranked by relevance. Cameroon listings appear first; internships and entry-level roles are ranked higher.`,
       sections,
       sources,
-      footnote: "Always confirm an offer on the organiser's official page. Never pay a fee or share ID documents to apply.",
-      badges: (o) => (o.deadline ? [`Deadline: ${o.deadline}`] : []),
+      footnote: `Always confirm an offer on the organiser's official page, and check for application or "self-funded" fees before applying. ${PASSPORT_NOTE}`,
+      badges: (o) => [
+        o.deadline && `Deadline: ${o.deadline}`,
+        o.section === "Fully funded travel" && o.destination && `Destination: ${o.destination}`,
+        o.section === "Fully funded travel" && "Passport needed",
+      ].filter((b): b is string => !!b),
       button: "View & apply",
     }),
-    text: plainText(`DAILY OPPORTUNITY DIGEST · ${longDate()}`, sections),
+    text: plainText(`OPPORTUNITY DIGEST · ${longDate()}`, sections),
   };
 }
 

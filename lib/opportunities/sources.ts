@@ -24,9 +24,9 @@ const UA =
 
 // LinkedIn's geoId for Cameroon (location=Cameroon alone matches the wrong country).
 const LINKEDIN_CAMEROON = "105745966";
-// How far back to look. Longer than a day so a missed run loses nothing;
+// How far back to look. Runs are up to 4 days apart (Thu → Mon), plus a day of slack;
 // the database makes sure nothing is emailed twice.
-const LOOKBACK_DAYS = 3;
+const LOOKBACK_DAYS = 5;
 // Cameroon gets only a handful of LinkedIn postings a week, so look further back there.
 const LINKEDIN_LOOKBACK_DAYS = 7;
 

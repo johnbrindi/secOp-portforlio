@@ -4,15 +4,16 @@ import {
   TOPICS, PROFILE_BOOSTERS, OPPORTUNITY_TYPES, LOCAL_TERMS, REMOTE_ELIGIBLE, EXCLUDE, SENIOR,
   SCHOLARSHIP_TERMS, MASTERS_TERMS, MAJOR_PROGRAMMES, FIELD_FIT, ELIGIBILITY_TERMS, PHD_TERMS,
   UNDERGRAD_TERMS, DESTINATIONS, NOT_DEGREE, OTHER_NATIONALITY,
+  FUNDED_TRAVEL_TERMS, TRAVEL_PROGRAMME_TERMS, OPEN_INTERNATIONALLY,
 } from "./profile";
 
 export type Stream = "tech" | "scholarship";
 
-export const TECH_SECTIONS = ["Cameroon", "Africa & Remote", "International"] as const;
+export const TECH_SECTIONS = ["Cameroon", "Fully funded travel", "Africa & Remote", "International"] as const;
 export const SCHOLARSHIP_SECTIONS = Object.keys(FIELD_FIT);
 
 const SECTION_LIMIT: Record<string, number> = {
-  "Cameroon": 40, "Africa & Remote": 20, "International": 15,
+  "Cameroon": 40, "Fully funded travel": 20, "Africa & Remote": 20, "International": 15,
   "Your fields": 25, "STEM & Engineering": 15, "Open to all fields": 15,
 };
 
@@ -104,6 +105,45 @@ function classifyScholarship(item: RawItem, text: string): Opportunity | null {
   };
 }
 
+// Funded summits, conferences, exchanges and fellowships abroad — any field.
+function classifyTravel(item: RawItem, text: string): Opportunity | null {
+  if (item.local || hits(text, LOCAL_TERMS).length) return null; // Cameroon items stay in the Cameroon section
+  if (!hits(text, FUNDED_TRAVEL_TERMS).length || !hits(text, TRAVEL_PROGRAMME_TERMS).length) return null;
+  // Jobs, PhDs and postdocs are not travel programmes.
+  if (hits(text, PHD_TERMS).length || /\b(vacancy|hiring|full[- ]time|salary)\b/i.test(text)) return null;
+  if (tooOld(item, "tech")) return null;
+  if (OTHER_NATIONALITY.test(item.title) && !/cameroon|cameroun|africans|african/i.test(text)) return null;
+
+  const topics: string[] = [];
+  let topicHits = 0;
+  for (const [topic, terms] of Object.entries(TOPICS)) {
+    if (topic === "Tech (general)") continue;
+    const n = hits(text, terms).length;
+    if (n) { topics.push(topic); topicHits += n; }
+  }
+  // Label by programme kind ("fully funded" alone would make everything a fellowship).
+  const category = /\b(summit|conference|forum|congress|assembly|festival|sommet|conférence|model united nations)\b/i.test(item.title)
+    ? "Event"
+    : /\b(summer school|winter school|camp|exchange|academy|bootcamp|training|workshop|programme d'échange)\b/i.test(item.title)
+      ? "Training"
+      : /\b(hackathon|competition|challenge)\b/i.test(item.title) ? "Competition" : "Fellowship / Funded Training";
+
+  let score = 10 + Math.min(topicHits, 3) * 3;
+  if (OPEN_INTERNATIONALLY.test(text)) score += 4;
+  if (/fully[\s-]funded|all[\s-]expenses[\s-]paid/i.test(text)) score += 3;
+
+  return {
+    ...item,
+    key: normalizeUrl(item.url),
+    stream: "tech",
+    section: "Fully funded travel",
+    category,
+    topics,
+    score,
+    destination: DESTINATIONS.find((d) => new RegExp(`\\b${d}\\b`).test(text)),
+  };
+}
+
 function classifyTech(item: RawItem, text: string): Opportunity | null {
   if (tooOld(item, "tech")) return null;
   if (item.remote && !REMOTE_ELIGIBLE.test((item.location || "").trim())) return null;
@@ -152,7 +192,7 @@ function classify(item: RawItem): Opportunity | null {
   const deadline = extractDeadline(text);
   if (deadline && deadline.at.getTime() < Date.now()) return null;
   // A Master's scholarship never appears in the tech digest, and vice versa.
-  const o = classifyScholarship(item, text) ?? classifyTech(item, text);
+  const o = classifyScholarship(item, text) ?? classifyTravel(item, text) ?? classifyTech(item, text);
   return o && deadline ? { ...o, deadline: deadline.label, deadlineAt: deadline.at } : o;
 }
 

@@ -96,13 +96,16 @@ All identity management happens in the **Okta Admin Console**:
 - **MFA:** under *Security → Authentication Policies*, require *Any 2 factor types* for the app.
 - **Revocation:** under *Directory → People*, suspending or deactivating a user blocks new sign-ins immediately. Deleting their `admin_users` row revokes access in the app as well, effective on their next request.
 
-## Daily opportunity digests
+## Opportunity digests (twice a week)
 
-`app/api/cron/opportunities` runs every day at 06:00 Cameroon time (Vercel Cron, `vercel.json`)
+`app/api/cron/opportunities` runs Mondays and Thursdays at 06:00 Cameroon time (Vercel Cron, `vercel.json`;
+schedule helpers in `lib/opportunities/schedule.ts`)
 and sends two separate emails, each only when there is something new:
 
 - **Opportunity Digest**: networking, cybersecurity and web-dev jobs, internships, events and
-  training. Cameroon first, then Africa/remote, then international; grouped by type.
+  training. Cameroon first, then fully funded travel (summits, conferences, exchanges and
+  fellowships abroad in any field, flagged "Passport needed"), then Africa/remote, then
+  international; grouped by type.
 - **Master's Scholarship Watch**: funded Master's study abroad, grouped by fit (your fields,
   STEM & engineering, open to all fields) and by fully funded vs partial funding.
 

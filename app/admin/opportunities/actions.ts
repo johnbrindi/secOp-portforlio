@@ -6,7 +6,7 @@ import prisma from "@/lib/prisma";
 import { runDigest } from "@/lib/opportunities/run";
 import { sendPush } from "@/lib/push";
 
-// "Run now" on /admin/opportunities: same pipeline as the daily cron, emails included.
+// "Run now" on /admin/opportunities: same pipeline as the scheduled cron, emails included.
 export async function runDigestNow() {
   await requireAdmin();
   await runDigest({ trigger: "manual" });

@@ -1,5 +1,6 @@
 import { ExternalLink, MapPin, Building2, CalendarClock, Plane } from "lucide-react";
 import type { opportunities } from "@prisma/client";
+import { PASSPORT_NOTE } from "@/lib/opportunities/profile";
 
 const TZ = "Africa/Douala";
 const DAY = 86_400_000;
@@ -67,6 +68,10 @@ export default function OpportunityCard({ o, color }: { o: opportunities; color:
         {o.destination && <span className="flex items-center gap-1"><Plane className="w-3.5 h-3.5" />{o.destination}</span>}
         {deadline && <span className="flex items-center gap-1 font-medium" style={{ color: deadline.color }}><CalendarClock className="w-3.5 h-3.5" />{deadline.text}</span>}
       </div>
+
+      {o.section === "Fully funded travel" && (
+        <p className="text-small" style={{ color: "#93c5fd", fontSize: ".75rem" }}>🛂 {PASSPORT_NOTE}</p>
+      )}
 
       {o.summary && !o.title.startsWith(o.summary.slice(0, 40)) && (
         <p className="text-small" style={{ color: "var(--text-muted)", lineHeight: 1.55 }}>
