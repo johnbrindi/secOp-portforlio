@@ -9,7 +9,7 @@ export default function VisitBeacon() {
   const pathname = usePathname();
 
   useEffect(() => {
-    if (!pathname || pathname.startsWith("/admin")) return;
+    if (!pathname || pathname.startsWith("/admin") || pathname.startsWith("/login")) return;
     try {
       if (sessionStorage.getItem("visit-reported")) return;
       sessionStorage.setItem("visit-reported", "1");

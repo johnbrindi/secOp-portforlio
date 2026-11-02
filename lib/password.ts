@@ -12,7 +12,8 @@ export function hashPassword(password: string): string {
 }
 
 export function verifyPassword(password: string, stored: string | undefined): boolean {
-  const [scheme, salt, hash] = (stored || "").split(":");
+  // Tolerate copy-paste slips in the env var: surrounding spaces or quotes.
+  const [scheme, salt, hash] = (stored || "").trim().replace(/^["']|["']$/g, "").split(":");
   if (scheme !== "scrypt" || !salt || !hash) return false;
   const expected = Buffer.from(hash, "base64url");
   const actual = scryptSync(password, Buffer.from(salt, "base64url"), expected.length);

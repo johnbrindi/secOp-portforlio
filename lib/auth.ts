@@ -41,17 +41,23 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
+        // Errors thrown here reach /login as ?error=<message>; keep them free of account details.
+        if (!process.env.ADMIN_PASSWORD_HASH || !getAdminEmails().length) throw new Error("PasswordLoginDisabled");
         const email = credentials?.email?.trim().toLowerCase();
-        if (!email || !credentials?.password || !process.env.ADMIN_PASSWORD_HASH) return null;
+        if (!email || !credentials?.password) return null;
         const forwarded = req?.headers?.["x-forwarded-for"];
         const ip = (Array.isArray(forwarded) ? forwarded[0] : forwarded || "").split(",")[0].trim() || "unknown";
         // 5 attempts per 15 minutes per IP (per instance — a speed bump against guessing).
-        if (!rateLimit(`login:${ip}`, 5, 15 * 60_000).ok) return null;
+        if (!rateLimit(`login:${ip}`, 5, 15 * 60_000).ok) throw new Error("TooManyAttempts");
         if (!isAdminEmail(email) || !verifyPassword(credentials.password, process.env.ADMIN_PASSWORD_HASH)) return null;
         return { id: email, email, name: "Admin" };
       },
     }),
   ],
+  pages: {
+    signIn: "/login",
+    error: "/login",
+  },
   session: {
     strategy: "jwt",
     maxAge: 60 * 60 * 8, // 8h admin sessions

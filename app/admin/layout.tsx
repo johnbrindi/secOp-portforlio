@@ -17,7 +17,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   // Defense in depth: proxy.ts already gates /admin, but never render admin data without a verified session
   const session = await getServerSession(authOptions);
   if (!isAdminEmail(session?.user?.email)) {
-    redirect("/api/auth/signin?callbackUrl=/admin");
+    redirect("/login?callbackUrl=/admin");
   }
 
   return (
